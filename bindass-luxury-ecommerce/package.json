@@ -1,0 +1,16 @@
+{
+    "name": "bindass-luxury-ecommerce",
+    "version": "1.0.0",
+    "description": "Root configuration for Bindass Luxury Ecommerce",
+    "scripts": {
+        "start": "concurrently \"npm run client\" \"npm run server\"",
+        "dev": "nodemon server/src/app.js",
+        "client": "npm start --prefix client",
+        "server": "npm run dev --prefix server"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
+}
