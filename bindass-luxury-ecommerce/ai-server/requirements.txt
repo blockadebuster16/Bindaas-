@@ -1,0 +1,40 @@
+# FastAPI & Server
+fastapi
+uvicorn[standard]
+python-multipart
+python-jose[cryptography]
+passlib[bcrypt]
+python-dotenv
+
+# MongoDB
+motor
+pymongo
+
+# ML & NLP
+scikit-learn
+joblib
+numpy
+textblob
+spacy
+emoji
+
+# HuggingFace for training data
+datasets
+pandas
+
+# Pydantic
+pydantic
+pydantic-settings
+
+# ONNX Runtime (for local model execution)
+onnxruntime>=1.16.0
+
+# Supabase Client
+supabase>=2.3.0
+
+# Security
+bcrypt>=4.0.0
+
+# File Processing
+pymupdf
+python-docx

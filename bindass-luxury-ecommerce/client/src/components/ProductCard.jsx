@@ -6,7 +6,7 @@ const ProductCard = ({ product, onBuy }) => {
             {/* Image Container */}
             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-sm bg-gray-50 lg:aspect-none group-hover:opacity-90 lg:h-80 transition-opacity">
                 <img
-                    src={product.images[0] || 'https://via.placeholder.com/400'}
+                    src={product.images?.[0] || 'https://via.placeholder.com/400'}
                     alt={product.name}
                     className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                 />

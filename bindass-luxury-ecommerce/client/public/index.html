@@ -34,6 +34,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
     rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1"
     rel="stylesheet" />
 </head>
@@ -41,6 +42,22 @@
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
+  <!-- NEXA AI Chat Widget -->
+  <script>
+    (function() {
+      // Don't load the widget on admin pages
+      if (window.location.pathname.startsWith('/admin')) return;
+      
+      window.NexaConfig = {
+        ownerId: "system_admin",
+        apiUrl: "http://localhost:8000"
+      };
+      var s = document.createElement('script');
+      s.src = 'http://localhost:3000/nexa-widget.js';
+      s.async = true;
+      document.head.appendChild(s);
+    })();
+  </script>
 </body>
 
 </html>

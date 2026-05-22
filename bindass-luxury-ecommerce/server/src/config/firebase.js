@@ -5,9 +5,7 @@ const serviceAccount = require('./firebase-service-account.json');
 // For development, you might rely on GOOGLE_APPLICATION_CREDENTIALS
 try {
     admin.initializeApp({
-        credential: admin.credential.applicationDefault(),
-        // Or use: credential: admin.credential.cert(serviceAccount)
-        // databaseURL: "https://your-project.firebaseio.com"
+        credential: admin.credential.cert(serviceAccount)
     });
     console.log("🔥 Firebase Admin Initialized");
 } catch (error) {

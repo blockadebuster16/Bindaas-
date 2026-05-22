@@ -40,7 +40,7 @@ const Checkout = () => {
                     {/* Right: Utilities */}
                     <div className="flex items-center space-x-6 text-white">
                         <Link to="/" className="hover:text-emerald-400 transition-colors"><span className="material-icons-outlined">room</span></Link>
-                        <Link to="/" className="hover:text-emerald-400 transition-colors"><span className="material-icons-outlined">favorite_border</span></Link>
+                        <Link to="/wishlist" className="hover:text-emerald-400 transition-colors"><span className="material-icons-outlined">favorite_border</span></Link>
                         <Link to="/profile" className="hover:text-emerald-400 transition-colors"><span className="material-icons-outlined">person_outline</span></Link>
                         <Link to="/cart" className="hover:text-emerald-400 transition-colors relative">
                             <span className="material-icons-outlined">shopping_bag</span>
