@@ -26,8 +26,8 @@ const AdminDashboard = () => {
 
   // Search & Filter State
   const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
-  const [sortBy, setSortBy] = useState(''); // 'price-asc', 'price-desc', 'stock-asc', 'stock-desc'
+  const [categoryFilter, setCategoryFilter] = useState('All');
+  const [sortBy, setSortBy] = useState('newest'); 
 
   // Form State for Adding/Editing
   const [formData, setFormData] = useState({
@@ -50,7 +50,6 @@ const AdminDashboard = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
-  // Unified Render API Endpoints
   const API_URL = "https://bindaas-ucyv.onrender.com/api/products";
   const UPLOAD_URL = "https://bindaas-ucyv.onrender.com/api/upload";
 
@@ -82,13 +81,17 @@ const AdminDashboard = () => {
     navigate('/admin-login');
   };
 
-  // Setup Axios with Token
   const getAuthHeaders = () => {
     const token = localStorage.getItem('adminToken');
     return {
       headers: { Authorization: `Bearer ${token}` }
     };
   };
+
+  // Dynamically extract unique categories from live backend response records
+  const uniqueCategories = useMemo(() => {
+    return [...new Set(products.map(p => p.category).filter(Boolean))];
+  }, [products]);
 
   // Filtering & Sorting Logic
   const filteredAndSortedProducts = useMemo(() => {
@@ -99,19 +102,19 @@ const AdminDashboard = () => {
       return matchesSearch && matchesCategory;
     });
 
-    if (sortBy === 'price-asc') result.sort((a, b) => a.price - b.price);
-    if (sortBy === 'price-desc') result.sort((a, b) => b.price - a.price);
-    if (sortBy === 'stock-asc') result.sort((a, b) => a.stock_quantity - b.stock_quantity);
-    if (sortBy === 'stock-desc') result.sort((a, b) => b.stock_quantity - a.stock_quantity);
+    // FIXED: Form values now align cleanly with filtering keys
+    if (sortBy === 'price-low') result.sort((a, b) => a.price - b.price);
+    if (sortBy === 'price-high') result.sort((a, b) => b.price - a.price);
+    if (sortBy === 'stock-asc') result.sort((a, b) => (a.stock_quantity || 0) - (b.stock_quantity || 0));
+    if (sortBy === 'stock-desc') result.sort((a, b) => (b.stock_quantity || 0) - (a.stock_quantity || 0));
+    if (sortBy === 'newest') result.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
     return result;
   }, [products, searchTerm, categoryFilter, sortBy]);
 
   const lowStockItems = useMemo(() => {
-    return products.filter(p => p.stock_quantity < 5);
+    return products.filter(p => (p.stock_quantity || 0) < 5);
   }, [products]);
-
-  const uniqueCategories = [...new Set(products.map(p => p.category).filter(Boolean))];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -153,7 +156,7 @@ const AdminDashboard = () => {
 
   const handleToggleActive = async (id) => {
     try {
-      await axios.patch(`https://bindaas-ucyv.onrender.com/api/products/${id}/toggle`, {}, getAuthHeaders());
+      await axios.patch(`${API_URL}/${id}/toggle`, {}, getAuthHeaders());
       showToast('Product status updated');
       fetchProducts();
     } catch (e) {
@@ -164,7 +167,7 @@ const AdminDashboard = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to permanently delete this product?')) {
       try {
-        await axios.delete(`https://bindaas-ucyv.onrender.com/api/products/${id}`, getAuthHeaders());
+        await axios.delete(`${API_URL}/${id}`, getAuthHeaders());
         showToast('Product deleted successfully');
         fetchProducts();
       } catch (e) {
@@ -320,9 +323,10 @@ const AdminDashboard = () => {
                  className="block w-full md:w-48 pl-3 pr-10 py-2 text-sm bg-gray-50 border-gray-200 text-gray-700 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-lg"
                >
                  <option value="All">All Categories</option>
-                 <option value="Clothing">Clothing</option>
-                 <option value="Accessories">Accessories</option>
-                 <option value="Footwear">Footwear</option>
+                 {/* FIXED: Dynamic parsing of database calculated categories */}
+                 {uniqueCategories.map(cat => (
+                   <option key={cat} value={cat}>{cat}</option>
+                 ))}
                </select>
 
                <select 
@@ -333,6 +337,8 @@ const AdminDashboard = () => {
                  <option value="newest">Newest First</option>
                  <option value="price-low">Price: Low to High</option>
                  <option value="price-high">Price: High to Low</option>
+                 <option value="stock-asc">Stock: Low to High</option>
+                 <option value="stock-desc">Stock: High to Low</option>
                </select>
             </div>
           </div>
@@ -351,7 +357,7 @@ const AdminDashboard = () => {
           <div className="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
              {loading ? (
                 <div className="flex justify-center flex-col items-center h-64 text-gray-500">
-                   <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mb-4"></div>
+                   <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600 mb-4"></div>
                    <p className="text-sm font-medium">Loading inventory...</p>
                 </div>
              ) : filteredAndSortedProducts.length === 0 ? (
@@ -389,21 +395,21 @@ const AdminDashboard = () => {
                                          </div>
                                          <div className="ml-4">
                                              <div className="text-sm font-bold text-gray-900">{product.name}</div>
-                                             <div className="text-xs text-gray-500 mt-0.5">ID: {product._id.substring(product._id.length - 6).toUpperCase()}</div>
+                                             <div className="text-xs text-gray-500 mt-0.5">ID: {product._id ? product._id.substring(product._id.length - 6).toUpperCase() : 'NEW'}</div>
                                          </div>
                                      </div>
                                  </td>
                                  <td className="px-6 py-4 whitespace-nowrap">
                                      <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
-                                         {product.category}
+                                         {product.category || "Unassigned"}
                                      </span>
                                  </td>
                                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
                                      {formatCurrency(product.price)}
                                  </td>
                                  <td className="px-6 py-4 whitespace-nowrap">
-                                     <div className={`text-sm font-medium ${product.stock_quantity < 10 ? 'text-red-600' : 'text-gray-900'}`}>
-                                         {product.stock_quantity} units
+                                     <div className={`text-sm font-medium ${product.stock_quantity < 5 ? 'text-red-600 font-bold' : 'text-gray-900'}`}>
+                                         {product.stock_quantity || 0} units
                                      </div>
                                  </td>
                                  <td className="px-6 py-4 whitespace-nowrap">
@@ -506,66 +512,62 @@ const AdminDashboard = () => {
 
                           <div className="grid grid-cols-2 gap-4">
                              <div>
-                                <label className="block text-sm font-medium text-gray-900 mb-1">Product Type (Variant Cat)</label>
-                                <input type="text" name="productType" value={formData.productType} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="e.g. Tops, Bottoms, Shirts" />
+                                <label className="block text-sm font-medium text-gray-900 mb-1">Product Type</label>
+                                <input type="text" name="productType" value={formData.productType} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="e.g. Shirts" />
                              </div>
                              <div>
                                 <label className="block text-sm font-medium text-gray-900 mb-1">Fit</label>
-                                <input type="text" name="fit" value={formData.fit} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="e.g. Loose Fit, Slim Fit" />
+                                <input type="text" name="fit" value={formData.fit} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="e.g. Slim Fit" />
                              </div>
                           </div>
 
                           <div className="grid grid-cols-2 gap-4">
                              <div>
-                                <label className="block text-sm font-medium text-gray-900 mb-1">Colors (Comma separated)</label>
-                                <input type="text" name="colors" value={formData.colors} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="e.g. Black, White, #FF0000" />
+                                <label className="block text-sm font-medium text-gray-900 mb-1">Colors</label>
+                                <input type="text" name="colors" value={formData.colors} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="Black, White" />
                              </div>
                              <div>
-                                <label className="block text-sm font-medium text-gray-900 mb-1">Sizes (Comma separated)</label>
-                                <input type="text" name="sizes" value={formData.sizes} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="e.g. S, M, L, XL" />
+                                <label className="block text-sm font-medium text-gray-900 mb-1">Sizes</label>
+                                <input type="text" name="sizes" value={formData.sizes} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="S, M, L" />
                              </div>
                           </div>
 
                           <div>
                              <label className="block text-sm font-medium text-gray-900 mb-1">Materials &amp; Care</label>
-                             <textarea name="materials_care" rows="3" value={formData.materials_care} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="e.g. 100% Italian leather. Wipe clean with a dry cloth." />
-                          </div>
- 
-                          <div>
-                             <label className="block text-sm font-medium text-gray-900 mb-1">Materials Integrity</label>
-                             <textarea name="materials_integrity" rows="3" value={formData.materials_integrity} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="e.g. Carbon-neutral certified." />
+                             <textarea name="materials_care" rows="3" value={formData.materials_care} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="Care details..." />
                           </div>
 
-                          <div>
-                             <label className="block text-sm font-medium text-gray-900 mb-1">Shipping &amp; Returns</label>
-                             <textarea name="shipping_returns" rows="3" value={formData.shipping_returns} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="e.g. Free shipping on orders over ₹4,000." />
-                          </div>
-
-                          {/* Image Upload Block */}
+                          {/* Image Upload Area */}
                           <div>
                             <label className="block text-sm font-medium text-gray-900 mb-1">Product Images</label>
                             <input type="file" multiple onChange={handleImageUpload} disabled={isUploading} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
                             {isUploading && <p className="text-xs text-indigo-600 mt-1 animate-pulse">Uploading images to cloud storage...</p>}
                             
                             {formData.images.length > 0 && (
-                              <div className="grid grid-cols-4 gap-2 mt-3">
+                              <div className="grid grid-cols-3 gap-2 mt-3">
                                 {formData.images.map((url, idx) => (
-                                  <div key={idx} className="relative group h-16 w-16 rounded-lg overflow-hidden border border-gray-200">
-                                    <img src={url} alt="" className="h-full w-full object-cover" />
-                                    <button type="button" onClick={() => removeImage(idx)} className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs font-bold">Delete</button>
+                                  <div key={idx} className="relative group rounded-md overflow-hidden h-20 border border-gray-200">
+                                    <img src={url} alt="" className="w-full h-full object-cover" />
+                                    <button type="button" onClick={() => removeImage(idx)} className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs font-bold">
+                                      Remove
+                                    </button>
                                   </div>
                                 ))}
                               </div>
                             )}
                           </div>
-
-                          <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
-                            <button type="button" onClick={resetForm} className="bg-white border border-gray-300 rounded-lg shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-gray-700 hover:bg-gray-50">Cancel</button>
-                            <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save Product</button>
-                          </div>
                         </form>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="flex-shrink-0 px-4 py-4 flex justify-end gap-3 bg-gray-50 border-t border-gray-200 rounded-bl-2xl">
+                    <button type="button" onClick={resetForm} className="bg-white py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50">
+                      Cancel
+                    </button>
+                    <button type="submit" form="product-form" className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700">
+                      {isEditing ? 'Save Changes' : 'Publish Item'}
+                    </button>
                   </div>
                 </div>
               </div>
