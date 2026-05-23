@@ -8,6 +8,7 @@ import AdHero from '../components/AdHero';
 import AdStrip from '../components/AdStrip';
 import RecentlyViewed from '../components/RecentlyViewed';
 import SEO from '../components/SEO';
+import API_BASE_URL from '../config/api';
 
 const Home = () => {
     // State
