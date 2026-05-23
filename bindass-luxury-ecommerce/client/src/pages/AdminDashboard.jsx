@@ -50,8 +50,9 @@ const AdminDashboard = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
-  import API_BASE_URL from '../config/api';
-const API_URL = `${API_BASE_URL}/api/products`;
+  // Unified Render API Endpoints
+  const API_URL = "https://bindaas-ucyv.onrender.com/api/products";
+  const UPLOAD_URL = "https://bindaas-ucyv.onrender.com/api/upload";
 
   // Fetch all products
   const fetchProducts = async () => {
@@ -90,25 +91,25 @@ const API_URL = `${API_BASE_URL}/api/products`;
   };
 
   // Filtering & Sorting Logic
-    const filteredAndSortedProducts = useMemo(() => {
-        let result = products.filter(product => {
-            const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                                 (product.category || '').toLowerCase().includes(searchTerm.toLowerCase());
-            const matchesCategory = (categoryFilter && categoryFilter !== 'All') ? product.category === categoryFilter : true;
-            return matchesSearch && matchesCategory;
-        });
+  const filteredAndSortedProducts = useMemo(() => {
+    let result = products.filter(product => {
+      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                           (product.category || '').toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = (categoryFilter && categoryFilter !== 'All') ? product.category === categoryFilter : true;
+      return matchesSearch && matchesCategory;
+    });
 
-        if (sortBy === 'price-asc') result.sort((a, b) => a.price - b.price);
-        if (sortBy === 'price-desc') result.sort((a, b) => b.price - a.price);
-        if (sortBy === 'stock-asc') result.sort((a, b) => a.stock_quantity - b.stock_quantity);
-        if (sortBy === 'stock-desc') result.sort((a, b) => b.stock_quantity - a.stock_quantity);
+    if (sortBy === 'price-asc') result.sort((a, b) => a.price - b.price);
+    if (sortBy === 'price-desc') result.sort((a, b) => b.price - a.price);
+    if (sortBy === 'stock-asc') result.sort((a, b) => a.stock_quantity - b.stock_quantity);
+    if (sortBy === 'stock-desc') result.sort((a, b) => b.stock_quantity - a.stock_quantity);
 
-        return result;
-    }, [products, searchTerm, categoryFilter, sortBy]);
+    return result;
+  }, [products, searchTerm, categoryFilter, sortBy]);
 
-    const lowStockItems = useMemo(() => {
-        return products.filter(p => p.stock_quantity < 5);
-    }, [products]);
+  const lowStockItems = useMemo(() => {
+    return products.filter(p => p.stock_quantity < 5);
+  }, [products]);
 
   const uniqueCategories = [...new Set(products.map(p => p.category).filter(Boolean))];
 
@@ -152,7 +153,7 @@ const API_URL = `${API_BASE_URL}/api/products`;
 
   const handleToggleActive = async (id) => {
     try {
-      await axios.patch(`${API_URL}/${id}/toggle`, {}, getAuthHeaders());
+      await axios.patch(`https://bindaas-ucyv.onrender.com/api/products/${id}/toggle`, {}, getAuthHeaders());
       showToast('Product status updated');
       fetchProducts();
     } catch (e) {
@@ -163,7 +164,7 @@ const API_URL = `${API_BASE_URL}/api/products`;
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to permanently delete this product?')) {
       try {
-        await axios.delete(`${API_URL}/${id}`, getAuthHeaders());
+        await axios.delete(`https://bindaas-ucyv.onrender.com/api/products/${id}`, getAuthHeaders());
         showToast('Product deleted successfully');
         fetchProducts();
       } catch (e) {
@@ -182,7 +183,10 @@ const API_URL = `${API_BASE_URL}/api/products`;
 
     try {
       setIsUploading(true);
-      const res = await axios.post('${API_BASE_URL}/api/upload', data, { ...getAuthHeaders(), headers: { ...getAuthHeaders().headers, 'Content-Type': 'multipart/form-data' }});
+      const res = await axios.post(UPLOAD_URL, data, { 
+        ...getAuthHeaders(), 
+        headers: { ...getAuthHeaders().headers, 'Content-Type': 'multipart/form-data' }
+      });
       
       if (res.data.success) {
          setFormData(prev => ({ ...prev, images: [...prev.images, ...res.data.urls] }));
@@ -196,10 +200,10 @@ const API_URL = `${API_BASE_URL}/api/products`;
   };
 
   const removeImage = (indexToRemove) => {
-      setFormData(prev => ({
-          ...prev,
-          images: prev.images.filter((_, idx) => idx !== indexToRemove)
-      }));
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, idx) => idx !== indexToRemove)
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -265,34 +269,34 @@ const API_URL = `${API_BASE_URL}/api/products`;
                   <h1 className="text-2xl font-bold text-gray-900 leading-tight">Catalog Management</h1>
                   <p className="text-sm text-gray-500 mt-1">Manage your luxury product inventory and visibility.</p>
               </div>
-                    <div className="flex items-center gap-3">
-                        <button onClick={() => { setIsEditing(false); setFormData({ name: '', description: '', price: '', category: '', stock: 0, images: [], isActive: true }); setIsModalOpen(true); }} className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium text-sm shadow-sm transition-all flex items-center">
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
-                            New Product
-                        </button>
-                    </div>
-                </div>
+              <div className="flex items-center gap-3">
+                  <button onClick={openAddModal} className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium text-sm shadow-sm transition-all flex items-center">
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
+                      New Product
+                  </button>
+              </div>
+          </div>
 
-                {/* Low Stock Alert */}
-                {lowStockItems.length > 0 && (
-                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="bg-amber-100 p-2 rounded-lg">
-                                <span className="material-icons text-amber-600">inventory_2</span>
-                            </div>
-                            <div>
-                                <h3 className="text-sm font-bold text-amber-900 uppercase tracking-tight">Low Stock Warning</h3>
-                                <p className="text-xs text-amber-700 font-medium">{lowStockItems.length} products have fewer than 5 units left.</p>
-                            </div>
-                        </div>
-                        <button 
-                            onClick={() => { setSearchTerm(''); setCategoryFilter('All'); setSortBy('stock-asc'); }}
-                            className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all"
-                        >
-                            Review Stock
-                        </button>
-                    </div>
-                )}
+          {/* Low Stock Alert */}
+          {lowStockItems.length > 0 && (
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                      <div className="bg-amber-100 p-2 rounded-lg">
+                          <span className="material-icons text-amber-600">inventory_2</span>
+                      </div>
+                      <div>
+                          <h3 className="text-sm font-bold text-amber-900 uppercase tracking-tight">Low Stock Warning</h3>
+                          <p className="text-xs text-amber-700 font-medium">{lowStockItems.length} products have fewer than 5 units left.</p>
+                      </div>
+                  </div>
+                  <button 
+                      onClick={() => { setSearchTerm(''); setCategoryFilter('All'); setSortBy('stock-asc'); }}
+                      className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all"
+                  >
+                      Review Stock
+                  </button>
+              </div>
+          )}
 
           {/* Filters Bar */}
           <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 flex flex-col md:flex-row gap-4">
@@ -449,7 +453,7 @@ const API_URL = `${API_BASE_URL}/api/products`;
             <section className="absolute inset-y-0 right-0 pl-10 max-w-2xl flex">
               <div className="w-screen max-w-md">
                 <div className="h-full divide-y divide-gray-200 flex flex-col bg-white shadow-2xl rounded-l-2xl">
-                                    <div className="flex-1 h-0 overflow-y-auto bg-white">
+                  <div className="flex-1 h-0 overflow-y-auto bg-white">
                     <div className="py-6 px-4 sm:px-6 bg-gray-50 border-b border-gray-200">
                       <div className="flex items-center justify-between">
                         <h2 className="text-xl font-bold text-gray-900">
@@ -524,96 +528,44 @@ const API_URL = `${API_BASE_URL}/api/products`;
 
                           <div>
                              <label className="block text-sm font-medium text-gray-900 mb-1">Materials &amp; Care</label>
-                             <textarea name="materials_care" rows="3" value={formData.materials_care} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="e.g. 100% Italian leather. Wipe clean with a dry cloth. Avoid prolonged exposure to moisture." />
+                             <textarea name="materials_care" rows="3" value={formData.materials_care} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="e.g. 100% Italian leather. Wipe clean with a dry cloth." />
                           </div>
  
                           <div>
                              <label className="block text-sm font-medium text-gray-900 mb-1">Materials Integrity</label>
-                             <textarea name="materials_integrity" rows="3" value={formData.materials_integrity} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="e.g. Carbon-neutral certified. Ethically sourced leather from LWG certified tanneries." />
+                             <textarea name="materials_integrity" rows="3" value={formData.materials_integrity} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="e.g. Carbon-neutral certified." />
                           </div>
 
                           <div>
                              <label className="block text-sm font-medium text-gray-900 mb-1">Shipping &amp; Returns</label>
-                             <textarea name="shipping_returns" rows="3" value={formData.shipping_returns} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="e.g. Free express shipping on all orders over ₹5000. Returns accepted within 14 days in original packaging." />
+                             <textarea name="shipping_returns" rows="3" value={formData.shipping_returns} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="e.g. Free shipping on orders over ₹4,000." />
                           </div>
 
+                          {/* Image Upload Block */}
                           <div>
-                             <label className="block text-sm font-medium text-gray-900 mb-3">Publish to Pages</label>
-                             <div className="grid grid-cols-2 gap-3">
-                               {[
-                                 { key: 'new_arrivals',        label: 'New Arrivals (Home)' },
-                                 { key: 'womens_collection',   label: "Women's Collection" },
-                                 { key: 'mens_collection',     label: "Men's Collection" },
-                                 { key: 'shop',                label: 'Shop Page' },
-                                 { key: 'sale',                label: 'Sale / Offers' },
-                                 { key: 'new_in',              label: 'New In' },
-                                 { key: 'apparel',             label: 'Apparel' },
-                                 { key: 'classics',            label: 'Classics' },
-                                 { key: 'sportscollection',    label: 'Sport Collection' },
-                                 { key: 'sports',              label: 'Sports' },
-                               ].map(({ key, label }) => (
-                                 <label key={key} className="flex items-center gap-2 cursor-pointer select-none">
-                                   <input
-                                     type="checkbox"
-                                     checked={formData.pages.includes(key)}
-                                     onChange={(e) => {
-                                       setFormData(prev => ({
-                                         ...prev,
-                                         pages: e.target.checked
-                                           ? [...prev.pages, key]
-                                           : prev.pages.filter(p => p !== key)
-                                       }));
-                                     }}
-                                     className="h-4 w-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900"
-                                   />
-                                   <span className="text-sm text-gray-700">{label}</span>
-                                 </label>
-                               ))}
-                             </div>
+                            <label className="block text-sm font-medium text-gray-900 mb-1">Product Images</label>
+                            <input type="file" multiple onChange={handleImageUpload} disabled={isUploading} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
+                            {isUploading && <p className="text-xs text-indigo-600 mt-1 animate-pulse">Uploading images to cloud storage...</p>}
+                            
+                            {formData.images.length > 0 && (
+                              <div className="grid grid-cols-4 gap-2 mt-3">
+                                {formData.images.map((url, idx) => (
+                                  <div key={idx} className="relative group h-16 w-16 rounded-lg overflow-hidden border border-gray-200">
+                                    <img src={url} alt="" className="h-full w-full object-cover" />
+                                    <button type="button" onClick={() => removeImage(idx)} className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs font-bold">Delete</button>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                           </div>
 
-                          <div>
-                             <label className="block text-sm font-medium text-gray-900 mb-1">Product Images</label>
-                             <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                               <div className="space-y-1 text-center">
-                                 <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                                   <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                 </svg>
-                                 <div className="flex text-sm text-gray-600 justify-center">
-                                   <label htmlFor="file-upload" className="relative cursor-pointer bg-white rounded-md font-medium text-primary hover:text-green-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary">
-                                     <span>{isUploading ? 'Uploading...' : 'Upload files'}</span>
-                                     <input id="file-upload" name="file-upload" type="file" multiple accept="image/*" className="sr-only" onChange={handleImageUpload} disabled={isUploading} />
-                                   </label>
-                                 </div>
-                                 <p className="text-xs text-gray-500">PNG, JPG, WEBP up to 5MB</p>
-                               </div>
-                             </div>
-                             
-                             {formData.images?.length > 0 && (
-                                <div className="mt-4 grid grid-cols-3 gap-4">
-                                   {formData.images.map((img, idx) => (
-                                      <div key={idx} className="relative h-24 w-full rounded-lg bg-gray-100 overflow-hidden border border-gray-200 group">
-                                         <img src={img} alt="Preview" className="h-full w-full object-cover" />
-                                         <button type="button" onClick={() => removeImage(idx)} className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                         </button>
-                                      </div>
-                                   ))}
-                                </div>
-                             )}
+                          <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
+                            <button type="button" onClick={resetForm} className="bg-white border border-gray-300 rounded-lg shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-gray-700 hover:bg-gray-50">Cancel</button>
+                            <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save Product</button>
                           </div>
                         </form>
                       </div>
                     </div>
-                  </div>
-                  
-                   <div className="flex-shrink-0 px-4 py-4 flex justify-end bg-gray-50 border-t border-gray-100">
-                    <button type="button" onClick={resetForm} className="bg-white py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-3 transition-colors">
-                      Cancel
-                    </button>
-                    <button type="submit" form="product-form" className="flex justify-center py-2 px-8 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-gray-900 hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-all">
-                      {isEditing ? 'Save changes' : 'Create product'}
-                    </button>
                   </div>
                 </div>
               </div>
