@@ -81,8 +81,14 @@ const AdminDashboard = () => {
     navigate('/admin-login');
   };
 
+  // FIXED: Bulletproof header utility checking for both client and admin token variables
   const getAuthHeaders = () => {
-    const token = localStorage.getItem('adminToken');
+    const token = localStorage.getItem('adminToken') || localStorage.getItem('token') || localStorage.getItem('authToken');
+    
+    if (!token) {
+      console.warn("⚠️ Authentication Token missing inside Admin localStorage storage pools.");
+    }
+
     return {
       headers: { Authorization: `Bearer ${token}` }
     };
@@ -97,12 +103,11 @@ const AdminDashboard = () => {
   const filteredAndSortedProducts = useMemo(() => {
     let result = products.filter(product => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                           (product.category || '').toLowerCase().includes(searchTerm.toLowerCase());
+                            (product.category || '').toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory = (categoryFilter && categoryFilter !== 'All') ? product.category === categoryFilter : true;
       return matchesSearch && matchesCategory;
     });
 
-    // FIXED: Form values now align cleanly with filtering keys
     if (sortBy === 'price-low') result.sort((a, b) => a.price - b.price);
     if (sortBy === 'price-high') result.sort((a, b) => b.price - a.price);
     if (sortBy === 'stock-asc') result.sort((a, b) => (a.stock_quantity || 0) - (b.stock_quantity || 0));
@@ -323,7 +328,6 @@ const AdminDashboard = () => {
                  className="block w-full md:w-48 pl-3 pr-10 py-2 text-sm bg-gray-50 border-gray-200 text-gray-700 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-lg"
                >
                  <option value="All">All Categories</option>
-                 {/* FIXED: Dynamic parsing of database calculated categories */}
                  {uniqueCategories.map(cat => (
                    <option key={cat} value={cat}>{cat}</option>
                  ))}
@@ -537,7 +541,6 @@ const AdminDashboard = () => {
                              <textarea name="materials_care" rows="3" value={formData.materials_care} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="Care details..." />
                           </div>
 
-                          {/* Image Upload Area */}
                           <div>
                             <label className="block text-sm font-medium text-gray-900 mb-1">Product Images</label>
                             <input type="file" multiple onChange={handleImageUpload} disabled={isUploading} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
@@ -559,15 +562,14 @@ const AdminDashboard = () => {
                         </form>
                       </div>
                     </div>
-                  </div>
-
-                  <div className="flex-shrink-0 px-4 py-4 flex justify-end gap-3 bg-gray-50 border-t border-gray-200 rounded-bl-2xl">
-                    <button type="button" onClick={resetForm} className="bg-white py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50">
-                      Cancel
-                    </button>
-                    <button type="submit" form="product-form" className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700">
-                      {isEditing ? 'Save Changes' : 'Publish Item'}
-                    </button>
+                    <div className="flex-shrink-0 px-4 py-4 flex justify-end gap-3 border-t border-gray-200 bg-gray-50">
+                      <button type="button" onClick={resetForm} className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
+                        Cancel
+                      </button>
+                      <button type="submit" form="product-form" className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none">
+                        {isEditing ? 'Save Changes' : 'Publish Product'}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
