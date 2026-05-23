@@ -551,7 +551,7 @@ const AdminDashboard = () => {
                                 {formData.images.map((url, idx) => (
                                   <div key={idx} className="relative group rounded-md overflow-hidden h-20 border border-gray-200">
                                     <img src={url} alt="" className="w-full h-full object-cover" />
-                                    <button type="button" onClick={() => removeImage(idx)} className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs font-bold">
+                                    <button type="button" onClick={() => removeImage(idx)} className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs font-semibold">
                                       Remove
                                     </button>
                                   </div>
@@ -562,15 +562,18 @@ const AdminDashboard = () => {
                         </form>
                       </div>
                     </div>
-                    <div className="flex-shrink-0 px-4 py-4 flex justify-end gap-3 border-t border-gray-200 bg-gray-50">
-                      <button type="button" onClick={resetForm} className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
-                        Cancel
-                      </button>
-                      <button type="submit" form="product-form" className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none">
-                        {isEditing ? 'Save Changes' : 'Publish Product'}
-                      </button>
-                    </div>
                   </div>
+
+                  {/* Form Action Footer buttons */}
+                  <div className="flex-shrink-0 px-4 py-4 flex justify-end gap-3 bg-gray-50 border-t border-gray-200 rounded-b-2xl">
+                    <button type="button" onClick={resetForm} className="bg-white border border-gray-300 rounded-lg shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-gray-700 hover:bg-gray-50">
+                      Cancel
+                    </button>
+                    <button type="submit" form="product-form" className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                      {isEditing ? 'Save Changes' : 'Create Product'}
+                    </button>
+                  </div>
+
                 </div>
               </div>
             </section>
