@@ -25,7 +25,7 @@ const Home = () => {
         const fetchData = async () => {
             try {
                 // Optimized fetch: Only fields needed for the home page grids, and limited to 24 items
-                const prodRes = await axios.get('https://bindaas-ucyv.onrender.com/api/products?limit=24&select=name,price,images,pages,stock_quantity,low_stock_threshold,category`);
+                const prodRes = await axios.get(`https://bindaas-ucyv.onrender.com/api/products?limit=24&select=name,price,images,pages,stock_quantity,low_stock_threshold,category`);
                 setProducts(prodRes.data);
                 setLoading(false);
             } catch (error) {
