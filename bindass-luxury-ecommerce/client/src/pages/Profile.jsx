@@ -33,8 +33,8 @@ const Profile = () => {
 
                 // Fetch Profile and Orders in parallel
                 const [profileRes, ordersRes] = await Promise.all([
-                    axios.get('${API_BASE_URL}/api/users/profile', { headers }),
-                    axios.get('${API_BASE_URL}/api/orders/my-orders', { headers })
+                    axios.get('https://bindaas-ucyv.onrender.com/api/users/profile', { headers }),
+                    axios.get('https://bindaas-ucyv.onrender.com/api/orders/my-orders', { headers })
                 ]);
 
                 setProfile(profileRes.data);
@@ -54,7 +54,7 @@ const Profile = () => {
         setSaveLoading(true);
         try {
             const token = await user.getIdToken();
-            const { data } = await axios.put('${API_BASE_URL}/api/users/profile', profile, {
+            const { data } = await axios.put('https://bindaas-ucyv.onrender.com/api/users/profile', profile, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setProfile(data);
