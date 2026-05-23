@@ -36,29 +36,43 @@ const Checkout = () => {
         const sub = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
         const totalQty = cartItems.reduce((acc, item) => acc + item.quantity, 0);
         if (sub > 0) {
-            updateTotals({ subtotal: sub, itemCount: totalQty });
-        }
-    }, [cartItems, updateTotals]);
+            // Default configuration-driven fallback values for initialization
+            const cgstRate = storeConfig?.cgst ?? 9;
+            const sgstRate = storeConfig?.sgst ?? 9;
+            const shipping = checkoutTotals.shippingTotal || 0;
+            const cod = isCOD ? (storeConfig?.codFee || 0) : 0;
+            
+            const taxableAmount = sub; 
+            const cgst = Math.round(taxableAmount * (cgstRate / 100));
+            const sgst = Math.round(taxableAmount * (sgstRate / 100));
 
-    // 2. Pre-fill from Persistent Profile (Fixed Template Literals)
+            updateTotals({ 
+                subtotal: sub, 
+                itemCount: totalQty,
+                cgst,
+                sgst,
+                totalAmount: sub + shipping + cod + cgst + sgst
+            });
+        }
+    }, [cartItems, updateTotals, storeConfig, isCOD, checkoutTotals.shippingTotal]);
+
+    // 2. Pre-fill from Persistent Profile
     useEffect(() => {
         const fetchAndFill = async () => {
             if (user) {
                 try {
                     const token = await user.getIdToken();
-                    // FIXED: Backticks instead of single quotes
                     const { data: profile } = await axios.get(`${API_BASE_URL}/api/users/profile`, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
 
-                    // Auto-fill form fields
                     if (profile.displayName) {
                         const names = profile.displayName.split(' ');
                         setValue('firstName', names[0]);
                         if (names.length > 1) setValue('lastName', names.slice(1).join(' '));
                     }
                     if (profile.email) setValue('email', profile.email);
-                    if (profile.phoneNumber) setValue('phone', profile.phoneNumber);
+                    if (profile.phone || profile.phoneNumber) setValue('phone', profile.phone || profile.phoneNumber);
                     if (profile.addressLine1) setValue('addressLine1', profile.addressLine1);
                     if (profile.addressLine2) setValue('addressLine2', profile.addressLine2);
                     if (profile.city) setValue('city', profile.city);
@@ -73,27 +87,50 @@ const Checkout = () => {
         fetchAndFill();
     }, [user, setValue]);
 
+    // Recalculates everything comprehensively to prevent UI stale data fields
+    const recalculateBreakdown = (discountVal) => {
+        const sub = checkoutTotals.subtotal || 0;
+        const shipping = checkoutTotals.shippingTotal || 0;
+        const cod = isCOD ? (storeConfig?.codFee || 0) : 0;
+        const cgstRate = storeConfig?.cgst ?? 9;
+        const sgstRate = storeConfig?.sgst ?? 9;
+
+        // Taxes apply to the discounted subtotal amount
+        const taxableAmount = Math.max(0, sub - discountVal);
+        const cgst = Math.round(taxableAmount * (cgstRate / 100));
+        const sgst = Math.round(taxableAmount * (sgstRate / 100));
+        const totalAmount = taxableAmount + shipping + cod + cgst + sgst;
+
+        updateTotals({
+            discount: discountVal,
+            cgst,
+            sgst,
+            totalAmount
+        });
+    };
+
     const handleApplyCoupon = async () => {
         if (!couponCode) return;
         setCouponLoading(true);
         setCouponError('');
         try {
-            // FIXED: Backticks instead of single quotes
             const { data: coupon } = await axios.post(`${API_BASE_URL}/api/coupons/validate`, {
                 code: couponCode,
                 subtotal: checkoutTotals.subtotal
             });
 
-            // Calculate Discount
             let discountValue = 0;
             if (coupon.discountType === 'percentage') {
                 discountValue = Math.round(checkoutTotals.subtotal * (coupon.discountValue / 100));
             } else {
                 discountValue = coupon.discountValue;
             }
+            
+            // Limit discount so it never exceeds subtotal value
+            discountValue = Math.min(discountValue, checkoutTotals.subtotal);
 
             applyCoupon(coupon);
-            updateTotals({ discount: discountValue });
+            recalculateBreakdown(discountValue);
             setCouponCode('');
         } catch (err) {
             setCouponError(err.response?.data?.message || 'Invalid code');
@@ -104,7 +141,7 @@ const Checkout = () => {
 
     const handleRemoveCoupon = () => {
         removeCoupon();
-        updateTotals({ discount: 0 });
+        recalculateBreakdown(0);
     };
 
     const onSubmit = (data) => {
@@ -133,7 +170,6 @@ const Checkout = () => {
                 <div className="flex flex-col lg:flex-row gap-12">
                     {/* Left Column: Form */}
                     <div className="flex-1 space-y-8">
-                        {/* FIXED: Dark mode visibility text-white */}
                         <h1 className="text-3xl font-bold dark:text-white">Shipping Information</h1>
                         <section className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
                             <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -231,7 +267,7 @@ const Checkout = () => {
                         </section>
                     </div>
 
-                    {/* Right Column: DYNAMIC Order Summary */}
+                    {/* Right Column: Order Summary */}
                     <aside className="w-full lg:w-[400px]">
                         <div className="sticky top-28 bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
                             <h3 className="text-lg font-bold mb-6 flex items-center justify-between dark:text-white uppercase tracking-tighter">
@@ -279,7 +315,7 @@ const Checkout = () => {
                                 </div>
                             </div>
 
-                            {/* International DDU Disclaimer */}
+                            {/* International Disclaimer */}
                             {zone?.isInternational && zone?.duty_note && (
                                 <div className="mb-4 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/50">
                                     <p className="text-[9px] font-black uppercase tracking-widest text-amber-700 dark:text-amber-400 mb-1">⚠️ International Order Notice</p>
@@ -295,7 +331,7 @@ const Checkout = () => {
                                             <span className="text-emerald-600 dark:text-emerald-400 font-bold uppercase text-[10px] tracking-widest">{appliedCoupon.code}</span>
                                             <span className="text-emerald-400 text-[9px] uppercase font-medium">Applied</span>
                                         </div>
-                                        <button onClick={handleRemoveCoupon} className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-800">
+                                        <button type="button" onClick={handleRemoveCoupon} className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-800">
                                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
                                         </button>
                                     </div>
@@ -310,6 +346,7 @@ const Checkout = () => {
                                                 className="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-[10px] font-bold uppercase outline-none focus:ring-1 focus:ring-[#10221c] text-slate-900 dark:text-slate-100"
                                             />
                                             <button 
+                                                type="button"
                                                 onClick={handleApplyCoupon}
                                                 disabled={couponLoading || !couponCode}
                                                 className="bg-[#10221c] dark:bg-slate-800 text-white dark:text-slate-200 px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest disabled:opacity-50 border dark:border-slate-700"
@@ -322,6 +359,7 @@ const Checkout = () => {
                                 )}
                             </div>
 
+                            {/* Totals Breakdown */}
                             <div className="space-y-3 border-t dark:border-slate-800 pt-6">
                                 <div className="flex justify-between text-[13px] text-slate-500">
                                     <span>Subtotal</span>
