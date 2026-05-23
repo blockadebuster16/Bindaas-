@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import axios from 'axios';
-import API_BASE_URL from '../config/api';
 
 const loadGoogleFont = (family) => {
     if (!family || document.querySelector(`link[data-gfont="${family}"]`)) return;
@@ -46,8 +45,12 @@ const Navbar = () => {
     const [showResults, setShowResults] = useState(false);
     const [searchLoading, setSearchLoading] = useState(false);
 
-    // Close mobile menu on route change
-    useEffect(() => { setMobileMenuOpen(false); }, [location.pathname]);
+    // Close menus on route change
+    useEffect(() => { 
+        setMobileMenuOpen(false); 
+        setShowResults(false);
+        setMobileSearchOpen(false);
+    }, [location.pathname]);
 
     // Prevent body scroll when mobile menu is open
     useEffect(() => {
@@ -55,14 +58,13 @@ const Navbar = () => {
         return () => { document.body.style.overflow = ''; };
     }, [mobileMenuOpen]);
 
-    const handleLogin = async () => {
+    const handleLogin = () => {
         setIsAuthModalOpen(true);
     };
 
     useEffect(() => {
         const fetchPromoAd = async () => {
             try {
-                // Optimized fetch: Only the promo record needed for the top bar
                 const { data } = await axios.get('https://bindaas-ucyv.onrender.com/api/advertisements?bannerType=promo');
                 const ad = data[0] || null;
                 setPromoAd(ad);
@@ -76,23 +78,24 @@ const Navbar = () => {
         fetchPromoAd();
     }, []);
 
-    // Search Logic
+    // Search Logic with Debounce
     useEffect(() => {
+        if (searchQuery.length <= 2) {
+            setSearchResults([]);
+            setShowResults(false);
+            return;
+        }
+
         const delayDebounceFn = setTimeout(async () => {
-            if (searchQuery.length > 2) {
-                setSearchLoading(true);
-                try {
-                    const { data } = await axios.get(`https://bindaas-ucyv.onrender.com/api/products/search?q=${searchQuery}`);
-                    setSearchResults(data);
-                    setShowResults(true);
-                } catch (err) {
-                    console.error("Search failed", err);
-                } finally {
-                    setSearchLoading(false);
-                }
-            } else {
-                setSearchResults([]);
-                setShowResults(false);
+            setSearchLoading(true);
+            try {
+                const { data } = await axios.get(`https://bindaas-ucyv.onrender.com/api/products/search?q=${searchQuery}`);
+                setSearchResults(data);
+                setShowResults(true);
+            } catch (err) {
+                console.error("Search failed", err);
+            } finally {
+                setSearchLoading(false);
             }
         }, 300);
 
@@ -105,6 +108,7 @@ const Navbar = () => {
             navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
             setShowResults(false);
             setMobileSearchOpen(false);
+            setSearchQuery('');
         }
     };
 
@@ -364,7 +368,7 @@ const Navbar = () => {
                             </Link>
                             <div className="absolute left-0 top-full w-full bg-[#10221c] text-white shadow-2xl transition-all duration-300 transform origin-top scale-y-0 group-hover:scale-y-100 opacity-0 group-hover:opacity-100 visible group-hover:visible border-t border-white/10 z-50">
                                 <section className="grid grid-cols-4 border-b border-gray-200">
-                                    <div className="relative group/card cursor-pointer overflow-hidden border-r border-white/10">
+                                    <div className="relative group/card cursor-pointer overflow-hidden border-r border-white/10 flex flex-col justify-between">
                                         <div className="aspect-[4/3] h-64 w-full">
                                             <img alt="Discover Our Commitments" className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-700 opacity-80 group-hover/card:opacity-100" src="https://images.unsplash.com/photo-1620799140408-ed5341cd2431?q=80&w=800&auto=format&fit=crop" />
                                         </div>
@@ -372,7 +376,7 @@ const Navbar = () => {
                                             <h3 className="text-white text-xs font-bold uppercase tracking-widest text-center">Discover Our Commitments</h3>
                                         </div>
                                     </div>
-                                    <Link to="/heritage" className="relative group/card cursor-pointer overflow-hidden border-r border-white/10 block">
+                                    <Link to="/heritage" className="relative group/card cursor-pointer overflow-hidden border-r border-white/10 block flex flex-col justify-between">
                                         <div className="aspect-[4/3] h-64 w-full">
                                             <img alt="Bindass Story" className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-700 grayscale group-hover/card:grayscale-0" src="https://images.unsplash.com/photo-1554062975-23b21bfe3664?q=80&w=2000&auto=format&fit=crop" />
                                         </div>
@@ -380,15 +384,16 @@ const Navbar = () => {
                                             <h3 className="text-white group-hover/card:text-[#10221c] text-xs font-bold uppercase tracking-widest text-center transition-colors">Bindass Story</h3>
                                         </div>
                                     </Link>
-                                    <Link to="/sport" className="relative group/card cursor-pointer overflow-hidden border-r border-white/10 block">
-                                        <div className="aspect-[4/3] h-64 w-full">
-                                            <img alt="Bindass Sport" className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7808qIvwuvaB__KXj775ubfVz-WesZbrtFib_cgqLoUrSziunoBofXdZp-qAzZmYz3a7Hu43EcTCKpBbxIE4SiQ_9hc25gsP-B_DCuge4VFbKZC_530XEnodiEv-ijoXTzcrEg-FF8zL0z0KedoFzj7lFuz5TSBwvdkvP2qCeXHc8rLRCJky6nPChr3vVAC7-pAy308DY4mmcWvKi2u5xWW0F09MIErImZXqcSKEKrEgRuX5mOaUVOvnVfUFkeFgJugFfcHxKDrFR" />
+                                    <Link to="/sport" className="relative group/card cursor-pointer overflow-hidden border-r border-white/10 block flex flex-col justify-between">
+                                        {/* Styled Fallback visual frame to manage broken structural asset layouts safely */}
+                                        <div className="aspect-[4/3] h-64 w-full bg-slate-800 flex items-center justify-center">
+                                            <span className="material-icons-outlined text-white/20 text-5xl group-hover/card:scale-110 transition-transform duration-700">fitness_center</span>
                                         </div>
                                         <div className="bg-[#152e26] p-4 absolute bottom-0 w-full group-hover/card:bg-[#11d490] transition-colors">
                                             <h3 className="text-white group-hover/card:text-[#10221c] text-xs font-bold uppercase tracking-widest text-center transition-colors">Bindass Sport</h3>
                                         </div>
                                     </Link>
-                                    <Link to="/membership" className="relative group/card cursor-pointer overflow-hidden block">
+                                    <Link to="/membership" className="relative group/card cursor-pointer overflow-hidden block flex flex-col justify-between">
                                         <div className="aspect-[4/3] h-64 w-full">
                                             <img alt="Le Club Bindass" className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-700" src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800&auto=format&fit=crop" />
                                         </div>
