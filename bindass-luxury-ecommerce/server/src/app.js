@@ -10,9 +10,9 @@ const app = express();
 
 // ─── CORS Configuration ────────────────────────────────────────────────────
 // CLIENT_URL must be set in Render environment variables to your Vercel URL.
-// Example: https://bindaas.vercel.app  (no trailing slash)
+// Example: https://bindaas-sigma.vercel.app  (no trailing slash)
 const allowedOrigins = [
-    process.env.https://bindaas-sigma.vercel.app,                          // Production Vercel URL (set in Render env vars)
+    process.env.CLIENT_URL,                          // Production Vercel URL (set in Render env vars)
     'http://localhost:3000',                          // Local React dev server
     'http://localhost:5001',                          // Local backend (for same-origin testing)
 ].filter(Boolean); // Remove undefined/null entries if CLIENT_URL is not set
@@ -38,7 +38,7 @@ app.use(cors({
 
 app.use(express.json());
 
-// ─── Database ─────────────────────────────────────────────────────────────
+// ─── Database ───────────────────────────────────────────────────────────
 connectDB();
 
 // ─── Health / Root ─────────────────────────────────────────────────────────
@@ -50,7 +50,7 @@ app.get('/', (req, res) => {
     res.send('Luxury E-commerce API is running...');
 });
 
-// ─── Routes ────────────────────────────────────────────────────────────────
+// ─── Routes ────────────────────────────────────────────────────────────
 app.use('/api/products',       require('./routes/productRoutes'));
 app.use('/api/auth',           require('./routes/authRoutes'));
 app.use('/api/payments',       require('./routes/paymentRoutes'));
