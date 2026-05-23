@@ -82,7 +82,7 @@ const Navbar = () => {
             if (searchQuery.length > 2) {
                 setSearchLoading(true);
                 try {
-                    const { data } = await axios.get(`${API_BASE_URL}/api/products/search?q=${searchQuery}`);
+                    const { data } = await axios.get(`https://bindaas-ucyv.onrender.com/api/products/search?q=${searchQuery}`);
                     setSearchResults(data);
                     setShowResults(true);
                 } catch (err) {
