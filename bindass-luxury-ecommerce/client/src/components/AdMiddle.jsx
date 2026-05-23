@@ -138,7 +138,7 @@ const AdMiddle = ({ page = 'home' }) => {
     useEffect(() => {
         const fetchAds = async () => {
             try {
-                const { data } = await axios.get(`${API_BASE_URL}/api/advertisements?bannerType=middle&page=${page}`);
+                const { data } = await axios.get(`https://bindaas-ucyv.onrender.com/api/advertisements?bannerType=middle&page=${page}`);
                 setMiddleAds(data);
                 data.forEach(ad => {
                     [ad.titleFontFamily, ad.tagFontFamily, ad.subtitleFontFamily].forEach(f => f && loadGoogleFont(f));
