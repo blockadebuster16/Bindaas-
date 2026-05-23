@@ -48,10 +48,20 @@ const MiddleAdContent = ({ ad }) => {
         
         return ad.mediaUrl;
     };
+
     const [mediaUrl, setMediaUrl] = useState(getResponsiveMedia());
 
+    // Update image URL if the advertisement object changes dynamically
     useEffect(() => {
-        const handleResize = () => setMediaUrl(getResponsiveMedia());
+        setMediaUrl(getResponsiveMedia());
+    }, [ad]);
+
+    // Handle responsive window resizing
+    useEffect(() => {
+        const handleResize = () => {
+            setMediaUrl(getResponsiveMedia());
+        };
+
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, [ad]);
