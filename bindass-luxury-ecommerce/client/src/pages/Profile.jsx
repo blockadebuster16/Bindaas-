@@ -24,23 +24,37 @@ const Profile = () => {
     const [loading, setLoading] = useState(true);
     const [saveLoading, setSaveLoading] = useState(false);
 
+    // Redirect if user is not logged in
+    useEffect(() => {
+        if (!user) {
+            // Give auth state a moment to resolve, otherwise protect route
+            const timeout = setTimeout(() => {
+                if (!user) navigate('/');
+            }, 1000);
+            return () => clearTimeout(timeout);
+        }
+    }, [user, navigate]);
+
+    // Fetch Profile & Orders
     useEffect(() => {
         const fetchData = async () => {
             if (!user) return;
+            
             try {
+                setLoading(true);
                 const token = await user.getIdToken();
                 const headers = { Authorization: `Bearer ${token}` };
 
-                // Fetch Profile and Orders in parallel
+                // Fetch Profile and Orders in parallel using configured base URL
                 const [profileRes, ordersRes] = await Promise.all([
-                    axios.get('https://bindaas-ucyv.onrender.com/api/users/profile', { headers }),
-                    axios.get('https://bindaas-ucyv.onrender.com/api/orders/my-orders', { headers })
+                    axios.get(`${API_BASE_URL}/users/profile`, { headers }),
+                    axios.get(`${API_BASE_URL}/orders/my-orders`, { headers })
                 ]);
 
-                setProfile(profileRes.data);
-                setOrders(ordersRes.data);
+                if (profileRes.data) setProfile(profileRes.data);
+                if (ordersRes.data) setOrders(ordersRes.data);
             } catch (err) {
-                console.error("Error fetching data:", err);
+                console.error("Error fetching profile details:", err);
             } finally {
                 setLoading(false);
             }
@@ -51,10 +65,12 @@ const Profile = () => {
 
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
+        if (!user) return;
+
         setSaveLoading(true);
         try {
             const token = await user.getIdToken();
-            const { data } = await axios.put('https://bindaas-ucyv.onrender.com/api/users/profile', profile, {
+            const { data } = await axios.put(`${API_BASE_URL}/users/profile`, profile, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setProfile(data);
@@ -78,9 +94,11 @@ const Profile = () => {
 
     const getStatusStep = (status) => {
         const steps = ['Pending', 'Processing', 'Shipped', 'Delivered'];
-        return steps.indexOf(status);
+        const index = steps.indexOf(status);
+        return index !== -1 ? index : 0;
     };
 
+    // Early return statement if Auth Context hasn't loaded a user yet
     if (!user) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-white font-['Work_Sans']">
@@ -106,7 +124,7 @@ const Profile = () => {
                                         <img src={user.photoURL} alt="User" className="w-full h-full object-cover" />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center bg-[#10221c] text-white font-bold text-2xl uppercase">
-                                            {profile.displayName?.[0] || user.email?.[0]}
+                                            {profile.displayName?.[0] || user.email?.[0] || '?'}
                                         </div>
                                     )}
                                 </div>
@@ -165,18 +183,18 @@ const Profile = () => {
                                                 <div className="bg-white border border-slate-100 rounded-lg p-6 hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500">
                                                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                                                         <div className="space-y-1">
-                                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Ordered on {new Date(order.orderDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
-                                                            <h3 className="text-xs font-black uppercase text-[#10221c]">Order #{order._id.slice(-8).toUpperCase()}</h3>
+                                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Ordered on {order.orderDate ? new Date(order.orderDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'N/A'}</p>
+                                                            <h3 className="text-xs font-black uppercase text-[#10221c]">Order #{order._id ? order._id.slice(-8).toUpperCase() : 'UNKNOWN'}</h3>
                                                         </div>
                                                         <div className={`px-4 py-1.5 rounded-full text-[9px] font-bold border uppercase tracking-[0.2em] w-fit ${getStatusColor(order.status)}`}>
                                                             {order.status}
                                                         </div>
                                                     </div>
                                                     <div className="flex flex-wrap gap-4 mb-8">
-                                                        {order.products.map((p, pIdx) => (
+                                                        {order.products?.map((p, pIdx) => (
                                                             <div key={pIdx} className="group/item relative">
                                                                 <div className="w-16 h-20 bg-slate-50 rounded overflow-hidden border border-slate-100 shadow-sm transition-transform group-hover/item:-translate-y-1">
-                                                                    <img src={p.productId?.images?.[0] || p.productId?.image || 'https://via.placeholder.com/100'} alt="p" className="w-full h-full object-cover" />
+                                                                    <img src={p.productId?.images?.[0] || p.productId?.image || 'https://via.placeholder.com/100'} alt="Product" className="w-full h-full object-cover" />
                                                                 </div>
                                                                 <div className="absolute top-0 right-0 -mr-2 -mt-2 bg-[#10221c] text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center opacity-0 group-hover/item:opacity-100 transition-opacity">
                                                                     {p.quantity}
@@ -189,7 +207,7 @@ const Profile = () => {
                                                     </div>
                                                     <div className="flex items-center justify-between border-t border-slate-50 pt-4 text-xs font-bold uppercase tracking-widest text-slate-400">
                                                         <span>Total Amount</span>
-                                                        <span className="text-xl font-black text-[#10221c]">₹{order.totalAmount.toLocaleString()}</span>
+                                                        <span className="text-xl font-black text-[#10221c]">₹{order.totalAmount ? order.totalAmount.toLocaleString() : '0'}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -230,7 +248,7 @@ const Profile = () => {
                                             <div className="space-y-2">
                                                 <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Contact Number</label>
                                                 <input 
-                                                    type="tel" 
+                                                    type="text" 
                                                     value={profile.phoneNumber || ''} 
                                                     onChange={e => setProfile({...profile, phoneNumber: e.target.value})}
                                                     placeholder="+91 000 000 0000"
