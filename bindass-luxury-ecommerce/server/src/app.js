@@ -12,7 +12,7 @@ const app = express();
 // 1. Middleware Configuration
 // CORS must be defined BEFORE your routes to allow your React app (Port 3000) to communicate
 app.use(cors({
-    origin: [process.env.CLIENT_URL || "http://localhost:3000", "http://localhost:5000"],
+    origin: [process.env.CLIENT_URL || "http://localhost:3000", "http://localhost:5000", "https://bindaas-kbb5lsuro-blockadebuster16s-projects.vercel.app/"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true
 }));

@@ -24,7 +24,7 @@ const Home = () => {
         const fetchData = async () => {
             try {
                 // Optimized fetch: Only fields needed for the home page grids, and limited to 24 items
-                const prodRes = await axios.get('http://localhost:5001/api/products?limit=24&select=name,price,images,pages,stock_quantity,low_stock_threshold,category');
+                const prodRes = await axios.get('https://bindaas-ucyv.onrender.com/api/products?limit=24&select=name,price,images,pages,stock_quantity,low_stock_threshold,category');
                 setProducts(prodRes.data);
                 setLoading(false);
             } catch (error) {
@@ -71,9 +71,9 @@ const Home = () => {
 
     return (
         <div className="font-display">
-            <SEO 
-                title="Home" 
-                description="Experience the intersection of high-fashion luxury and athletic energy. Shop the latest collections from Bindass!!" 
+            <SEO
+                title="Home"
+                description="Experience the intersection of high-fashion luxury and athletic energy. Shop the latest collections from Bindass!!"
             />
 
             {/* Hero Section - Dynamic */}
@@ -110,8 +110,8 @@ const Home = () => {
                             return (
                                 <Link to={`/product/${product._id}`} key={product._id} className="group block relative snap-start flex-shrink-0 w-[calc(50%-8px)] lg:w-[calc(25%-12px)]">
                                     <div className="relative overflow-hidden bg-[#f2eeeb] mb-3" style={{ aspectRatio: '3/4' }}>
-                                        <button 
-                                            onClick={(e) => { e.preventDefault(); toggleWishlist(product); }} 
+                                        <button
+                                            onClick={(e) => { e.preventDefault(); toggleWishlist(product); }}
                                             className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm hover:scale-110 transition-transform"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" fill={isWished ? "#ff3f6c" : "none"} viewBox="0 0 24 24" strokeWidth={1.5} stroke={isWished ? "#ff3f6c" : "currentColor"} className="w-4 h-4 text-gray-600"><path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
@@ -166,8 +166,8 @@ const Home = () => {
                             return (
                                 <Link to={`/product/${product._id}`} key={product._id} className="group block relative snap-start flex-shrink-0 w-[calc(50%-8px)] lg:w-[calc(25%-12px)]">
                                     <div className="relative overflow-hidden bg-[#f2eeeb] mb-3" style={{ aspectRatio: '3/4' }}>
-                                        <button 
-                                            onClick={(e) => { e.preventDefault(); toggleWishlist(product); }} 
+                                        <button
+                                            onClick={(e) => { e.preventDefault(); toggleWishlist(product); }}
                                             className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm hover:scale-110 transition-transform"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" fill={isWished ? "#ff3f6c" : "none"} viewBox="0 0 24 24" strokeWidth={1.5} stroke={isWished ? "#ff3f6c" : "currentColor"} className="w-4 h-4 text-gray-600"><path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>

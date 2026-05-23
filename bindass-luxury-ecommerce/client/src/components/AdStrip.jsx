@@ -36,7 +36,7 @@ const AdStrip = ({ page = 'home' }) => {
     useEffect(() => {
         const fetchAds = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:5001/api/advertisements?bannerType=strip&page=${page}`);
+                const { data } = await axios.get(`https://bindaas-ucyv.onrender.com/api/advertisements?bannerType=strip&page=${page}`);
                 setStripAds(data);
                 data.forEach(ad => {
                     [ad.tagFontFamily, ad.taglineFontFamily].forEach(f => f && loadGoogleFont(f));

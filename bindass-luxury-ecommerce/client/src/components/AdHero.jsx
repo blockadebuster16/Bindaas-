@@ -32,22 +32,22 @@ const HeroSlide = ({ ad, i, heroIndex }) => {
     const getResponsiveMedia = () => {
         if (typeof window === 'undefined') return ad.mediaUrl;
         const w = window.innerWidth;
-        
+
         if (w < 640) {
             if (ad.mediaUrlMobile) return ad.mediaUrlMobile;
             if (ad.mediaCropMobile) return getCroppedUrl(ad.mediaUrl, ad.mediaCropMobile);
             return ad.mediaUrl;
         }
-        
+
         if (w < 1024) {
             if (ad.mediaUrlTablet) return ad.mediaUrlTablet;
             if (ad.mediaCropTablet) return getCroppedUrl(ad.mediaUrl, ad.mediaCropTablet);
             return ad.mediaUrl;
         }
-        
+
         return ad.mediaUrl;
     };
-    
+
     const [mediaUrl, setMediaUrl] = useState(getResponsiveMedia());
 
     useEffect(() => {
@@ -139,7 +139,7 @@ const AdHero = ({ page = 'home' }) => {
     useEffect(() => {
         const fetchAds = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:5001/api/advertisements?bannerType=hero&page=${page}`);
+                const { data } = await axios.get(`https://bindaas-ucyv.onrender.com/api/advertisements?bannerType=hero&page=${page}`);
                 setHeroAds(data);
                 data.forEach(ad => {
                     [ad.titleFontFamily, ad.tagFontFamily, ad.subtitleFontFamily].forEach(f => f && loadGoogleFont(f));
