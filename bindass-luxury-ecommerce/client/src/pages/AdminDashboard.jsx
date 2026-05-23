@@ -50,7 +50,8 @@ const AdminDashboard = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
-  const API_URL = 'http://localhost:5001/api/products';
+  import API_BASE_URL from '../config/api';
+const API_URL = `${API_BASE_URL}/api/products`;
 
   // Fetch all products
   const fetchProducts = async () => {
@@ -181,7 +182,7 @@ const AdminDashboard = () => {
 
     try {
       setIsUploading(true);
-      const res = await axios.post('http://localhost:5001/api/upload', data, { ...getAuthHeaders(), headers: { ...getAuthHeaders().headers, 'Content-Type': 'multipart/form-data' }});
+      const res = await axios.post('${API_BASE_URL}/api/upload', data, { ...getAuthHeaders(), headers: { ...getAuthHeaders().headers, 'Content-Type': 'multipart/form-data' }});
       
       if (res.data.success) {
          setFormData(prev => ({ ...prev, images: [...prev.images, ...res.data.urls] }));

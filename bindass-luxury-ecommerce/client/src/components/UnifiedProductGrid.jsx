@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 import GridProductCard from './GridProductCard';
 import FilterSidebar from './FilterSidebar';
 
@@ -34,7 +35,7 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
             try {
                 setLoading(true);
                 // Optimized fetch: Filter by pageTarget on the server and request only needed fields
-                const { data } = await axios.get(`http://localhost:5001/api/products?pages=${pageTarget}&select=name,price,images,pages,stock_quantity,low_stock_threshold,colors,sizes,productType,fit,createdAt,category`);
+                const { data } = await axios.get(`${API_BASE_URL}/api/products?pages=${pageTarget}&select=name,price,images,pages,stock_quantity,low_stock_threshold,colors,sizes,productType,fit,createdAt,category`);
                 setOriginalProducts(data);
             } catch (err) {
                 console.error("Failed to fetch products for grid:", err);

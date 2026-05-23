@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 import { getCroppedUrl } from '../utils/cloudinaryHelper';
 
 const loadGoogleFont = (family) => {
@@ -137,7 +138,7 @@ const AdMiddle = ({ page = 'home' }) => {
     useEffect(() => {
         const fetchAds = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:5001/api/advertisements?bannerType=middle&page=${page}`);
+                const { data } = await axios.get(`${API_BASE_URL}/api/advertisements?bannerType=middle&page=${page}`);
                 setMiddleAds(data);
                 data.forEach(ad => {
                     [ad.titleFontFamily, ad.tagFontFamily, ad.subtitleFontFamily].forEach(f => f && loadGoogleFont(f));

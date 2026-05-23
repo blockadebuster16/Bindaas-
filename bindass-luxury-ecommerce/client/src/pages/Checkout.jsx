@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 import { useAuth } from '../context/AuthContext';
 import { useCheckout } from '../context/CheckoutContext';
 import { useCart } from '../context/CartContext';
@@ -45,7 +46,7 @@ const Checkout = () => {
             if (user) {
                 try {
                     const token = await user.getIdToken();
-                    const { data: profile } = await axios.get('http://localhost:5001/api/users/profile', {
+                    const { data: profile } = await axios.get('${API_BASE_URL}/api/users/profile', {
                         headers: { Authorization: `Bearer ${token}` }
                     });
 
@@ -76,7 +77,7 @@ const Checkout = () => {
         setCouponLoading(true);
         setCouponError('');
         try {
-            const { data: coupon } = await axios.post('http://localhost:5001/api/coupons/validate', {
+            const { data: coupon } = await axios.post('${API_BASE_URL}/api/coupons/validate', {
                 code: couponCode,
                 subtotal: checkoutTotals.subtotal
             });

@@ -1,12 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 import { useAuth } from './AuthContext';
 
 const WishlistContext = createContext();
 
-const BASE_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:5001/api/wishlist' 
-    : '/api/wishlist';
+const BASE_URL = `${API_BASE_URL}/api/wishlist`;
 
 export const WishlistProvider = ({ children }) => {
     const { user } = useAuth();

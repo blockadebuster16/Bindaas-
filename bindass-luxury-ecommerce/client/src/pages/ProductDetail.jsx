@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useCurrency } from '../context/CurrencyContext';
@@ -34,11 +35,11 @@ const ProductDetail = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:5001/api/products/${id}`);
+                const { data } = await axios.get(`${API_BASE_URL}/api/products/${id}`);
                 setProduct(data);
                 setMainImage(data.images[0] || 'https://via.placeholder.com/600');
                 
-                const reviewsRes = await axios.get(`http://localhost:5001/api/reviews/${id}`);
+                const reviewsRes = await axios.get(`${API_BASE_URL}/api/reviews/${id}`);
                 setReviewsData(reviewsRes.data);
 
                 setLoading(false);
@@ -82,10 +83,10 @@ const ProductDetail = () => {
         setReviewError('');
         try {
             const token = await user.getIdToken();
-            await axios.post(`http://localhost:5001/api/reviews/${product._id}`, newReview, {
+            await axios.post(`${API_BASE_URL}/api/reviews/${product._id}`, newReview, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            const reviewsRes = await axios.get(`http://localhost:5001/api/reviews/${product._id}`);
+            const reviewsRes = await axios.get(`${API_BASE_URL}/api/reviews/${product._id}`);
             setReviewsData(reviewsRes.data);
             setNewReview({ rating: 5, comment: '' });
         } catch (err) {

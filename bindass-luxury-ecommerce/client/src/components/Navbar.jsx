@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 const loadGoogleFont = (family) => {
     if (!family || document.querySelector(`link[data-gfont="${family}"]`)) return;
@@ -62,7 +63,7 @@ const Navbar = () => {
         const fetchPromoAd = async () => {
             try {
                 // Optimized fetch: Only the promo record needed for the top bar
-                const { data } = await axios.get('http://localhost:5001/api/advertisements?bannerType=promo');
+                const { data } = await axios.get('${API_BASE_URL}/api/advertisements?bannerType=promo');
                 const ad = data[0] || null;
                 setPromoAd(ad);
                 if (ad && ad.titleFontFamily) {
@@ -81,7 +82,7 @@ const Navbar = () => {
             if (searchQuery.length > 2) {
                 setSearchLoading(true);
                 try {
-                    const { data } = await axios.get(`http://localhost:5001/api/products/search?q=${searchQuery}`);
+                    const { data } = await axios.get(`${API_BASE_URL}/api/products/search?q=${searchQuery}`);
                     setSearchResults(data);
                     setShowResults(true);
                 } catch (err) {

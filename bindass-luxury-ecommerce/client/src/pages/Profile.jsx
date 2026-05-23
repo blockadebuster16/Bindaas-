@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 import { useAuth } from '../context/AuthContext';
 
 const Profile = () => {
@@ -32,8 +33,8 @@ const Profile = () => {
 
                 // Fetch Profile and Orders in parallel
                 const [profileRes, ordersRes] = await Promise.all([
-                    axios.get('http://localhost:5001/api/users/profile', { headers }),
-                    axios.get('http://localhost:5001/api/orders/my-orders', { headers })
+                    axios.get('${API_BASE_URL}/api/users/profile', { headers }),
+                    axios.get('${API_BASE_URL}/api/orders/my-orders', { headers })
                 ]);
 
                 setProfile(profileRes.data);
@@ -53,7 +54,7 @@ const Profile = () => {
         setSaveLoading(true);
         try {
             const token = await user.getIdToken();
-            const { data } = await axios.put('http://localhost:5001/api/users/profile', profile, {
+            const { data } = await axios.put('${API_BASE_URL}/api/users/profile', profile, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setProfile(data);
