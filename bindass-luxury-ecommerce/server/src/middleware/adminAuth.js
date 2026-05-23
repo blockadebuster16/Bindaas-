@@ -1,27 +1,54 @@
 const jwt = require('jsonwebtoken');
 
-const adminProtect = async (req, res, next) => {
+/**
+ * ADMIN AUTHENTICATION MIDDLEWARE
+ * Protects admin dashboard routes by verifying JWT tokens
+ * Uses separate JWT_SECRET from customer Firebase auth
+ * 
+ * This middleware is ONLY for admin routes (/api/products, /api/upload, etc)
+ * NOT for customer/user authentication (which uses Firebase)
+ */
+const adminProtect = (req, res, next) => {
     let token = req.headers.authorization?.startsWith('Bearer ') 
         ? req.headers.authorization.split(' ')[1] 
         : null;
 
     if (!token) {
-        return res.status(401).json({ message: "Not authorized, no admin token provided" });
+        return res.status(401).json({ 
+            success: false,
+            message: "Not authorized, no admin token provided" 
+        });
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.ADMIN_JWT_SECRET || 'fallback_secret_for_dev');
+        const JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'fallback_secret_for_dev';
+        const decoded = jwt.verify(token, JWT_SECRET);
         
         // Ensure the token represents the admin identity
         if (decoded.role !== 'admin') {
-             return res.status(403).json({ message: "Unauthorized, not an admin" });
+             return res.status(403).json({ 
+                 success: false,
+                 message: "Unauthorized, not an admin" 
+             });
         }
 
+        // Attach admin info to request
         req.admin = decoded;
         next();
     } catch (error) {
         console.error("Admin Token verification error:", error.message);
-        return res.status(401).json({ message: "Not authorized, token failed" });
+        
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ 
+                success: false,
+                message: "Token expired, please login again" 
+            });
+        }
+        
+        return res.status(401).json({ 
+            success: false,
+            message: "Not authorized, token invalid" 
+        });
     }
 };
 
