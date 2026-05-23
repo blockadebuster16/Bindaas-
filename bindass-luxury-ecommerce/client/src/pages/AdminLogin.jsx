@@ -17,6 +17,9 @@ const AdminLogin = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Unified production base URL
+  const AUTH_API_URL = 'https://bindaas-ucyv.onrender.com/api/auth';
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -24,11 +27,12 @@ const AdminLogin = () => {
     setSuccessMsg('');
 
     try {
-      const response = await axios.post('http://localhost:5001/api/auth/admin-login', { email, password });
+      // FIXED: Switched from localhost:5001 to Render production URL
+      const response = await axios.post(`${AUTH_API_URL}/admin-login`, { email, password });
 
       if (response.data.success) {
         localStorage.setItem('adminToken', response.data.token);
-        navigate('/admin');
+        navigate('/admin'); 
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to login. Please check your credentials.');
@@ -45,7 +49,8 @@ const AdminLogin = () => {
 
     try {
       const payload = { predefinedEmail, newEmail, newPassword };
-      const response = await axios.post('http://localhost:5001/api/auth/admin-reset', payload);
+      // FIXED: Switched from localhost:5001 to Render production URL
+      const response = await axios.post(`${AUTH_API_URL}/admin-reset`, payload);
 
       if (response.data.success) {
         setSuccessMsg('Credentials successfully updated. Please sign in with your new credentials.');
