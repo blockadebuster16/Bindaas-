@@ -1,17 +1,26 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
 import { useAuth } from './AuthContext';
 
 const CartContext = createContext();
 
-// DYNAMIC URL: Uses localhost for dev, and relative path for Vercel production
 const BASE_URL = `${API_BASE_URL}/api/cart`;
 
 export const CartProvider = ({ children }) => {
     const { user } = useAuth();
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    // Helper to format raw DB elements to ensure they always possess a operational client identifier
+    const normaliseCartItems = (items) => {
+        return items.map((item, index) => ({
+            ...item,
+            productId: item.productId || item._id,
+            // FIXED: Fallback to array index + timestamp if cartId isn't stored in DB
+            cartId: item.cartId || `${item.productId || item._id}-${item.size}-${Date.now()}-${index}`
+        }));
+    };
 
     // Initial load & Login/Logout Sync
     useEffect(() => {
@@ -26,17 +35,31 @@ export const CartProvider = ({ children }) => {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     
+                    // Normalise database items to guarantee cartId exists
+                    let processedDbCart = normaliseCartItems(dbCart);
+                    
                     // 2. Load any Guest Cart from local storage
                     const local = localStorage.getItem('bindass_cart');
                     const guestCart = local ? JSON.parse(local) : [];
                     
                     if (guestCart.length > 0) {
-                        // MERGE: guest items + db items
-                        let merged = [...dbCart];
+                        // MERGE: guest items + db items without mutating underlying objects
+                        let merged = [...processedDbCart];
+                        
                         guestCart.forEach(gItem => {
                            const existsIndex = merged.findIndex(m => m.productId === gItem.productId && m.size === gItem.size);
-                           if (existsIndex > -1) merged[existsIndex].quantity += gItem.quantity;
-                           else merged.push(gItem);
+                           if (existsIndex > -1) {
+                               // FIXED: Immutable object assignment update
+                               merged[existsIndex] = {
+                                   ...merged[existsIndex],
+                                   quantity: merged[existsIndex].quantity + gItem.quantity
+                               };
+                           } else {
+                               merged.push({
+                                   ...gItem,
+                                   cartId: gItem.cartId || `${gItem.productId}-${gItem.size}-${Date.now()}`
+                               });
+                           }
                         });
                         
                         // Push merged cart to DB (overwrite)
@@ -48,11 +71,9 @@ export const CartProvider = ({ children }) => {
                         if (isMounted) setCartItems(merged);
                         
                     } else {
-                        // Normal login/reload, just use DB cart
-                        if (isMounted) setCartItems(dbCart);
+                        if (isMounted) setCartItems(processedDbCart);
                     }
                     
-                    // Clear the guest cart so it doesn't merge again on next refresh
                     localStorage.removeItem('bindass_cart');
                 } catch (err) {
                     console.error("Error loading cart:", err);
@@ -60,7 +81,7 @@ export const CartProvider = ({ children }) => {
             } else {
                 // Not logged in: purely use guest local storage
                 const local = localStorage.getItem('bindass_cart');
-                if (isMounted) setCartItems(local ? JSON.parse(local) : []);
+                if (isMounted) setCartItems(local ? normaliseCartItems(JSON.parse(local)) : []);
             }
             if (isMounted) setLoading(false);
         };
@@ -77,11 +98,11 @@ export const CartProvider = ({ children }) => {
         }
     }, [cartItems, user]);
 
-    const syncWithServer = async (items) => {
+    // Wrapped in useCallback to prevent unneeded downstream rerender cycles
+    const syncWithServer = useCallback(async (items) => {
         if (user) {
             try {
                 const token = await user.getIdToken();
-                // Send overwrite flag so the backend directly saves this array
                 await axios.post(`${BASE_URL}/sync`,
                     { items, overwrite: true },
                     { headers: { Authorization: `Bearer ${token}` } }
@@ -90,23 +111,24 @@ export const CartProvider = ({ children }) => {
                 console.error("Failed to sync cart to server:", err);
             }
         }
-    };
+    }, [user]);
 
     const addToCart = async (product) => {
-        const exists = cartItems.find(item => item.productId === (product._id || product.productId) && item.size === product.size);
+        const targetProductId = product._id || product.productId;
+        const exists = cartItems.find(item => item.productId === targetProductId && item.size === product.size);
         let updatedCart;
         
         if (exists) {
             updatedCart = cartItems.map(item => 
-                (item.productId === (product._id || product.productId) && item.size === product.size)
+                (item.productId === targetProductId && item.size === product.size)
                 ? { ...item, quantity: item.quantity + (product.quantity || 1) }
                 : item
             );
         } else {
             updatedCart = [...cartItems, { 
                 ...product, 
-                productId: product._id || product.productId, 
-                cartId: Date.now() 
+                productId: targetProductId, 
+                cartId: `${targetProductId}-${product.size}-${Date.now()}`
             }];
         }
         
@@ -115,7 +137,26 @@ export const CartProvider = ({ children }) => {
     };
 
     const addMultipleToCart = (products) => {
-        const updatedCart = [...cartItems, ...products.map((p, i) => ({ ...p, cartId: Date.now() + i }))];
+        let updatedCart = [...cartItems];
+        
+        products.forEach((p, i) => {
+            const targetProductId = p._id || p.productId;
+            const existsIndex = updatedCart.findIndex(item => item.productId === targetProductId && item.size === p.size);
+            
+            if (existsIndex > -1) {
+                updatedCart[existsIndex] = {
+                    ...updatedCart[existsIndex],
+                    quantity: updatedCart[existsIndex].quantity + (p.quantity || 1)
+                };
+            } else {
+                updatedCart.push({
+                    ...p,
+                    productId: targetProductId,
+                    cartId: `${targetProductId}-${p.size}-${Date.now()}-${i}`
+                });
+            }
+        });
+
         setCartItems(updatedCart);
         syncWithServer(updatedCart);
     };
@@ -131,8 +172,11 @@ export const CartProvider = ({ children }) => {
         syncWithServer([]);
     };
 
+    // Calculate aggregated item quantity safely dynamically
+    const cartCount = cartItems.reduce((acc, current) => acc + (current.quantity || 0), 0);
+
     return (
-        <CartContext.Provider value={{ cartItems, addToCart, addMultipleToCart, removeFromCart, clearCart, setCartItems, cartCount: cartItems.length }}>
+        <CartContext.Provider value={{ cartItems, addToCart, addMultipleToCart, removeFromCart, clearCart, setCartItems, cartCount }}>
             {!loading && children}
         </CartContext.Provider>
     );
