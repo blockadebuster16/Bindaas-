@@ -20,22 +20,23 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
     const [sortBy, setSortBy] = useState(''); // '', 'price-asc', 'price-desc', 'newest'
 
     // Deep Filter States
-    const defaultFilters = {
+    const defaultFilters = useMemo(() => ({
         colors: [],
         sizes: [],
         productTypes: [],
         fits: [],
         minPrice: '',
         maxPrice: ''
-    };
+    }), []);
+    
     const [filters, setFilters] = useState(defaultFilters);
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
                 setLoading(true);
-                // Optimized fetch: Filter by pageTarget on the server and request only needed fields
-                const { data } = await axios.get(`https://bindaas-ucyv.onrender.com/api/products?pages=${pageTarget}&select=name,price,images,pages,stock_quantity,low_stock_threshold,colors,sizes,productType,fit,createdAt,category`);
+                // FIXED: Added _id explicitly to selection fields list to match key rendering needs downstream
+                const { data } = await axios.get(`https://bindaas-ucyv.onrender.com/api/products?pages=${pageTarget}&select=_id,name,price,images,pages,stock_quantity,low_stock_threshold,colors,sizes,productType,fit,createdAt,category`);
                 setOriginalProducts(data);
             } catch (err) {
                 console.error("Failed to fetch products for grid:", err);
@@ -116,7 +117,6 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
 
         // 1. Apply Pill (Quick Category/Type filter)
         if (activePill !== '') {
-            // we'll assume the pill corresponds to productType usually, or maybe category string included check
             result = result.filter(p => 
                 (p.productType && p.productType.toLowerCase() === activePill.toLowerCase()) || 
                 (p.category && p.category.toLowerCase().includes(activePill.toLowerCase()))
