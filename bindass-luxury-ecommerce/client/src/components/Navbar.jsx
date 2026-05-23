@@ -63,7 +63,7 @@ const Navbar = () => {
         const fetchPromoAd = async () => {
             try {
                 // Optimized fetch: Only the promo record needed for the top bar
-                const { data } = await axios.get('${API_BASE_URL}/api/advertisements?bannerType=promo');
+                const { data } = await axios.get('https://bindaas-ucyv.onrender.com/api/advertisements?bannerType=promo');
                 const ad = data[0] || null;
                 setPromoAd(ad);
                 if (ad && ad.titleFontFamily) {
