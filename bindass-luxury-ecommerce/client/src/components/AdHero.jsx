@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { getCroppedUrl } from '../utils/cloudinaryHelper';\nimport API_BASE_URL from '../config/api';
+import { getCroppedUrl } from '../utils/cloudinaryHelper';
+import API_BASE_URL from '../config/api';
 
 const loadGoogleFont = (family) => {
     if (!family || document.querySelector(`link[data-gfont="${family}"]`)) return;
