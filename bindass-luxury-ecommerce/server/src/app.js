@@ -12,7 +12,7 @@ const app = express();
 // CLIENT_URL must be set in Render environment variables to your Vercel URL.
 // Example: https://bindaas.vercel.app  (no trailing slash)
 const allowedOrigins = [
-    process.env.CLIENT_URL,                          // Production Vercel URL (set in Render env vars)
+    process.env.https://bindaas-sigma.vercel.app,                          // Production Vercel URL (set in Render env vars)
     'http://localhost:3000',                          // Local React dev server
     'http://localhost:5001',                          // Local backend (for same-origin testing)
 ].filter(Boolean); // Remove undefined/null entries if CLIENT_URL is not set
