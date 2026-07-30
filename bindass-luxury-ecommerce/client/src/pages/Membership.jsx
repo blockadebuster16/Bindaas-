@@ -23,7 +23,7 @@ const Membership = () => {
             await updateUserProfile(user, {
                 displayName: `${formData.firstName} ${formData.lastName}`
             });
-            alert("Welcome to Le Club Bindass!");
+            alert("Welcome to Le Club BiNDAAS!");
             navigate('/profile');
         } catch (error) {
             console.error("Signup failed:", error);

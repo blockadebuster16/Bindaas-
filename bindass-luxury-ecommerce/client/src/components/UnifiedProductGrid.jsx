@@ -161,44 +161,44 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
     };
 
     return (
-        <div className="bg-white min-h-screen relative font-display">
+        <div className="bg-white min-h-screen relative font-['Outfit','Manrope',sans-serif]">
             {/* Pill Navigation */}
-            <div className="pt-2 pb-4 px-4 md:px-8">
+            <div className="pt-2 pb-4 px-2.5 sm:px-4 lg:px-6 max-w-[1800px] mx-auto">
                 <div className="flex flex-wrap gap-2 mb-8">
                     <button 
                         onClick={() => setActivePill('')}
-                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-colors ${activePill === '' ? 'bg-black text-white border-black' : 'bg-white text-gray-800 border-gray-300 hover:border-black'}`}
+                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 ${activePill === '' ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-[#111111] border-[#D4AF37] hover:border-[#111111] hover:bg-[#111111]/5'}`}
                     >
                         View All
                     </button>
                     <button 
                         onClick={() => handlePillClick('Accessories')}
-                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-colors ${activePill === 'Accessories' ? 'bg-black text-white border-black' : 'bg-white text-gray-800 border-gray-300 hover:border-black'}`}
+                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 ${activePill === 'Accessories' ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-[#111111] border-[#D4AF37] hover:border-[#111111] hover:bg-[#111111]/5'}`}
                     >
                         Accessories
                     </button>
                     <button 
                         onClick={() => handlePillClick('Shoes')}
-                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-colors ${activePill === 'Shoes' ? 'bg-black text-white border-black' : 'bg-white text-gray-800 border-gray-300 hover:border-black'}`}
+                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 ${activePill === 'Shoes' ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-[#111111] border-[#D4AF37] hover:border-[#111111] hover:bg-[#111111]/5'}`}
                     >
                         Shoes
                     </button>
                     <button 
                         onClick={() => handlePillClick('Clothes')}
-                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-colors ${activePill === 'Clothes' ? 'bg-black text-white border-black' : 'bg-white text-gray-800 border-gray-300 hover:border-black'}`}
+                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 ${activePill === 'Clothes' ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-[#111111] border-[#D4AF37] hover:border-[#111111] hover:bg-[#111111]/5'}`}
                     >
                         Clothes
                     </button>
                 </div>
 
                 {/* Toolbar */}
-                <div className="flex justify-between items-center border-t border-[#f1f1f1] pt-6 pr-2 relative">
+                <div className="flex justify-between items-center border-t border-[#E8E3D8] pt-6 pr-2 relative">
                     
                     {/* Sort By Container */}
                     <div className="relative" ref={sortDropdownRef}>
                         <button 
                             onClick={() => setIsSortOpen(!isSortOpen)}
-                            className="text-xs uppercase tracking-widest font-medium text-gray-800 flex items-center gap-1 hover:text-black focus:outline-none"
+                            className="text-xs uppercase tracking-widest font-medium text-[#111111] flex items-center gap-1 hover:text-[#D4AF37] transition-colors focus:outline-none"
                         >
                             Sort By 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-4 h-4 ml-0.5 transition-transform ${isSortOpen ? '-rotate-180' : ''}`}>
@@ -208,28 +208,28 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
                         
                         {/* Sort Dropdown Panel */}
                         {isSortOpen && (
-                            <div className="absolute top-full left-0 mt-3 w-48 bg-white shadow-xl border border-gray-100 z-30 py-2">
+                            <div className="absolute top-full left-0 mt-3 w-52 bg-white shadow-xl border border-[#E8E3D8] z-30 py-2">
                                 <button 
                                     onClick={() => { setSortBy(''); setIsSortOpen(false); }}
-                                    className={`w-full text-left px-4 py-2 text-xs tracking-wider uppercase ${sortBy === '' ? 'font-bold bg-gray-50' : 'text-gray-600 hover:bg-gray-50'}`}
+                                    className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === '' ? 'font-bold text-[#111111] bg-[#FFD017]' : 'text-[#6B6457] hover:bg-[#FFD017]/40 hover:text-[#111111]'}`}
                                 >
                                     Recommended
                                 </button>
                                 <button 
                                     onClick={() => { setSortBy('newest'); setIsSortOpen(false); }}
-                                    className={`w-full text-left px-4 py-2 text-xs tracking-wider uppercase ${sortBy === 'newest' ? 'font-bold bg-gray-50' : 'text-gray-600 hover:bg-gray-50'}`}
+                                    className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === 'newest' ? 'font-bold text-[#111111] bg-[#FFD017]' : 'text-[#6B6457] hover:bg-[#FFD017]/40 hover:text-[#111111]'}`}
                                 >
                                     Newest Arrivals
                                 </button>
                                 <button 
                                     onClick={() => { setSortBy('price-asc'); setIsSortOpen(false); }}
-                                    className={`w-full text-left px-4 py-2 text-xs tracking-wider uppercase ${sortBy === 'price-asc' ? 'font-bold bg-gray-50' : 'text-gray-600 hover:bg-gray-50'}`}
+                                    className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === 'price-asc' ? 'font-bold text-[#111111] bg-[#FFD017]' : 'text-[#6B6457] hover:bg-[#FFD017]/40 hover:text-[#111111]'}`}
                                 >
                                     Price: Low to High
                                 </button>
                                 <button 
                                     onClick={() => { setSortBy('price-desc'); setIsSortOpen(false); }}
-                                    className={`w-full text-left px-4 py-2 text-xs tracking-wider uppercase ${sortBy === 'price-desc' ? 'font-bold bg-gray-50' : 'text-gray-600 hover:bg-gray-50'}`}
+                                    className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === 'price-desc' ? 'font-bold text-[#111111] bg-[#FFD017]' : 'text-[#6B6457] hover:bg-[#FFD017]/40 hover:text-[#111111]'}`}
                                 >
                                     Price: High to Low
                                 </button>
@@ -239,7 +239,7 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
                     
                     <button 
                         onClick={() => setIsFilterOpen(true)}
-                        className="text-xs uppercase tracking-widest font-medium text-gray-800 flex items-center gap-2 hover:text-black position-relative"
+                        className="text-xs uppercase tracking-widest font-medium text-[#111111] flex items-center gap-2 hover:text-[#D4AF37] transition-colors position-relative"
                     >
                         Filter
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
@@ -259,18 +259,18 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
 
             {/* Grid Area */}
             {loading ? (
-                <div className="flex justify-center flex-col items-center h-64">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-black mb-4"></div>
-                    <span className="text-xs font-medium uppercase tracking-[0.2em] text-gray-400">Loading Collection...</span>
+                <div className="flex justify-center flex-col items-center h-64 gap-4">
+                    <div className="w-7 h-7 border-2 border-[#FFD017] border-t-[#111111] rounded-full animate-spin"></div>
+                    <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#6B6457]">Loading Collection...</span>
                 </div>
             ) : processedProducts.length === 0 ? (
-                <div className="flex justify-center flex-col items-center h-64">
-                    <span className="text-xs font-medium uppercase tracking-[0.2em] text-gray-400 mb-2">No Items Found</span>
-                    <button onClick={clearAllFilters} className="text-xs text-black border-b border-black uppercase tracking-widest pb-0.5">Clear Filters</button>
+                <div className="flex justify-center flex-col items-center h-64 gap-3">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#6B6457]">No Items Found</span>
+                    <button onClick={clearAllFilters} className="text-[10px] font-bold text-[#111111] border-b border-[#D4AF37] uppercase tracking-widest pb-0.5 hover:text-[#D4AF37] transition-colors">Clear Filters</button>
                 </div>
             ) : (
-                <div className="px-4 md:px-8 bg-white border-t border-[#f1f1f1]">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 pt-6">
+                <div className="px-2.5 sm:px-4 lg:px-6 py-6 max-w-[1800px] mx-auto">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3 lg:gap-3.5">
                         {processedProducts.map(product => (
                             <GridProductCard key={product._id} product={product} />
                         ))}

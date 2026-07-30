@@ -1,9 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Cart from './pages/Cart';
-import Footer from './components/Footer';
 import Profile from './pages/Profile';
 import Wishlist from './pages/Wishlist';
 import Success from './pages/Success';
@@ -31,6 +29,7 @@ import Women from './pages/Women';
 import Classics from './pages/Classics';
 import Sports from './pages/Sports';
 import AdvertisementManager from './pages/AdvertisementManager';
+import PageLayoutManager from './pages/PageLayoutManager';
 import CouponManager from './pages/CouponManager';
 import SettingsManager from './pages/SettingsManager';
 import NexaDashboard from './pages/Nexa/NexaDashboard';
@@ -42,12 +41,14 @@ import NexaEmbed from './pages/Nexa/NexaEmbed';
 import FormSubmissions from './pages/FormSubmissions';
 import { AuthProvider } from './context/AuthContext';
 import { CheckoutProvider } from './context/CheckoutContext';
+import SmoothScroll from './components/SmoothScroll';
 
 function App() {
   return (
     <AuthProvider>
       <CheckoutProvider>
-        <Routes>
+        <SmoothScroll>
+          <Routes>
           {/* Main Application Layout (Navbar + Footer) */}
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
@@ -83,6 +84,7 @@ function App() {
              <Route path="/admin" element={<AdminDashboard />} />
              <Route path="/admin/orders" element={<OrdersManagement />} />
              <Route path="/admin/advertisements" element={<AdvertisementManager />} />
+             <Route path="/admin/page-layouts" element={<PageLayoutManager />} />
              <Route path="/admin/coupons" element={<CouponManager />} />
              <Route path="/admin/settings" element={<SettingsManager />} />
              <Route path="/admin/nexa-dashboard" element={<NexaDashboard />} />
@@ -94,6 +96,7 @@ function App() {
              <Route path="/admin/forms" element={<FormSubmissions />} />
           </Route>
         </Routes>
+        </SmoothScroll>
       </CheckoutProvider>
     </AuthProvider>
   );

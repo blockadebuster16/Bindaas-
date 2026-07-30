@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Cropper from 'react-easy-crop';
 import AdminSidebar from '../components/AdminSidebar';
 
@@ -69,7 +69,13 @@ const UPLOAD_URL = 'http://localhost:5001/api/upload/ad';
       fd.append('media', file);
       try {
         setSvgUploading(true);
-        const { data } = await axios.post(UPLOAD_URL, fd, getAuthHeaders());
+        const { data } = await axios.post(UPLOAD_URL, fd, {
+          ...getAuthHeaders(),
+          headers: {
+            ...getAuthHeaders().headers,
+            'Content-Type': 'multipart/form-data'
+          }
+        });
         setFormData(p => ({ ...p, [svgUrlKey]: data.url }));
         showToast('SVG uploaded');
       } catch { showToast('SVG upload failed', 'error'); }
@@ -233,6 +239,8 @@ const AdvertisementManager = () => {
     ctaLink: '',
     isActive: true,
     order: 0,
+    splitLeft: { mediaType: 'image', mediaUrl: '', title: '', link: '' },
+    splitRight: { mediaType: 'image', mediaUrl: '', title: '', link: '' },
     // Colors
     titleColor: '#ffffff',
     tagColor: '#ffffff',
@@ -297,6 +305,8 @@ const AdvertisementManager = () => {
       ctaLink: '',
       isActive: true,
       order: 0,
+      splitLeft: { mediaType: 'image', mediaUrl: '', title: '', link: '' },
+      splitRight: { mediaType: 'image', mediaUrl: '', title: '', link: '' },
       titleColor: '#ffffff',
       tagColor: '#ffffff',
       taglineColor: '#ffffff',
@@ -334,7 +344,13 @@ const AdvertisementManager = () => {
 
     try {
       setIsUploading(true);
-      const { data } = await axios.post(UPLOAD_URL, uploadData, getAuthHeaders());
+      const { data } = await axios.post(UPLOAD_URL, uploadData, {
+        ...getAuthHeaders(),
+        headers: {
+          ...getAuthHeaders().headers,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       
       const urlField = activeDevice === 'mobile' ? 'mediaUrlMobile' : 
                       activeDevice === 'tablet' ? 'mediaUrlTablet' : 'mediaUrl';
@@ -355,17 +371,28 @@ const AdvertisementManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const payload = { ...formData };
+      if (!payload.title || !payload.title.trim()) {
+        if (payload.bannerType === 'split') {
+          payload.title = payload.splitLeft?.title || payload.splitRight?.title || 'Split Banner Ad';
+        } else {
+          payload.title = payload.tag || 'New Advertisement';
+        }
+      }
+
       if (isEditing) {
-        await axios.put(`${API_URL}/${formData.id}`, formData, getAuthHeaders());
+        await axios.put(`${API_URL}/${formData.id}`, payload, getAuthHeaders());
         showToast('Advertisement updated');
       } else {
-        await axios.post(API_URL, formData, getAuthHeaders());
+        await axios.post(API_URL, payload, getAuthHeaders());
         showToast('Advertisement created');
       }
       resetForm();
       fetchAds();
     } catch (err) {
-      showToast('Failed to save advertisement', 'error');
+      console.error('Save ad error:', err);
+      const errMsg = err.response?.data?.error || err.response?.data?.message || 'Failed to save advertisement';
+      showToast(errMsg, 'error');
     }
   };
 
@@ -412,6 +439,8 @@ const AdvertisementManager = () => {
       ctaLink: ad.ctaLink || '',
       isActive: ad.isActive,
       order: ad.order || 0,
+      splitLeft: ad.splitLeft || { mediaType: 'image', mediaUrl: '', title: '', link: '' },
+      splitRight: ad.splitRight || { mediaType: 'image', mediaUrl: '', title: '', link: '' },
       titleColor: ad.titleColor || '#ffffff',
       tagColor: ad.tagColor || '#ffffff',
       taglineColor: ad.taglineColor || '#ffffff',
@@ -479,7 +508,7 @@ const AdvertisementManager = () => {
             <div className="flex items-center gap-3">
                <button 
                 onClick={() => { resetForm(); setIsModalOpen(true); }}
-                className="bg-primary hover:bg-green-600 text-white px-5 py-2.5 rounded-lg font-medium text-sm shadow-sm transition-all flex items-center"
+                className="bg-primary hover:bg-amber-400 text-black font-bold px-5 py-2.5 rounded-lg text-sm shadow-sm transition-all flex items-center"
               >
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>
                 Create New Ad
@@ -510,7 +539,7 @@ const AdvertisementManager = () => {
                       <img src={ad.mediaUrl} alt={ad.title} className="w-full h-full object-cover" />
                     )}
                     <div className="absolute top-3 left-3 flex gap-2">
-                       <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${ad.bannerType === 'hero' ? 'bg-gray-900 text-white' : ad.bannerType === 'strip' ? 'bg-emerald-600 text-white' : ad.bannerType === 'promo' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-white'}`}>
+                       <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${ad.bannerType === 'hero' ? 'bg-gray-900 text-white' : ad.bannerType === 'strip' ? 'bg-emerald-600 text-white' : ad.bannerType === 'break' ? 'bg-amber-500 text-black' : ad.bannerType === 'promo' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-white'}`}>
                         {ad.bannerType}
                       </span>
                     </div>
@@ -637,14 +666,14 @@ const AdvertisementManager = () => {
                 <div>
                   <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Banner Type</label>
                   <div className="flex flex-wrap gap-2">
-                    {['hero', 'strip', 'middle', 'promo'].map(type => (
+                    {['hero', 'strip', 'break', 'middle', 'promo', 'split', 'feature_showcase'].map(type => (
                       <button
                         key={type}
                         type="button"
                         onClick={() => setFormData(prev => ({ ...prev, bannerType: type, mediaType: type === 'promo' ? 'none' : prev.mediaType }))}
                         className={`py-2.5 px-5 rounded-xl border text-sm font-bold capitalize transition-all ${formData.bannerType === type ? 'bg-gray-900 border-gray-900 text-white shadow-lg' : 'bg-white border-gray-200 text-gray-500 hover:border-gray-400'}`}
                       >
-                        {type}
+                        {type === 'feature_showcase' ? 'Feature Showcase / Heritage' : (type === 'break' ? 'Page Break / Editorial' : type)}
                       </button>
                     ))}
                     <div className="flex items-center gap-3 ml-auto">
@@ -677,6 +706,7 @@ const AdvertisementManager = () => {
               </div>
 
               {/* Common Basic Details */}
+              {formData.bannerType !== 'split' && (
               <div className="space-y-6">
                 <StyledTextField
                   label="Slide Main Title"
@@ -695,9 +725,10 @@ const AdvertisementManager = () => {
                   setFormData={setFormData}
                 />
               </div>
+              )}
 
               {/* Media Section */}
-              {formData.bannerType !== 'promo' && (
+              {!['promo', 'split'].includes(formData.bannerType) && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest">Media (Cloudinary)</label>
@@ -849,10 +880,24 @@ const AdvertisementManager = () => {
                      Hero Banner Details
                    </h5>
                    <StyledTextField label="Eyebrow Tag (e.g. NEW COLLECTION)" fieldKey="tag" formData={formData} setFormData={setFormData} handleInputChange={handleInputChange} showToast={showToast} getAuthHeaders={getAuthHeaders} placeholder="NEW SEASON" inputClass="font-bold" />
-                   <ColorSwatch label="Tag" name="tagColor" currentColor={formData.tagColor} setFormData={setFormData} />
+                   <ColorSwatch label="Eyebrow Tag" name="tagColor" currentColor={formData.tagColor} setFormData={setFormData} />
                    <StyledTextField label="Sub-title" fieldKey="subtitle" formData={formData} setFormData={setFormData} handleInputChange={handleInputChange} showToast={showToast} getAuthHeaders={getAuthHeaders} placeholder="Discover the latest arrivals" />
                    <ColorSwatch label="Subtitle" name="subtitleColor" currentColor={formData.subtitleColor} setFormData={setFormData} />
                 </div>
+              )}
+
+              {/* Feature Showcase / Heritage Specific Fields */}
+              {(formData.bannerType === 'feature_showcase' || formData.bannerType === 'heritage') && (
+                 <div className="bg-amber-950/10 border border-amber-500/20 rounded-2xl p-6 space-y-5 animate-fadeIn">
+                    <h5 className="text-[11px] font-black text-amber-600 uppercase tracking-widest flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 bg-amber-500 rounded-full" />
+                      Feature Showcase / Heritage Details
+                    </h5>
+                    <StyledTextField label="Category Tag (e.g. THE HERITAGE)" fieldKey="tag" formData={formData} setFormData={setFormData} handleInputChange={handleInputChange} showToast={showToast} getAuthHeaders={getAuthHeaders} placeholder="THE HERITAGE" inputClass="font-bold" />
+                    <ColorSwatch label="Tag" name="tagColor" currentColor={formData.tagColor} setFormData={setFormData} />
+                    <StyledTextField label="Story Description / Subtitle" fieldKey="subtitle" formData={formData} setFormData={setFormData} handleInputChange={handleInputChange} showToast={showToast} getAuthHeaders={getAuthHeaders} placeholder="From the tennis courts of 1920s Paris..." />
+                    <ColorSwatch label="Description" name="subtitleColor" currentColor={formData.subtitleColor} setFormData={setFormData} />
+                 </div>
               )}
 
               {/* Middle Banner Specific Fields */}
@@ -915,6 +960,73 @@ const AdvertisementManager = () => {
                    </div>
                    <ColorSwatch label="CTA Button/Text" name="ctaColor" currentColor={formData.ctaColor} setFormData={setFormData} />
                 </div>
+
+              {/* Split Banner Specific Fields */}
+              {formData.bannerType === 'split' && (
+                <div className="bg-gray-900 rounded-2xl p-6 space-y-6 animate-fadeIn text-white">
+                   <h5 className="text-[11px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2 mb-4">
+                     <div className="w-1.5 h-1.5 bg-gray-400 rounded-full" />
+                     Split Banner Details
+                   </h5>
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {['splitLeft', 'splitRight'].map((side) => (
+                        <div key={side} className="bg-black/30 p-4 rounded-xl space-y-4 border border-white/10">
+                           <h6 className="text-xs font-bold uppercase tracking-widest text-gray-300">{side === 'splitLeft' ? 'Left Item' : 'Right Item'}</h6>
+                           <div className="space-y-3">
+                              <div>
+                                 <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1.5">Title</label>
+                                 <input type="text" value={formData[side].title} onChange={(e) => setFormData(p => ({...p, [side]: {...p[side], title: e.target.value}}))} className="w-full bg-black/50 text-white border border-white/10 rounded-lg px-3 py-2 text-xs focus:ring-1 focus:ring-white" placeholder="FESTIVAL FITS" />
+                              </div>
+                              <div>
+                                 <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1.5">Link</label>
+                                 <input type="text" value={formData[side].link} onChange={(e) => setFormData(p => ({...p, [side]: {...p[side], link: e.target.value}}))} className="w-full bg-black/50 text-white border border-white/10 rounded-lg px-3 py-2 text-xs focus:ring-1 focus:ring-white" placeholder="/shop" />
+                              </div>
+                              <div>
+                                 <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1.5">Media</label>
+                                 {formData[side].mediaUrl ? (
+                                    <div className="relative h-32 bg-black rounded-lg overflow-hidden border border-white/10">
+                                       {formData[side].mediaType === 'video' ? (
+                                          <video src={formData[side].mediaUrl} className="w-full h-full object-cover" muted loop autoPlay />
+                                       ) : (
+                                          <img src={formData[side].mediaUrl} className="w-full h-full object-cover" alt="Preview" />
+                                       )}
+                                       <button type="button" onClick={() => setFormData(p => ({...p, [side]: {...p[side], mediaUrl: '', mediaType: 'image'}}))} className="absolute top-2 right-2 bg-red-600 text-white p-1.5 rounded-lg text-[10px]">Remove</button>
+                                    </div>
+                                 ) : (
+                                    <div className="relative bg-black/50 border border-dashed border-white/20 rounded-lg p-4 text-center">
+                                       <span className="text-[10px] text-gray-400">Upload Image/Video</span>
+                                       <input type="file" accept="image/*,video/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={async (e) => {
+                                          const file = e.target.files[0];
+                                          if (!file) return;
+                                          const fd = new FormData();
+                                          fd.append('media', file);
+                                          try {
+                                             setIsUploading(true);
+                                             const { data } = await axios.post(UPLOAD_URL, fd, {
+                                               ...getAuthHeaders(),
+                                               headers: {
+                                                 ...getAuthHeaders().headers,
+                                                 'Content-Type': 'multipart/form-data'
+                                               }
+                                             });
+                                             setFormData(p => ({ ...p, [side]: { ...p[side], mediaUrl: data.url, mediaType: data.mediaType } }));
+                                             showToast(`${side === 'splitLeft' ? 'Left' : 'Right'} media uploaded`);
+                                          } catch (err) {
+                                             console.error('Split upload error:', err);
+                                             showToast('Upload failed', 'error');
+                                          } finally {
+                                             setIsUploading(false);
+                                          }
+                                       }} />
+                                    </div>
+                                 )}
+                              </div>
+                           </div>
+                        </div>
+                      ))}
+                   </div>
+                </div>
+              )}
             </form>
 
             <div className="flex-shrink-0 px-8 py-6 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">

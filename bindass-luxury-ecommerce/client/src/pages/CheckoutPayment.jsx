@@ -74,7 +74,7 @@ const CheckoutReviewPay = () => {
                 key: "rzp_test_SawF4zg8SaC3gx", // Should ideally be injected via ENV or returned by server
                 amount: order.amount,
                 currency: "INR",
-                name: "BINDASS!! Co.",
+                name: "BiNDAAS! Co.",
                 description: "Luxury Collection Purchase",
                 order_id: order.id,
                 handler: async (response) => {
@@ -328,10 +328,10 @@ const CheckoutReviewPay = () => {
                             <button 
                                 onClick={handlePlaceOrder}
                                 disabled={processing}
-                                className={`w-full py-6 rounded-lg uppercase tracking-[0.3em] text-[11px] font-black transition-all flex items-center justify-center space-x-3 shadow-lg shadow-[#10221c]/20 ${
+                                className={`w-full flex items-center justify-center space-x-3 ${
                                     processing 
-                                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
-                                    : 'bg-[#10221c] text-white hover:bg-black active:scale-95'
+                                    ? 'btn-pill opacity-50 cursor-not-allowed hover:bg-black' 
+                                    : 'btn-pill'
                                 }`}
                             >
                                 <span>Place Your Order</span>

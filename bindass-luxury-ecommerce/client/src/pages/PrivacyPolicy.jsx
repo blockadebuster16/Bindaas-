@@ -9,7 +9,7 @@ const PrivacyPolicy = () => {
                     Privacy Policy
                 </h1>
                 <p className="max-w-2xl mx-auto text-xs font-bold uppercase tracking-[0.3em] text-emerald-600">
-                    Your Privacy at BINDASS!!
+                    Your Privacy at BiNDAAS!
                 </p>
             </div>
 
@@ -21,7 +21,7 @@ const PrivacyPolicy = () => {
                         <section className="space-y-4">
                             <h2 className="text-lg font-black text-[#10221c] uppercase tracking-tight">1. Introduction</h2>
                             <p>
-                                This Privacy Policy sets out how BINDASS!! Luxury Private Limited (“BINDASS!!”, “we”, “us”, “our”) uses and protects any personal information of users that we collect through our Platform. We are committed to ensuring that your privacy is protected and your Personal Information is used strictly in accordance with this Policy.
+                                This Privacy Policy sets out how BiNDAAS! Luxury Private Limited (“BiNDAAS!”, “we”, “us”, “our”) uses and protects any personal information of users that we collect through our Platform. We are committed to ensuring that your privacy is protected and your Personal Information is used strictly in accordance with this Policy.
                             </p>
                         </section>
 

@@ -49,6 +49,7 @@ app.use('/api/geo', require('./routes/geoRoutes'));
 app.use('/api/analytics', require('./routes/analyticsRoutes'));
 app.use('/api/membership', require('./routes/membershipRoutes'));
 app.use('/api/forms', require('./routes/formRoutes'));
+app.use('/api/page-layouts', require('./routes/pageLayoutRoutes'));
 
 
 

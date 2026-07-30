@@ -9,15 +9,15 @@ const faqData = [
         a: "To place an order, simply browse our collections, select your desired items and size, and click 'Add to Bag'. Once you're ready, proceed to checkout from your cart, enter your shipping and payment details, and confirm your order."
       },
       {
-        q: "How do I use my BINDASS!! Money?",
-        a: "BINDASS!! Money is our store credit system. During checkout, you can select 'BINDASS!! Money' as a payment method to apply your available balance toward your purchase."
+        q: "How do I use my BiNDAAS! Money?",
+        a: "BiNDAAS! Money is our store credit system. During checkout, you can select 'BiNDAAS! Money' as a payment method to apply your available balance toward your purchase."
       },
       {
         q: "Can I place an order on Cash On Delivery?",
         a: "Yes, we offer Cash On Delivery (COD) for most pin codes across India. You will see the option at checkout if it is available for your location."
       },
       {
-        q: "Do I have to have an account to place an order at BINDASS!!?",
+        q: "Do I have to have an account to place an order at BiNDAAS!?",
         a: "While you can checkout as a guest, we recommend creating an account to track your orders, manage your wishlist, and enjoy exclusive member benefits."
       },
       {
@@ -45,7 +45,7 @@ const faqData = [
         a: "If a delivery attempt fails, our courier partner will usually attempt delivery again on the next business day. You can also contact us for assistance."
       },
       {
-        q: "How do I use my BINDASS!! Points?",
+        q: "How do I use my BiNDAAS! Points?",
         a: "Points earned through our loyalty program can be converted into discounts during the final step of checkout."
       },
       {
@@ -82,8 +82,8 @@ const faqData = [
         a: "If your order is returned to us as undelivered, we will contact you for a re-delivery or process a refund as per our policy."
       },
       {
-        q: "Does BINDASS!! have any physical stores?",
-        a: "Currently, BINDASS!! is an exclusive online luxury destination, allowing us to bring premium fashion directly to you anywhere."
+        q: "Does BiNDAAS! have any physical stores?",
+        a: "Currently, BiNDAAS! is an exclusive online luxury destination, allowing us to bring premium fashion directly to you anywhere."
       },
       {
         q: "How can I track my Return Status?",
@@ -108,7 +108,7 @@ const faqData = [
     questions: [
       {
         q: "What denominations are gift cards available in?",
-        a: "BINDASS!! Gift Cards are available in denominations ranging from ₹500 to ₹10,000."
+        a: "BiNDAAS! Gift Cards are available in denominations ranging from ₹500 to ₹10,000."
       },
       {
         q: "How do I use my gift card balance?",
@@ -120,7 +120,7 @@ const faqData = [
       },
       {
         q: "How long are my gift cards valid for?",
-        a: "BINDASS!! Gift Cards are typically valid for 12 months from the date of issuance."
+        a: "BiNDAAS! Gift Cards are typically valid for 12 months from the date of issuance."
       }
     ]
   },
@@ -194,8 +194,8 @@ const faqData = [
     category: "EXCLUSIVE MEMBERSHIP",
     questions: [
       {
-        q: "What is Club BINDASS!!?",
-        a: "Club BINDASS!! is our premier loyalty program offering early access to drops, exclusive discounts, and premium concierge services."
+        q: "What is Club BiNDAAS!?",
+        a: "Club BiNDAAS! is our premier loyalty program offering early access to drops, exclusive discounts, and premium concierge services."
       },
       {
         q: "How do I join the membership?",
@@ -239,7 +239,7 @@ const FAQ = () => {
         {/* Header */}
         <div className="mb-12 md:mb-16">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tighter uppercase mb-2">Help Center</h1>
-          <p className="text-slate-500 text-sm md:text-base font-medium">Find answers to frequently asked questions about BINDASS!!</p>
+          <p className="text-slate-500 text-sm md:text-base font-medium">Find answers to frequently asked questions about BiNDAAS!</p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">

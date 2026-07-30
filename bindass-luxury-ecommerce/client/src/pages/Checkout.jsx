@@ -218,7 +218,7 @@ const Checkout = () => {
                                 </div>
 
                                 <button 
-                                    className="w-full bg-[#10221c] text-white font-bold py-5 rounded-lg uppercase tracking-widest text-xs hover:bg-black transition-all active:scale-[0.98]" 
+                                    className="btn-pill w-full" 
                                     type="submit"
                                 >
                                     Continue to Payment

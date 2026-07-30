@@ -148,12 +148,12 @@ const Success = () => {
 
                             <div className="space-y-4">
                                 <Link to="/profile" className="block">
-                                    <button className="w-full bg-emerald-500 text-white py-4 text-[10px] font-black uppercase tracking-[0.3em] hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20">
+                                    <button className="btn-pill w-full">
                                         Track Acquisition
                                     </button>
                                 </Link>
                                 <Link to="/" className="block">
-                                    <button className="w-full bg-transparent border border-white/20 text-white py-4 text-[10px] font-black uppercase tracking-[0.3em] hover:bg-white/5 transition-all">
+                                    <button className="btn-pill w-full border border-white/20">
                                         Continue Exploring
                                     </button>
                                 </Link>

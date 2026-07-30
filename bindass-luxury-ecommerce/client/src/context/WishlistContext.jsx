@@ -4,8 +4,8 @@ import { useAuth } from './AuthContext';
 
 const WishlistContext = createContext();
 
-const BASE_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:5001/api/wishlist' 
+const BASE_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:5001/api/wishlist'
     : '/api/wishlist';
 
 export const WishlistProvider = ({ children }) => {
@@ -21,20 +21,20 @@ export const WishlistProvider = ({ children }) => {
             if (user) {
                 try {
                     const token = await user.getIdToken();
-                    
+
                     // Get any local items they added as a guest before logging in
                     const local = localStorage.getItem('wishlist');
                     const guestWishlist = local ? JSON.parse(local) : [];
                     const productIds = guestWishlist.map(item => item._id || item);
-                    
+
                     // Sync current local wishlist IDs to server (Server handles merging)
-                    const { data: persistentWishlist } = await axios.post(`${BASE_URL}/sync`, 
+                    const { data: persistentWishlist } = await axios.post(`${BASE_URL}/sync`,
                         { productIds },
                         { headers: { Authorization: `Bearer ${token}` } }
                     );
-                    
+
                     if (isMounted) setWishlistItems(persistentWishlist);
-                    
+
                     // Clear the local storage so it doesn't bleed back into guest mode upon logout
                     localStorage.removeItem('wishlist');
                 } catch (err) {

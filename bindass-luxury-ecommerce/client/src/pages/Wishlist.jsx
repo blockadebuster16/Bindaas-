@@ -192,12 +192,12 @@ const Wishlist = () => {
                             id="wishlist-add-to-cart-btn"
                             onClick={handleAddToCart}
                             disabled={selectedIds.size === 0}
-                            className={`flex items-center gap-2.5 px-8 py-3.5 uppercase text-[11px] font-bold tracking-[0.2em] transition-all duration-300 rounded-sm ${
+                            className={`flex items-center gap-2.5 ${
                                 selectedIds.size > 0
                                     ? addedFeedback
-                                        ? 'bg-emerald-600 text-white scale-95'
-                                        : 'bg-[#10221c] text-white hover:bg-black active:scale-95'
-                                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                        ? 'btn-pill bg-emerald-600 text-white scale-95'
+                                        : 'btn-pill'
+                                    : 'btn-pill opacity-50 cursor-not-allowed hover:bg-black'
                             }`}
                         >
                             {addedFeedback ? (

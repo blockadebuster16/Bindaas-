@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { getCroppedUrl } from '../utils/cloudinaryHelper';
 
 const loadGoogleFont = (family) => {
     if (!family || document.querySelector(`link[data-gfont="${family}"]`)) return;
@@ -29,24 +28,14 @@ const RenderText = ({ value, svgUrl, bold, italic, stroke, strokeColor, strokeWi
 };
 
 const HeroSlide = ({ ad, i, heroIndex }) => {
-    const getResponsiveMedia = () => {
-        if (typeof window === 'undefined') return ad.mediaUrl;
+    const getResponsiveMedia = useCallback(() => {
+        if (!ad) return '';
         const w = window.innerWidth;
-
-        if (w < 640) {
-            if (ad.mediaUrlMobile) return ad.mediaUrlMobile;
-            if (ad.mediaCropMobile) return getCroppedUrl(ad.mediaUrl, ad.mediaCropMobile);
-            return ad.mediaUrl;
-        }
-
-        if (w < 1024) {
-            if (ad.mediaUrlTablet) return ad.mediaUrlTablet;
-            if (ad.mediaCropTablet) return getCroppedUrl(ad.mediaUrl, ad.mediaCropTablet);
-            return ad.mediaUrl;
-        }
-
+        if (w < 768 && ad.mediaUrlMobile) return ad.mediaUrlMobile;
+        if (w >= 768 && w < 1024 && ad.mediaUrlTablet) return ad.mediaUrlTablet;
+        if (w >= 1024 && ad.mediaUrlDesktop) return ad.mediaUrlDesktop;
         return ad.mediaUrl;
-    };
+    }, [ad]);
 
     const [mediaUrl, setMediaUrl] = useState(getResponsiveMedia());
 
@@ -54,7 +43,7 @@ const HeroSlide = ({ ad, i, heroIndex }) => {
         const handleResize = () => setMediaUrl(getResponsiveMedia());
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, [ad]);
+    }, [getResponsiveMedia]);
 
     return (
         <div className={`absolute inset-0 transition-opacity duration-1000 ${i === heroIndex ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
@@ -166,7 +155,7 @@ const AdHero = ({ page = 'home' }) => {
 
     return (
         <section
-            className="relative h-[85vh] w-full overflow-hidden group"
+            className="hero-banner-top relative h-screen w-full overflow-hidden group"
             onMouseEnter={() => setIsHeroPaused(true)}
             onMouseLeave={() => setIsHeroPaused(false)}
         >

@@ -85,7 +85,7 @@ const Profile = () => {
             <div className="min-h-screen flex items-center justify-center bg-white font-['Work_Sans']">
                 <div className="text-center">
                     <p className="text-slate-400 uppercase tracking-widest text-xs font-bold mb-4">Identification Required</p>
-                    <button onClick={() => navigate('/')} className="px-8 py-3 bg-[#10221c] text-white text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-black transition-all">Go Home</button>
+                    <button onClick={() => navigate('/')} className="btn-pill">Go Home</button>
                 </div>
             </div>
         );
@@ -199,7 +199,7 @@ const Profile = () => {
                                         <svg className="w-32 h-32 mx-auto mb-8 opacity-40 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
                                         <h3 className="text-lg font-bold text-[#10221c] uppercase tracking-widest mb-2">No Acquisitions Yet</h3>
                                         <p className="text-slate-400 text-xs mb-8 font-medium">Your collection is waiting to be started.</p>
-                                        <button onClick={() => navigate('/')} className="px-10 py-4 border-2 border-[#10221c] text-[#10221c] text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-[#10221c] hover:text-white transition-all transform active:scale-95">Browse Collection</button>
+                                        <button onClick={() => navigate('/')} className="btn-pill">Browse Collection</button>
                                     </div>
                                 )}
                             </>
@@ -305,7 +305,7 @@ const Profile = () => {
                                     <button 
                                         type="submit" 
                                         disabled={saveLoading}
-                                        className="w-full py-4 bg-[#10221c] text-white text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-black transition-all shadow-lg active:scale-95 disabled:opacity-50"
+                                        className="btn-pill w-full disabled:opacity-50"
                                     >
                                         {saveLoading ? 'Archiving Profile...' : 'Save Shipping Profile'}
                                     </button>

@@ -4,8 +4,8 @@ import { useAuth } from './AuthContext';
 
 const RecentlyViewedContext = createContext();
 
-const BASE_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:5001/api/users/recently-viewed' 
+const BASE_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:5001/api/users/recently-viewed'
     : '/api/users/recently-viewed';
 
 export const RecentlyViewedProvider = ({ children }) => {
@@ -27,13 +27,13 @@ export const RecentlyViewedProvider = ({ children }) => {
                 try {
                     const token = await user.getIdToken();
                     const productIds = history.map(item => item._id || item);
-                    
+
                     // Bulk sync local history to server
-                    const { data: updatedHistory } = await axios.post(`${BASE_URL}/sync`, 
+                    const { data: updatedHistory } = await axios.post(`${BASE_URL}/sync`,
                         { productIds },
                         { headers: { Authorization: `Bearer ${token}` } }
                     );
-                    
+
                     setHistory(updatedHistory);
                 } catch (err) {
                     console.error("Error syncing history on login:", err);
@@ -47,7 +47,7 @@ export const RecentlyViewedProvider = ({ children }) => {
     // 3. Add to History
     const addToHistory = async (product) => {
         const productId = product._id || product;
-        
+
         // Update Local State immediately for responsiveness
         setHistory(prev => {
             // Remove existing to pull to front
@@ -59,7 +59,7 @@ export const RecentlyViewedProvider = ({ children }) => {
         if (user) {
             try {
                 const token = await user.getIdToken();
-                await axios.post(BASE_URL, 
+                await axios.post(BASE_URL,
                     { productId },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../components/AdminSidebar';
 
 const formatCurrency = (amount) => {
@@ -265,7 +265,7 @@ const AdminDashboard = () => {
                   <p className="text-sm text-gray-500 mt-1">Manage your luxury product inventory and visibility.</p>
               </div>
                     <div className="flex items-center gap-3">
-                        <button onClick={() => { setIsEditing(false); setFormData({ name: '', description: '', price: '', category: '', stock: 0, images: [], isActive: true }); setIsModalOpen(true); }} className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium text-sm shadow-sm transition-all flex items-center">
+                        <button onClick={openAddModal} className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium text-sm shadow-sm transition-all flex items-center">
                             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
                             New Product
                         </button>

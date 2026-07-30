@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
-import { useCurrency } from '../context/CurrencyContext';
+import GridProductCard from '../components/GridProductCard';
 
 const SearchResults = () => {
     const location = useLocation();
     const query = new URLSearchParams(location.search).get('q');
-    const { formatPrice } = useCurrency();
 
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -28,52 +27,30 @@ const SearchResults = () => {
     }, [query]);
 
     return (
-        <div className="max-w-[1440px] mx-auto px-4 md:px-6 py-12 font-['Manrope'] min-h-screen">
-            <header className="mb-12">
+        <div className="max-w-[1440px] mx-auto px-4 md:px-6 py-12 font-['Outfit','Manrope',sans-serif] min-h-screen">
+            <header className="mb-8">
                 <h1 className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 mb-2">Search Results For</h1>
-                <h2 className="text-3xl md:text-5xl font-black text-[#10221c] uppercase tracking-tighter italic">"{query}"</h2>
+                <h2 className="text-3xl md:text-5xl font-black text-[#111111] uppercase tracking-tighter italic">"{query}"</h2>
                 <p className="mt-4 text-xs font-bold text-slate-500 uppercase tracking-widest">{products.length} pieces found</p>
             </header>
 
             {loading ? (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
                     {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
                         <div key={i} className="animate-pulse space-y-4">
-                            <div className="aspect-[3/4] bg-slate-100 rounded-sm" />
-                            <div className="h-4 bg-slate-100 w-3/4 rounded" />
-                            <div className="h-4 bg-slate-100 w-1/2 rounded" />
+                            <div className="aspect-[3/4] bg-slate-200 rounded-3xl" />
+                            <div className="h-4 bg-slate-200 w-3/4 rounded" />
+                            <div className="h-4 bg-slate-200 w-1/2 rounded" />
                         </div>
                     ))}
                 </div>
             ) : products.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
-                    {products.map(product => (
-                        <Link 
-                            key={product._id} 
-                            to={`/product/${product._id}`}
-                            className="group"
-                        >
-                            <div className="aspect-[3/4] overflow-hidden bg-slate-50 rounded-sm relative mb-4">
-                                <img 
-                                    src={product.images[0]} 
-                                    alt={product.name} 
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                                />
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
-                            </div>
-                            <div className="space-y-1">
-                                <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#10221c] group-hover:text-emerald-600 transition-colors">
-                                    {product.name}
-                                </h3>
-                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                                    {product.category}
-                                </p>
-                                <p className="text-sm font-black text-[#10221c] mt-2">
-                                    {formatPrice(product.price)}
-                                </p>
-                            </div>
-                        </Link>
-                    ))}
+                <div className="max-w-[1800px] mx-auto px-2.5 sm:px-4 lg:px-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3 lg:gap-3.5">
+                        {products.map(product => (
+                            <GridProductCard key={product._id} product={product} />
+                        ))}
+                    </div>
                 </div>
             ) : (
                 <div className="py-20 text-center border-2 border-dashed border-slate-100 rounded-2xl">
@@ -83,8 +60,8 @@ const SearchResults = () => {
                         We couldn't find any pieces matching your search. Try adjusting your terms or browse our collections.
                     </p>
                     <div className="mt-8 flex justify-center gap-4">
-                        <Link to="/men" className="px-6 py-3 bg-[#10221c] text-white text-[10px] font-bold uppercase tracking-widest hover:bg-black transition-all">Men</Link>
-                        <Link to="/women" className="px-6 py-3 border border-[#10221c] text-[#10221c] text-[10px] font-bold uppercase tracking-widest hover:bg-[#10221c] hover:text-white transition-all">Women</Link>
+                        <Link to="/men" className="btn-pill">Men</Link>
+                        <Link to="/women" className="btn-pill">Women</Link>
                     </div>
                 </div>
             )}

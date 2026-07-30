@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 const FilterAccordion = ({ title, children, showArrow = true }) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
-        <div className="border-b border-transparent">
+        <div className="border-b border-[#E8E3D8]">
             <div 
-                className="flex justify-between items-center py-4 hover:bg-gray-50 cursor-pointer"
+                className="flex justify-between items-center py-4 hover:bg-[#FAE7A8]/60 cursor-pointer px-1 transition-colors"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <span className="text-xs tracking-wider text-gray-800 font-medium font-display">{title}</span>
+                <span className="text-[10px] tracking-[0.2em] text-[#111111] font-bold uppercase font-['Outfit','Manrope',sans-serif]">{title}</span>
                 {showArrow ? (
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
@@ -33,15 +33,15 @@ const FilterAccordion = ({ title, children, showArrow = true }) => {
 
 const CheckboxOption = ({ label, count, checked, onChange }) => (
     <label className="flex items-center gap-3 py-1.5 cursor-pointer group">
-        <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${checked ? 'bg-black border-black text-white' : 'border-gray-300 group-hover:border-gray-500 bg-white'}`}>
+        <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${checked ? 'bg-[#111111] border-[#111111] text-white' : 'border-[#D4AF37] bg-[#FAE7A8] group-hover:border-[#111111]'}`}>
             {checked && (
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
             )}
         </div>
-        <span className="text-xs text-gray-700 flex-1">{label}</span>
-        {count !== undefined && <span className="text-xs text-gray-400">[{count}]</span>}
+        <span className="text-xs text-[#111111] flex-1 font-medium">{label}</span>
+        {count !== undefined && <span className="text-xs text-[#6B6457]">[{count}]</span>}
     </label>
 );
 
@@ -78,19 +78,19 @@ const FilterSidebar = ({
 
             {/* Sidebar Drawer */}
             <div 
-                className={`fixed top-0 right-0 h-full w-[400px] max-w-[90vw] bg-white shadow-2xl z-50 transform transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col font-display ${
+                className={`fixed top-0 right-0 h-full w-[400px] max-w-[90vw] bg-white shadow-2xl z-50 transform transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col font-['Outfit','Manrope',sans-serif] ${
                     isOpen ? 'translate-x-0' : 'translate-x-full'
                 }`}
             >
                 {/* Header */}
-                <div className="flex items-center justify-between px-6 py-5 border-b border-[#f1f1f1]">
+                <div className="flex items-center justify-between px-6 py-5 border-b border-[#E8E3D8]">
                     <span className="text-xs uppercase tracking-[0.2em] font-medium opacity-0">S</span> 
-                    <h2 className="text-xs uppercase tracking-[0.2em] font-medium text-gray-900 absolute left-1/2 -translate-x-1/2">
+                    <h2 className="text-[10px] uppercase tracking-[0.25em] font-bold text-[#111111] absolute left-1/2 -translate-x-1/2">
                         Filter
                     </h2>
                     <button 
                         onClick={onClose}
-                        className="text-gray-900 hover:text-gray-500 transition-colors p-2"
+                        className="text-[#111111] hover:text-[#D4AF37] transition-colors p-2"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -104,7 +104,7 @@ const FilterSidebar = ({
                     {/* Price Range - Using simple text input for min/max to be fully robust without external slider libs */}
                     <div className="mb-10 block">
                         <div className="flex justify-between items-center mb-6">
-                            <span className="text-xs tracking-wider text-gray-800 font-bold">PRICE RANGE (₹)</span>
+                            <span className="text-[10px] tracking-[0.2em] text-[#111111] font-bold uppercase">PRICE RANGE (₹)</span>
                         </div>
                         <div className="flex items-center gap-4">
                             <input 
@@ -112,15 +112,15 @@ const FilterSidebar = ({
                                 placeholder="Min"
                                 value={filters.minPrice || ''}
                                 onChange={(e) => setFilters(prev => ({ ...prev, minPrice: Number(e.target.value) }))}
-                                className="w-full text-xs border-b border-gray-300 py-1 focus:outline-none focus:border-black transition-colors"
+                                className="w-full text-xs border-b border-[#D4AF37] py-1 bg-transparent focus:outline-none focus:border-[#111111] transition-colors text-[#111111] placeholder:text-[#6B6457]"
                             />
-                            <span className="text-gray-400">-</span>
+                            <span className="text-[#6B6457]">–</span>
                             <input 
                                 type="number"
                                 placeholder="Max"
                                 value={filters.maxPrice || ''}
                                 onChange={(e) => setFilters(prev => ({ ...prev, maxPrice: Number(e.target.value) }))}
-                                className="w-full text-xs border-b border-gray-300 py-1 focus:outline-none focus:border-black transition-colors"
+                                className="w-full text-xs border-b border-[#D4AF37] py-1 bg-transparent focus:outline-none focus:border-[#111111] transition-colors text-[#111111] placeholder:text-[#6B6457]"
                             />
                         </div>
                     </div>
@@ -187,16 +187,16 @@ const FilterSidebar = ({
                 </div>
 
                 {/* Footer fixed */}
-                <div className="p-6 border-t border-[#f1f1f1] bg-white grid grid-cols-2 gap-4">
+                <div className="p-6 border-t border-[#E8E3D8] bg-white grid grid-cols-2 gap-4">
                     <button 
                         onClick={clearAll}
-                        className="py-4 text-[11px] font-bold tracking-[0.1em] text-gray-500 bg-[#f4f4f4] hover:bg-gray-200 transition-colors uppercase leading-none"
+                        className="py-4 text-[10px] font-bold tracking-[0.15em] text-[#111111] bg-[#E8E3D8] hover:bg-[#D4AF37] transition-colors uppercase leading-none border border-[#D4AF37]"
                     >
                         Clear All
                     </button>
                     <button 
                         onClick={onClose}
-                        className="py-4 text-[11px] font-bold tracking-[0.1em] text-white bg-black hover:bg-gray-800 transition-colors uppercase leading-none shadow-xl"
+                        className="py-4 text-[10px] font-bold tracking-[0.15em] text-white bg-[#111111] hover:bg-[#FFD017] hover:text-[#111111] transition-all duration-300 uppercase leading-none"
                     >
                         View [{totalResults}]
                     </button>

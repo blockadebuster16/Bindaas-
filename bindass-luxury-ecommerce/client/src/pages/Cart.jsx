@@ -1,31 +1,15 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { useCheckout } from '../context/CheckoutContext';
-const loadRazorpayScript = () => {
-    return new Promise((resolve) => {
-        if (window.Razorpay) {
-            resolve(true);
-            return;
-        }
-        const script = document.createElement('script');
-        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-        script.onload = () => resolve(true);
-        script.onerror = () => resolve(false);
-        document.body.appendChild(script);
-    });
-};
-
-
 
 const Cart = () => {
-    const { cartItems, removeFromCart, clearCart } = useCart();
+    const { cartItems, removeFromCart } = useCart();
     const { user, setIsAuthModalOpen } = useAuth();
     const navigate = useNavigate();
-    const { formatPrice, getConvertedAmount, currencyCode } = useCurrency();
+    const { formatPrice } = useCurrency();
     const { updateTotals, clearCheckout } = useCheckout();
 
     const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
@@ -103,7 +87,7 @@ const Cart = () => {
                             <h3 className="text-[22px] font-bold text-[#424553] mt-2 mb-2">Hey, it feels so light!</h3>
                             <p className="text-[15px] text-[#7e818c] mb-8 font-normal">There is nothing in your bag. Let's add some items.</p>
                             
-                            <button className="px-10 py-[14px] border border-[#ff3f6c] text-[#ff3f6c] bg-transparent uppercase font-bold text-[13px] tracking-wider hover:bg-[#ff3f6c] hover:text-white transition-colors duration-300 rounded-sm">
+                            <button className="btn-pill">
                                 ADD ITEMS FROM WISHLIST
                             </button>
                         </div>
@@ -127,9 +111,9 @@ const Cart = () => {
                         <button
                             onClick={handleCheckout}
                             disabled={cartItems.length === 0}
-                            className={`w-full py-5 uppercase text-[10px] font-bold tracking-[0.3em] transition-all ${cartItems.length > 0
-                                ? 'bg-[#10221c] text-white hover:bg-black active:scale-95'
-                                : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                            className={`w-full ${cartItems.length > 0
+                                ? 'btn-pill'
+                                : 'btn-pill opacity-50 cursor-not-allowed hover:bg-black'
                                 }`}
                         >
                             Proceed to Acquisition

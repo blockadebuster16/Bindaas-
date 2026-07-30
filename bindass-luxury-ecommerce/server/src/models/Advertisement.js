@@ -1,15 +1,29 @@
 const mongoose = require('mongoose');
 
 const advertisementSchema = new mongoose.Schema({
-    title: { type: String, required: true },
-    mediaType: { type: String, enum: ['image', 'video', 'none'], required: function() { return this.bannerType !== 'promo'; } },
-    mediaUrl: { type: String, required: function() { return this.bannerType !== 'promo'; } },
+    title: { type: String, default: 'Untitled Advertisement' },
+    mediaType: { type: String, enum: ['image', 'video', 'none'], default: 'image' },
+    mediaUrl: { type: String, default: '' },
     mediaUrlTablet: { type: String, default: '' },
     mediaUrlMobile: { type: String, default: '' },
     mediaCropTablet: { type: Object, default: null }, // { x, y, width, height, zoom }
     mediaCropMobile: { type: Object, default: null },
-    bannerType: { type: String, enum: ['hero', 'strip', 'middle', 'promo'], required: true },
+    bannerType: { type: String, enum: ['hero', 'strip', 'middle', 'promo', 'split', 'break', 'feature_showcase', 'heritage'], required: true },
     pages: [{ type: String }], // e.g. ['home', 'men', 'women']
+
+    // Split Banner specific fields
+    splitLeft: {
+        mediaType: { type: String, enum: ['image', 'video', 'none'] },
+        mediaUrl: { type: String },
+        title: { type: String },
+        link: { type: String }
+    },
+    splitRight: {
+        mediaType: { type: String, enum: ['image', 'video', 'none'] },
+        mediaUrl: { type: String },
+        title: { type: String },
+        link: { type: String }
+    },
 
     // Category/Middle Banner specific
     subtitle: { type: String },   // e.g. "STYLES FOR EVERY OCCASION!"

@@ -14,7 +14,7 @@ const Contact = () => {
         setStatus({ type: '', message: '' });
         try {
             await axios.post('http://localhost:5001/api/forms/contact', formData);
-            setStatus({ type: 'success', message: 'Your message has been sent to the Bindass!! concierge.' });
+            setStatus({ type: 'success', message: 'Your message has been sent to the BiNDAAS! concierge.' });
             setFormData({ name: '', email: '', subject: 'Inquiry', message: '' });
         } catch (err) {
             setStatus({ type: 'error', message: err.response?.data?.message || 'Failed to send message.' });

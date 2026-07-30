@@ -5,8 +5,8 @@ const SEO = ({ title, description }) => {
     const location = useLocation();
 
     useEffect(() => {
-        const baseTitle = "Bindass!! | Luxury Athletic Energy";
-        document.title = title ? `${title} | Bindass!!` : baseTitle;
+        const baseTitle = "BiNDAAS! | Luxury Athletic Energy";
+        document.title = title ? `${title} | BiNDAAS!` : baseTitle;
 
         if (description) {
             let metaDesc = document.querySelector('meta[name="description"]');

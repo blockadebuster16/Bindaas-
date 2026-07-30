@@ -28,15 +28,15 @@ const Sustainability = () => {
                     <div className="space-y-8">
                         <p className="text-xs font-black text-emerald-600 uppercase tracking-[0.3em]">Our Philosophy</p>
                         <h2 className="text-3xl md:text-4xl font-black text-[#10221c] tracking-tighter uppercase leading-tight">
-                            The BINDASS!! Ethos: Quality Over Quantity.
+                            The BiNDAAS! Ethos: Quality Over Quantity.
                         </h2>
                         <div className="w-20 h-1 bg-[#10221c]" />
                         <p className="text-slate-600 text-sm leading-relaxed font-medium">
-                            In an era of fleeting trends, we choose the path of permanence. Each BINDASS!! piece is engineered to last a lifetime, reducing the need for constant consumption and honoring the raw materials harvested from our planet.
+                            In an era of fleeting trends, we choose the path of permanence. Each BiNDAAS! piece is engineered to last a lifetime, reducing the need for constant consumption and honoring the raw materials harvested from our planet.
                         </p>
                     </div>
                     <div className="bg-slate-50 p-12 rounded-3xl border border-slate-100 italic font-medium text-slate-500 text-sm leading-relaxed">
-                        "Luxury is not just about the final product; it's about the integrity of the journey that created it. At BINDASS!!, we are architects of a cleaner, more ethical future for sportswear."
+                        "Luxury is not just about the final product; it's about the integrity of the journey that created it. At BiNDAAS!, we are architects of a cleaner, more ethical future for sportswear."
                     </div>
                 </div>
 
@@ -48,7 +48,7 @@ const Sustainability = () => {
                             <span className="text-5xl font-black text-slate-100 leading-none select-none">01</span>
                             <h3 className="text-xl font-black text-[#10221c] uppercase tracking-tighter">Conscious Sourcing</h3>
                             <p className="text-sm text-slate-600 leading-relaxed">
-                                We utilize high-end regenerated nylons (ECONYL®) and organic cottons. By sourcing materials that give back more than they take, we ensure that every BINDASS!! garment carries a minimal environmental footprint without ever compromising on the luxe feel.
+                                We utilize high-end regenerated nylons (ECONYL®) and organic cottons. By sourcing materials that give back more than they take, we ensure that every BiNDAAS! garment carries a minimal environmental footprint without ever compromising on the luxe feel.
                             </p>
                         </div>
                         <div className="order-1 md:order-2 h-[400px] bg-slate-100 rounded-3xl overflow-hidden grayscale hover:grayscale-0 transition-all duration-700">
@@ -65,7 +65,7 @@ const Sustainability = () => {
                             <span className="text-5xl font-black text-slate-100 leading-none select-none">02</span>
                             <h3 className="text-xl font-black text-[#10221c] uppercase tracking-tighter">Ethical Craftsmanship</h3>
                             <p className="text-sm text-slate-600 leading-relaxed">
-                                Our artisans are the heartbeat of BINDASS!!. We partner only with small-scale, highly vetted ateliers that guarantee living wages, safe conditions, and a culture of respect. We believe human dignity is the ultimate luxury.
+                                Our artisans are the heartbeat of BiNDAAS!. We partner only with small-scale, highly vetted ateliers that guarantee living wages, safe conditions, and a culture of respect. We believe human dignity is the ultimate luxury.
                             </p>
                         </div>
                     </div>

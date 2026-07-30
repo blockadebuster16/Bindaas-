@@ -129,7 +129,7 @@ const ProductDetail = () => {
                             </button>
                             {openAccordion === 'desc' && (
                                 <div className="pb-6 text-sm text-slate-500 font-light leading-relaxed animate-in fade-in slide-in-from-top-1 duration-300">
-                                    {product.description || "A signature piece from the BINDASS!! studio. Meticulously designed for the modern silhouette using premium materials."}
+                                    {product.description || "A signature piece from the BiNDAAS! studio. Meticulously designed for the modern silhouette using premium materials."}
                                 </div>
                             )}
                         </div>

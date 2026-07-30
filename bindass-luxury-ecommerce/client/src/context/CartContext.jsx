@@ -5,8 +5,8 @@ import { useAuth } from './AuthContext';
 const CartContext = createContext();
 
 // DYNAMIC URL: Uses localhost for dev, and relative path for Vercel production
-const BASE_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:5001/api/cart' 
+const BASE_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:5001/api/cart'
     : '/api/cart';
 
 export const CartProvider = ({ children }) => {
@@ -26,33 +26,33 @@ export const CartProvider = ({ children }) => {
                     const { data: dbCart } = await axios.get(BASE_URL, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
-                    
+
                     // 2. Load any Guest Cart from local storage
                     const local = localStorage.getItem('bindass_cart');
                     const guestCart = local ? JSON.parse(local) : [];
-                    
+
                     if (guestCart.length > 0) {
                         // MERGE: guest items + db items
                         let merged = [...dbCart];
                         guestCart.forEach(gItem => {
-                           const existsIndex = merged.findIndex(m => m.productId === gItem.productId && m.size === gItem.size);
-                           if (existsIndex > -1) merged[existsIndex].quantity += gItem.quantity;
-                           else merged.push(gItem);
+                            const existsIndex = merged.findIndex(m => m.productId === gItem.productId && m.size === gItem.size);
+                            if (existsIndex > -1) merged[existsIndex].quantity += gItem.quantity;
+                            else merged.push(gItem);
                         });
-                        
+
                         // Push merged cart to DB (overwrite)
-                        await axios.post(`${BASE_URL}/sync`, 
+                        await axios.post(`${BASE_URL}/sync`,
                             { items: merged, overwrite: true },
                             { headers: { Authorization: `Bearer ${token}` } }
                         );
-                        
+
                         if (isMounted) setCartItems(merged);
-                        
+
                     } else {
                         // Normal login/reload, just use DB cart
                         if (isMounted) setCartItems(dbCart);
                     }
-                    
+
                     // Clear the guest cart so it doesn't merge again on next refresh
                     localStorage.removeItem('bindass_cart');
                 } catch (err) {
@@ -67,7 +67,7 @@ export const CartProvider = ({ children }) => {
         };
 
         loadCart();
-        
+
         return () => { isMounted = false; };
     }, [user]);
 
@@ -96,21 +96,21 @@ export const CartProvider = ({ children }) => {
     const addToCart = async (product) => {
         const exists = cartItems.find(item => item.productId === (product._id || product.productId) && item.size === product.size);
         let updatedCart;
-        
+
         if (exists) {
-            updatedCart = cartItems.map(item => 
+            updatedCart = cartItems.map(item =>
                 (item.productId === (product._id || product.productId) && item.size === product.size)
-                ? { ...item, quantity: item.quantity + (product.quantity || 1) }
-                : item
+                    ? { ...item, quantity: item.quantity + (product.quantity || 1) }
+                    : item
             );
         } else {
-            updatedCart = [...cartItems, { 
-                ...product, 
-                productId: product._id || product.productId, 
-                cartId: Date.now() 
+            updatedCart = [...cartItems, {
+                ...product,
+                productId: product._id || product.productId,
+                cartId: Date.now()
             }];
         }
-        
+
         setCartItems(updatedCart);
         syncWithServer(updatedCart);
     };

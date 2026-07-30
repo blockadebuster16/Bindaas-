@@ -24,7 +24,7 @@ const Terms = () => {
                                 PLEASE READ THESE TERMS OF USE CAREFULLY. BY SIGNING UP TO AND/OR USING THIS PLATFORM AND OUR SERVICES, YOU AGREE TO BE BOUND BY ALL OF THE BELOW TERMS AND CONDITIONS AND PRIVACY POLICY.
                             </p>
                             <p className="text-slate-600 leading-relaxed text-sm">
-                                The website at www.bindassluxury.com (“Website”) is owned and operated by BINDASS!! Luxury Private Limited (“BINDASS!!”, “we”, “us”, “our” and their respective connotations). The Website and any associated mobile applications are collectively referred to as “Platform”.
+                                The website at www.bindassluxury.com (“Website”) is owned and operated by BiNDAAS! Luxury Private Limited (“BiNDAAS!”, “we”, “us”, “our” and their respective connotations). The Website and any associated mobile applications are collectively referred to as “Platform”.
                             </p>
                         </section>
 
@@ -33,7 +33,7 @@ const Terms = () => {
                                 1. ABOUT OUR SERVICES
                             </h3>
                             <p className="text-slate-600 leading-relaxed text-sm">
-                                BINDASS!! provides a range of Services through the Platform, including but not limited to, enabling you to publish, sell, comment on, promote, and purchase merchandise art related products like clothing, footwear and accessories of various fashion and lifestyle; interact with other members; and receive the benefits of BINDASS!!'s product production service including payment processing, transaction handling, product manufacturing, packaging, order fulfilment, and customer service (“Services”).
+                                BiNDAAS! provides a range of Services through the Platform, including but not limited to, enabling you to publish, sell, comment on, promote, and purchase merchandise art related products like clothing, footwear and accessories of various fashion and lifestyle; interact with other members; and receive the benefits of BiNDAAS!'s product production service including payment processing, transaction handling, product manufacturing, packaging, order fulfilment, and customer service (“Services”).
                             </p>
                         </section>
 
@@ -58,7 +58,7 @@ const Terms = () => {
                                 3. PRODUCT SERVICES AND INFORMATION
                             </h3>
                             <p className="text-slate-600 leading-relaxed text-sm">
-                                BINDASS!! attempts to be as accurate as possible in the description of the product on the Platform. However, BINDASS!! does not warrant that the product description, colour, information or other content of the Platform is accurate, complete, reliable, current or error-free. The product pictures are indicative and may not match the actual product.
+                                BiNDAAS! attempts to be as accurate as possible in the description of the product on the Platform. However, BiNDAAS! does not warrant that the product description, colour, information or other content of the Platform is accurate, complete, reliable, current or error-free. The product pictures are indicative and may not match the actual product.
                             </p>
                         </section>
 
@@ -67,7 +67,7 @@ const Terms = () => {
                                 4. CONTENT & COPYRIGHT POLICY
                             </h3>
                             <p className="text-slate-600 leading-relaxed text-sm">
-                                You understand that all information, images, pictures, data, text, music, sound, photographs, graphics, video, messages, or other materials, whether publicly posted or privately transmitted, is the exclusive work and property of the person from whom such Content originated. BINDASS!! does not claim any permanent ownership of your Content. You retain copyright and any other rights you already hold in Content which you submit, post, upload, display, or sell on or through BINDASS!!.
+                                You understand that all information, images, pictures, data, text, music, sound, photographs, graphics, video, messages, or other materials, whether publicly posted or privately transmitted, is the exclusive work and property of the person from whom such Content originated. BiNDAAS! does not claim any permanent ownership of your Content. You retain copyright and any other rights you already hold in Content which you submit, post, upload, display, or sell on or through BiNDAAS!.
                             </p>
                             <p className="text-slate-600 leading-relaxed text-sm italic border-l-2 border-emerald-500 pl-4 py-2">
                                 Inappropriate Content includes, but is not limited to, Content that infringes copyright, defames any person, or is deemed offensive, harassing, or otherwise objectionable at our sole discretion.
@@ -80,7 +80,7 @@ const Terms = () => {
                             </h3>
                             <div className="bg-slate-50 p-6 rounded-2xl space-y-4">
                                 <p className="text-slate-600 leading-relaxed text-[13px] font-medium tracking-tight uppercase">
-                                    THIS PLATFORM AND THE SERVICES ARE PROVIDED ON AN “AS IS” BASIS. BINDASS!!, ITS LICENSORS AND AFFILIATES MAKE NO REPRESENTATIONS OR WARRANTIES OF ANY KIND (EXPRESS, STATUTORY OR IMPLIED) AS TO THE OPERATION OF THE PLATFORM.
+                                    THIS PLATFORM AND THE SERVICES ARE PROVIDED ON AN “AS IS” BASIS. BINDAAS!, ITS LICENSORS AND AFFILIATES MAKE NO REPRESENTATIONS OR WARRANTIES OF ANY KIND (EXPRESS, STATUTORY OR IMPLIED) AS TO THE OPERATION OF THE PLATFORM.
                                 </p>
                                 <p className="text-slate-600 leading-relaxed text-sm">
                                     Except as provided above, there are no other warranties, conditions, or other terms and conditions, express or implied, statutory or otherwise, and all such terms and conditions are hereby excluded to the maximum extent permitted by applicable law.
