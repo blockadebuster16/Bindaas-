@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -17,6 +18,9 @@ const AdminLogin = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Use dynamic API URL from config - Admin Auth (SEPARATE from Customer Firebase Auth)
+  const AUTH_API_URL = `${API_BASE_URL}/api/auth`;
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -24,11 +28,12 @@ const AdminLogin = () => {
     setSuccessMsg('');
 
     try {
-      const response = await axios.post('http://localhost:5001/api/auth/admin-login', { email, password });
+      const response = await axios.post(`${AUTH_API_URL}/admin-login`, { email, password });
 
       if (response.data.success) {
+        // Store ADMIN JWT token (different from customer Firebase tokens)
         localStorage.setItem('adminToken', response.data.token);
-        navigate('/admin');
+        navigate('/admin'); 
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to login. Please check your credentials.');
@@ -45,7 +50,7 @@ const AdminLogin = () => {
 
     try {
       const payload = { predefinedEmail, newEmail, newPassword };
-      const response = await axios.post('http://localhost:5001/api/auth/admin-reset', payload);
+      const response = await axios.post(`${AUTH_API_URL}/admin-reset`, payload);
 
       if (response.data.success) {
         setSuccessMsg('Credentials successfully updated. Please sign in with your new credentials.');
@@ -53,6 +58,8 @@ const AdminLogin = () => {
         setPredefinedEmail('');
         setNewEmail('');
         setNewPassword('');
+        setEmail('');
+        setPassword('');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to reset credentials. Make sure your predefined email is correct.');
@@ -80,7 +87,7 @@ const AdminLogin = () => {
                <div className="flex">
                   <div className="flex-shrink-0">
                      <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L10.586 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                      </svg>
                   </div>
                   <div className="ml-3">
@@ -110,27 +117,49 @@ const AdminLogin = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Email Address</label>
                   <div className="mt-1">
-                    <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition-colors" placeholder="admin@bindass.com" />
+                    <input 
+                      type="email" 
+                      required 
+                      value={email} 
+                      onChange={(e) => setEmail(e.target.value)} 
+                      className="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-black focus:border-black"
+                      placeholder="admin@bindass.com"
+                    />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Password</label>
                   <div className="mt-1">
-                    <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition-colors" placeholder="••••••••" />
+                    <input 
+                      type="password" 
+                      required 
+                      value={password} 
+                      onChange={(e) => setPassword(e.target.value)} 
+                      className="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-black focus:border-black"
+                      placeholder="••••••••"
+                    />
                   </div>
                 </div>
 
                 <div className="flex items-center justify-end">
                   <div className="text-sm">
-                    <button type="button" onClick={() => { setIsResetting(true); setError(''); setSuccessMsg(''); }} className="font-medium text-primary hover:text-green-600 transition-colors">
+                    <button 
+                      type="button" 
+                      onClick={() => { setIsResetting(true); setError(''); setSuccessMsg(''); }} 
+                      className="font-medium text-primary hover:text-green-600 transition-colors"
+                    >
                       Forgot or Setup Credentials?
                     </button>
                   </div>
                 </div>
 
                 <div>
-                  <button type="submit" disabled={loading} className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors disabled:opacity-50">
+                  <button 
+                    type="submit" 
+                    disabled={loading} 
+                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-black transition-colors disabled:opacity-50"
+                  >
                     {loading ? 'Authenticating...' : 'Sign in securely'}
                   </button>
                 </div>
@@ -139,36 +168,67 @@ const AdminLogin = () => {
               <form className="space-y-6" onSubmit={handleReset}>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Verification Email *</label>
-                  <p className="text-xs text-gray-500 mb-1">Enter the master email configured in the server.</p>
+                  <p className="text-xs text-gray-500 mb-1">Enter the master email configured in your server environment variables (ADMIN_EMAIL).</p>
                   <div className="mt-1">
-                    <input type="email" required value={predefinedEmail} onChange={(e) => setPredefinedEmail(e.target.value)} className="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition-colors" placeholder="master@example.com" />
+                    <input 
+                      type="email" 
+                      required 
+                      value={predefinedEmail} 
+                      onChange={(e) => setPredefinedEmail(e.target.value)} 
+                      className="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-black focus:border-black"
+                      placeholder="admin@bindass.com"
+                    />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">New Login Email *</label>
+                  <label className="block text-sm font-medium text-gray-700">New Admin Email *</label>
                   <div className="mt-1">
-                    <input type="email" required value={newEmail} onChange={(e) => setNewEmail(e.target.value)} className="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition-colors" placeholder="your.email@example.com" />
+                    <input 
+                      type="email" 
+                      required 
+                      value={newEmail} 
+                      onChange={(e) => setNewEmail(e.target.value)} 
+                      className="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-black focus:border-black"
+                      placeholder="newemail@example.com"
+                    />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">New Password *</label>
+                  <p className="text-xs text-gray-500 mb-1">Minimum 6 characters</p>
                   <div className="mt-1">
-                    <input type="password" required minLength="6" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition-colors" placeholder="••••••••" />
+                    <input 
+                      type="password" 
+                      required 
+                      minLength="6" 
+                      value={newPassword} 
+                      onChange={(e) => setNewPassword(e.target.value)} 
+                      className="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-black focus:border-black"
+                      placeholder="••••••••"
+                    />
                   </div>
                 </div>
 
                 <div className="flex items-center justify-end">
                   <div className="text-sm">
-                    <button type="button" onClick={() => { setIsResetting(false); setError(''); setSuccessMsg(''); }} className="font-medium text-gray-500 hover:text-gray-900 transition-colors">
+                    <button 
+                      type="button" 
+                      onClick={() => { setIsResetting(false); setError(''); setSuccessMsg(''); }} 
+                      className="font-medium text-gray-500 hover:text-gray-900 transition-colors"
+                    >
                       Back to Login
                     </button>
                   </div>
                 </div>
 
                 <div>
-                  <button type="submit" disabled={loading} className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors disabled:opacity-50">
+                  <button 
+                    type="submit" 
+                    disabled={loading} 
+                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-green-700 transition-colors disabled:opacity-50"
+                  >
                     {loading ? 'Updating...' : 'Update Credentials'}
                   </button>
                 </div>

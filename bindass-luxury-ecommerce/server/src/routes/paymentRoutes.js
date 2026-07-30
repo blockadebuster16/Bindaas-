@@ -87,7 +87,7 @@ router.post('/verify-payment', protect, async (req, res) => {
                 climate_contribution: orderDetails.climateContribution || 0,
                 transaction_id: razorpay_payment_id,
                 status: 'Pending',
-                shipping_info: orderDetails.shippingData || {}
+                shipping_info: orderDetails.shippingInfo || {}
             };
 
             const savedOrder = await createOrder(newOrderData, orderProducts);
@@ -109,7 +109,7 @@ router.post('/verify-payment', protect, async (req, res) => {
                         razorpayOrderId: razorpay_order_id,
                         razorpayPaymentId: razorpay_payment_id,
                         customerEmail: req.user.email,
-                        customerName: (orderDetails.shippingData?.firstName || '') + ' ' + (orderDetails.shippingData?.lastName || ''),
+                        customerName: (orderDetails.shippingInfo?.firstName || '') + ' ' + (orderDetails.shippingInfo?.lastName || ''),
                         donationAmount: orderDetails.climateContribution,
                         cause: 'Certified Mangrove Restoration Projects' // Can be made dynamic from store config
                     });
@@ -130,7 +130,7 @@ router.post('/verify-payment', protect, async (req, res) => {
                 status: savedOrder.status,
                 transactionId: savedOrder.transaction_id,
                 orderDate: savedOrder.order_date,
-                userName: (orderDetails.shippingData?.firstName || '') + ' ' + (orderDetails.shippingData?.lastName || ''),
+                userName: (orderDetails.shippingInfo?.firstName || '') + ' ' + (orderDetails.shippingInfo?.lastName || ''),
                 items: orderDetails.cart
             };
 

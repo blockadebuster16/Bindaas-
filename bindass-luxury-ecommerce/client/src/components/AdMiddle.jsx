@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 import { getCroppedUrl } from '../utils/cloudinaryHelper';
 
 const loadGoogleFont = (family) => {
@@ -47,10 +48,20 @@ const MiddleAdContent = ({ ad }) => {
         
         return ad.mediaUrl;
     };
+
     const [mediaUrl, setMediaUrl] = useState(getResponsiveMedia());
 
+    // Update image URL if the advertisement object changes dynamically
     useEffect(() => {
-        const handleResize = () => setMediaUrl(getResponsiveMedia());
+        setMediaUrl(getResponsiveMedia());
+    }, [ad]);
+
+    // Handle responsive window resizing
+    useEffect(() => {
+        const handleResize = () => {
+            setMediaUrl(getResponsiveMedia());
+        };
+
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, [ad]);
@@ -137,7 +148,7 @@ const AdMiddle = ({ page = 'home' }) => {
     useEffect(() => {
         const fetchAds = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:5001/api/advertisements?bannerType=middle&page=${page}`);
+                const { data } = await axios.get(`https://bindaas-ucyv.onrender.com/api/advertisements?bannerType=middle&page=${page}`);
                 setMiddleAds(data);
                 data.forEach(ad => {
                     [ad.titleFontFamily, ad.tagFontFamily, ad.subtitleFontFamily].forEach(f => f && loadGoogleFont(f));
