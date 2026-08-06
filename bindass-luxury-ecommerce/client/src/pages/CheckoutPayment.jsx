@@ -311,7 +311,7 @@ const CheckoutReviewPay = () => {
 
                                 <p className="text-[9px] text-slate-400 text-center font-medium leading-relaxed">
                                     Encrypted & secured by Razorpay.{' '}
-                                    <Link to="/" className="underline hover:text-[#111111] transition-colors">Refund Policy</Link>
+                                    <Link to="/returns" className="underline hover:text-[#111111] transition-colors">Refund Policy</Link>
                                 </p>
                             </div>
                         </div>
