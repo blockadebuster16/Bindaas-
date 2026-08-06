@@ -31,7 +31,7 @@ export default function RefundAnalytics() {
       {ITEMS.map(i => (
         <div key={i.label} className="glass" style={{ padding: "1rem 1.25rem", borderRadius: 16 }}>
           <div style={{ fontSize: "0.7rem", color: "var(--color-text-dim)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.25rem", letterSpacing: "0.05em" }}>{i.label}</div>
-          <div style={{ fontSize: "1.25rem", fontWeight: 700, color: i.color, fontFamily: "'Space Grotesk', sans-serif" }}>{i.value}</div>
+          <div style={{ fontSize: "1.25rem", fontWeight: 700, color: i.color, fontFamily: "inherit" }}>{i.value}</div>
         </div>
       ))}
     </div>

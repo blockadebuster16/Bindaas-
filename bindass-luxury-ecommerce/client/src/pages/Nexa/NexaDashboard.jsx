@@ -79,7 +79,7 @@ export default function NexaDashboard() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "2.5rem" }}>
             <div>
               <p style={{ color: "var(--color-text-muted)", fontSize: "0.85rem", marginBottom: "0.4rem" }}>REAL-TIME AI INTELLIGENCE</p>
-              <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: "2rem" }}>
+              <h1 style={{ fontFamily: "inherit", fontWeight: 700, fontSize: "2rem" }}>
                 <span className="gradient-text">{company}</span> AI Overview
               </h1>
             </div>
@@ -96,7 +96,7 @@ export default function NexaDashboard() {
                     <span style={{ fontSize: "1.5rem" }}>{s.icon}</span>
                     <span style={{ fontSize: "0.65rem", color: "var(--color-text-muted)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>24h Radar</span>
                 </div>
-                <div style={{ fontSize: "2.25rem", fontWeight: 700, color: s.color, marginBottom: "0.25rem", fontFamily: "'Space Grotesk', sans-serif" }}>{s.value}</div>
+                <div style={{ fontSize: "2.25rem", fontWeight: 700, color: s.color, marginBottom: "0.25rem", fontFamily: "inherit" }}>{s.value}</div>
                 <div style={{ fontSize: "0.85rem", color: "var(--color-text-muted)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.02em" }}>{s.label}</div>
               </div>
             ))}

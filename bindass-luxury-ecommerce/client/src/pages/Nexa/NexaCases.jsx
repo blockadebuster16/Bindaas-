@@ -100,7 +100,7 @@ export default function NexaCases() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "2.5rem" }}>
         <div>
           <p style={{ color: "var(--color-text-muted)", fontSize: "0.85rem", marginBottom: "0.4rem" }}>REASONING ENGINE</p>
-          <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: "2rem" }}>
+          <h1 style={{ fontFamily: "inherit", fontWeight: 700, fontSize: "2rem" }}>
             Resolution <span className="gradient-text">Policies</span>
           </h1>
         </div>

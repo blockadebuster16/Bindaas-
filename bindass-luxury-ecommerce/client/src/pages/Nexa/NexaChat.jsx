@@ -63,7 +63,7 @@ export default function NexaChat() {
     <div className="animate-fade-in" style={{ height: "calc(100vh - 64px)", display: "flex", flexDirection: "column", padding: "2rem" }}>
       <div style={{ marginBottom: "1.5rem" }}>
         <p style={{ color: "var(--color-text-muted)", fontSize: "0.85rem", marginBottom: "0.4rem" }}>NEURAL SANDBOX</p>
-        <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: "2rem" }}>
+        <h1 style={{ fontFamily: "inherit", fontWeight: 700, fontSize: "2rem" }}>
           Chat <span className="gradient-text">Playground</span>
         </h1>
         <p style={{ color: "var(--color-text-muted)", fontSize: "0.95rem" }}>Test your AI resolution policies and sentiment detection in real-time.</p>

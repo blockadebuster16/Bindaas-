@@ -47,7 +47,7 @@ const Membership = () => {
                 type="text/tailwindcss"
                 dangerouslySetInnerHTML={{
                     __html:
-                        "\n        :root {\n            --primary-color: #11d490;\n            --brand-dark: #10221c;\n        }\n        body {\n            font-family: 'Manrope', sans-serif;\n        }\n        .material-symbols-outlined {\n            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;\n        }\n    "
+                        "\n        :root {\n            --primary-color: #11d490;\n            --brand-dark: #10221c;\n        }\n        body {\n            \n        }\n        .material-symbols-outlined {\n            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;\n        }\n    "
                 }}
             />
 

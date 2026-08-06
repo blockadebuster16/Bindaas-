@@ -148,7 +148,7 @@ export default function NexaLive() {
     <div className="animate-fade-in" style={{ padding: "2rem" }}>
       <div style={{ marginBottom: "2rem" }}>
         <p style={{ color: "var(--color-text-muted)", fontSize: "0.85rem", marginBottom: "0.4rem" }}>HUMAN-IN-THE-LOOP CONTROL</p>
-        <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: "2rem" }}>
+        <h1 style={{ fontFamily: "inherit", fontWeight: 700, fontSize: "2rem" }}>
           Live <span className="gradient-text">Command Center</span>
         </h1>
       </div>
