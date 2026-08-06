@@ -135,8 +135,13 @@ h1.display,
   box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
 }
 
+.btn-primary:focus-visible {
+  outline: 2px solid #111111;
+  outline-offset: 2px;
+}
+
 .btn-pill {
-  @apply bg-[#000000] text-white rounded-full px-8 py-3 font-bold uppercase tracking-widest hover:bg-[#222222] transition-all duration-300 inline-flex items-center justify-center;
+  @apply bg-[#000000] text-white rounded-full px-8 py-3 font-bold uppercase tracking-widest hover:bg-[#222222] transition-all duration-300 inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#111111];
 }
 
 .btn-secondary {
@@ -156,6 +161,11 @@ h1.display,
   color: #111111;
 }
 
+.btn-secondary:focus-visible {
+  outline: 2px solid #111111;
+  outline-offset: 2px;
+}
+
 /* ── Form Elements ─────────────────────────────────────────── */
 .input {
   background: #ffffff;
@@ -171,6 +181,11 @@ h1.display,
 .input:focus {
   border-color: #FFD017;
   box-shadow: 0 0 0 2px rgba(255, 208, 23, 0.2);
+}
+
+.input:focus-visible {
+  outline: 2px solid #FFD017;
+  outline-offset: 1px;
 }
 
 .label {
