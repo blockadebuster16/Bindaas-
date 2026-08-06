@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -172,21 +172,17 @@ router.post('/admin-login', async (req, res) => {
         const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'secretadmin123';
         const JWT_SECRET = getAdminJWTSecret();
 
-        const adminUsers = await Admin.find({});
-        let isAuthenticated = false;
-        let authEmail = '';
-
-        if (adminUsers.length > 0) {
-            const admin = await Admin.findOne({ email: email.toLowerCase() });
-            if (admin && (await admin.matchPassword(password))) {
-                isAuthenticated = true;
-                authEmail = admin.email;
-            }
-        } else {
-            if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && password === ADMIN_PASSWORD) {
-                isAuthenticated = true;
-                authEmail = ADMIN_EMAIL;
-            }
+        // 1. Try Database Admin
+        const admin = await Admin.findOne({ email: email.toLowerCase() });
+        if (admin && (await admin.matchPassword(password))) {
+            isAuthenticated = true;
+            authEmail = admin.email;
+        } 
+        
+        // 2. Try Master ENV Admin (Fallback)
+        if (!isAuthenticated && email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && password === ADMIN_PASSWORD) {
+            isAuthenticated = true;
+            authEmail = ADMIN_EMAIL;
         }
 
         if (isAuthenticated) {
