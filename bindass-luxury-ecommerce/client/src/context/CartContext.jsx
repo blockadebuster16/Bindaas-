@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+﻿import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
 
@@ -21,7 +21,7 @@ export const CartProvider = ({ children }) => {
             setLoading(true);
             if (user) {
                 try {
-                    const token = await user.getIdToken();
+                    const token = localStorage.getItem("bindass_user_token");
                     // 1. Fetch DB Cart
                     const { data: dbCart } = await axios.get(BASE_URL, {
                         headers: { Authorization: `Bearer ${token}` }
@@ -81,7 +81,7 @@ export const CartProvider = ({ children }) => {
     const syncWithServer = async (items) => {
         if (user) {
             try {
-                const token = await user.getIdToken();
+                const token = localStorage.getItem("bindass_user_token");
                 // Send overwrite flag so the backend directly saves this array
                 await axios.post(`${BASE_URL}/sync`,
                     { items, overwrite: true },
@@ -144,3 +144,4 @@ export const CartProvider = ({ children }) => {
 };
 
 export const useCart = () => useContext(CartContext);
+

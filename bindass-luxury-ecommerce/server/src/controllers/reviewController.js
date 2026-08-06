@@ -1,4 +1,4 @@
-const Review = require('../models/Review');
+﻿const Review = require('../models/Review');
 const Product = require('../models/Product');
 
 // @desc    Get all reviews for a product
@@ -46,7 +46,7 @@ exports.addReview = async (req, res) => {
         // Check if user already reviewed this product
         const alreadyReviewed = await Review.findOne({
             product: productId,
-            firebaseUID: req.user.uid
+            googleUID: req.user.uid
         });
 
         if (alreadyReviewed) {
@@ -55,7 +55,7 @@ exports.addReview = async (req, res) => {
 
         const review = await Review.create({
             product: productId,
-            firebaseUID: req.user.uid,
+            googleUID: req.user.uid,
             userName: req.user.name || 'Anonymous Member',
             rating: Number(rating),
             comment
@@ -70,3 +70,4 @@ exports.addReview = async (req, res) => {
         res.status(500).json({ message: "Server error adding review" });
     }
 };
+

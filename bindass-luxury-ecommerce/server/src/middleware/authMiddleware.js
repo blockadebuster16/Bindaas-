@@ -1,31 +1,51 @@
-// server/src/middleware/authMiddleware.js
-const admin = require('../config/firebase');
+﻿// server/src/middleware/authMiddleware.js
 const jwt = require('jsonwebtoken');
 
-// ── Customer / Firebase protection ────────────────────────────────────────
-const protect = async (req, res, next) => {
+// ── Customer protection (Google OAuth + Email/Password JWT) ───────────────────
+const protect = (req, res, next) => {
     const token = req.headers.authorization?.split('Bearer ')[1];
 
     if (!token) {
-        return res.status(403).json({ message: "No token provided" });
+        return res.status(403).json({ message: 'No token provided' });
     }
 
     try {
-        const decodedToken = await admin.auth().verifyIdToken(token);
-        req.user = decodedToken;
+        const CUSTOMER_JWT_SECRET = process.env.CUSTOMER_JWT_SECRET;
+        if (!CUSTOMER_JWT_SECRET) {
+            console.error('CUSTOMER_JWT_SECRET is not configured');
+            return res.status(500).json({ message: 'Server configuration error' });
+        }
+
+        const decoded = jwt.verify(token, CUSTOMER_JWT_SECRET);
+
+        // Normalise: expose decoded.sub or decoded.uid as req.user.uid
+        // so all controllers (userController, reviewController, etc.) work unchanged
+        req.user = {
+            uid: decoded.uid,
+            email: decoded.email,
+            name: decoded.name,
+            picture: decoded.picture,
+            provider: decoded.provider,
+        };
+
         next();
     } catch (error) {
-        console.error("Token verification error:", error);
-        return res.status(403).json({ message: "Unauthorized access" });
+        console.error('Customer token verification error:', error.message);
+
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ message: 'Token expired, please sign in again' });
+        }
+
+        return res.status(403).json({ message: 'Unauthorized access' });
     }
 };
 
-// ── Admin JWT protection (used by admin dashboard) ─────────────────────────
+// ── Admin JWT protection (admin dashboard — unchanged) ─────────────────────────
 const protectAdmin = (req, res, next) => {
     const token = req.headers.authorization?.split('Bearer ')[1];
 
     if (!token) {
-        return res.status(403).json({ message: "No admin token provided" });
+        return res.status(403).json({ message: 'No admin token provided' });
     }
 
     try {
@@ -36,12 +56,12 @@ const protectAdmin = (req, res, next) => {
         }
         const decoded = jwt.verify(token, JWT_SECRET);
         if (decoded.role !== 'admin') {
-            return res.status(403).json({ message: "Admin role required" });
+            return res.status(403).json({ message: 'Admin role required' });
         }
         req.admin = decoded;
         next();
     } catch (error) {
-        return res.status(403).json({ message: "Unauthorized access" });
+        return res.status(403).json({ message: 'Unauthorized access' });
     }
 };
 

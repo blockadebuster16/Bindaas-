@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
@@ -18,7 +18,7 @@ const AdminLogin = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Use dynamic API URL from config - Admin Auth (SEPARATE from Customer Firebase Auth)
+  // Use dynamic API URL from config - Admin Auth (SEPARATE from Customer Google OAuth JWT)
   const AUTH_API_URL = `${API_BASE_URL}/api/auth`;
 
   const handleLogin = async (e) => {
@@ -31,7 +31,7 @@ const AdminLogin = () => {
       const response = await axios.post(`${AUTH_API_URL}/admin-login`, { email, password });
 
       if (response.data.success) {
-        // Store ADMIN JWT token (different from customer Firebase tokens)
+        // Store ADMIN JWT token (different from customer OAuth JWT tokens)
         localStorage.setItem('adminToken', response.data.token);
         navigate('/admin'); 
       }
@@ -137,7 +137,7 @@ const AdminLogin = () => {
                       value={password} 
                       onChange={(e) => setPassword(e.target.value)} 
                       className="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-black focus:border-black"
-                      placeholder="••••••••"
+                      placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                     />
                   </div>
                 </div>
@@ -206,7 +206,7 @@ const AdminLogin = () => {
                       value={newPassword} 
                       onChange={(e) => setNewPassword(e.target.value)} 
                       className="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-black focus:border-black"
-                      placeholder="••••••••"
+                      placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                     />
                   </div>
                 </div>
@@ -261,3 +261,4 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
+

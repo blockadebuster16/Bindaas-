@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+﻿const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
     product: {
@@ -6,7 +6,8 @@ const reviewSchema = new mongoose.Schema({
         ref: 'Product',
         required: true
     },
-    firebaseUID: {
+    // Google OAuth sub (for Google users) OR MongoDB User _id (for email users)
+    googleUID: {
         type: String,
         required: true
     },
@@ -28,6 +29,6 @@ const reviewSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // A user can only leave one review per product
-reviewSchema.index({ product: 1, firebaseUID: 1 }, { unique: true });
+reviewSchema.index({ product: 1, googleUID: 1 }, { unique: true });
 
 module.exports = mongoose.model('Review', reviewSchema);

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+﻿import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
 
@@ -20,7 +20,7 @@ export const WishlistProvider = ({ children }) => {
             setLoading(true);
             if (user) {
                 try {
-                    const token = await user.getIdToken();
+                    const token = localStorage.getItem("bindass_user_token");
 
                     // Get any local items they added as a guest before logging in
                     const local = localStorage.getItem('wishlist');
@@ -62,7 +62,7 @@ export const WishlistProvider = ({ children }) => {
     const syncWithServer = async (items) => {
         if (user) {
             try {
-                const token = await user.getIdToken();
+                const token = localStorage.getItem("bindass_user_token");
                 const productIds = items.map(item => item._id || item);
                 await axios.post(`${BASE_URL}/sync`,
                     { productIds },
@@ -119,3 +119,4 @@ export const WishlistProvider = ({ children }) => {
 };
 
 export const useWishlist = () => useContext(WishlistContext);
+

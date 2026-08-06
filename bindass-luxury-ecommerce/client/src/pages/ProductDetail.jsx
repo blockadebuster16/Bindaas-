@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
@@ -72,7 +72,7 @@ const ProductDetail = () => {
         };
 
         await addToCart(cartItem);
-        toast.success(`${product.name} (Size ${selectedSize}) added to your bag! 🛍️`);
+        toast.success(`${product.name} (Size ${selectedSize}) added to your bag! ðŸ›ï¸`);
     };
 
     const handleBuyNow = async () => {
@@ -99,7 +99,7 @@ const ProductDetail = () => {
         setReviewSubmitting(true);
         setReviewError('');
         try {
-            const token = await user.getIdToken();
+            const token = localStorage.getItem("bindass_user_token");
             await axios.post(`${API_BASE_URL}/api/reviews/${product._id}`, newReview, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -145,7 +145,7 @@ const ProductDetail = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
 
-                    {/* ── Left Column: Exact Bluorng 2-Column Asymmetrical Image Grid & Smooth Scroll ── */}
+                    {/* â”€â”€ Left Column: Exact Bluorng 2-Column Asymmetrical Image Grid & Smooth Scroll â”€â”€ */}
                     <div className="lg:col-span-7">
                         {imagesList.length === 1 && (
                             <div className="w-full aspect-[3/4] bg-[#f5f5f5] rounded-3xl overflow-hidden border border-slate-100/80 shadow-sm">
@@ -197,7 +197,7 @@ const ProductDetail = () => {
                         )}
                     </div>
 
-                    {/* ── Right Column: Sticky Product Info Panel ── */}
+                    {/* â”€â”€ Right Column: Sticky Product Info Panel â”€â”€ */}
                     <div className="lg:col-span-5 sticky top-24 h-fit bg-[#F9F9F9] p-6 md:p-8 rounded-3xl border border-slate-100 space-y-6">
 
                         {/* Title & Bookmark/Wishlist */}
@@ -452,14 +452,14 @@ const ProductDetail = () => {
                 </div>
             </div>
 
-            {/* ── Size Guide Modal ── */}
+            {/* â”€â”€ Size Guide Modal â”€â”€ */}
             {isSizeGuideOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={() => setIsSizeGuideOpen(false)}>
                     <div className="bg-white rounded-3xl p-6 md:p-8 max-w-lg w-full space-y-6 shadow-2xl relative" onClick={e => e.stopPropagation()}>
                         <div className="flex justify-between items-center border-b pb-4">
                             <h3 className="text-lg font-extrabold uppercase tracking-tight text-[#111111]">Size Guide</h3>
                             <button onClick={() => setIsSizeGuideOpen(false)} className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 hover:text-black">
-                                ✕
+                                âœ•
                             </button>
                         </div>
                         <p className="text-xs text-slate-500 font-normal">All measurements are in inches. Designed with an oversized fit.</p>

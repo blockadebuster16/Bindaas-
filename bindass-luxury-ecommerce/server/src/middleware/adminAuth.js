@@ -3,10 +3,10 @@ const jwt = require('jsonwebtoken');
 /**
  * ADMIN AUTHENTICATION MIDDLEWARE
  * Protects admin dashboard routes by verifying JWT tokens
- * Uses separate JWT_SECRET from customer Firebase auth
+ * Uses a separate ADMIN_JWT_SECRET from the customer auth JWT (CUSTOMER_JWT_SECRET)
  * 
  * This middleware is ONLY for admin routes (/api/products, /api/upload, etc)
- * NOT for customer/user authentication (which uses Firebase)
+ * NOT for customer/user authentication (which uses Google Cloud Console OAuth)
  */
 const adminProtect = (req, res, next) => {
     let token = req.headers.authorization?.startsWith('Bearer ') 

@@ -1,4 +1,4 @@
-const User = require('../models/User');
+﻿const User = require('../models/User');
 const { upsertCustomerProfile } = require('../services/supabaseService');
 
 // @desc    Get or Initialize user profile
@@ -6,12 +6,12 @@ const { upsertCustomerProfile } = require('../services/supabaseService');
 // @access  Private
 exports.getProfile = async (req, res) => {
     try {
-        let user = await User.findOne({ firebaseUID: req.user.uid });
+        let user = await User.findOne({ googleUID: req.user.uid });
 
         if (!user) {
-            // Initialize new profile from Firebase data
+            // Initialize new profile from Google OAuth / email data
             user = await User.create({
-                firebaseUID: req.user.uid,
+                googleUID: req.user.uid,
                 email: req.user.email,
                 displayName: req.user.name || 'Value Member'
             });
@@ -32,12 +32,12 @@ exports.updateProfile = async (req, res) => {
         const updates = req.body;
         
         // Block sensitive fields from being updated here
-        delete updates.firebaseUID;
+        delete updates.googleUID;
         delete updates.email;
         delete updates.membershipTier;
 
         const user = await User.findOneAndUpdate(
-            { firebaseUID: req.user.uid },
+            { googleUID: req.user.uid },
             { $set: updates },
             { new: true, runValidators: true }
         );
@@ -61,7 +61,7 @@ exports.addToRecentlyViewed = async (req, res) => {
         const { productId } = req.body;
         if (!productId) return res.status(400).json({ message: "Product ID required" });
 
-        const user = await User.findOne({ firebaseUID: req.user.uid });
+        const user = await User.findOne({ googleUID: req.user.uid });
         if (!user) return res.status(404).json({ message: "User not found" });
 
         // deduplicate and keep only the last 12
@@ -89,7 +89,7 @@ exports.addToRecentlyViewed = async (req, res) => {
 // @access  Private
 exports.getRecentlyViewed = async (req, res) => {
     try {
-        const user = await User.findOne({ firebaseUID: req.user.uid })
+        const user = await User.findOne({ googleUID: req.user.uid })
             .populate('recentlyViewed', 'name price images category stock_quantity');
 
         if (!user) return res.status(404).json({ message: "User not found" });
@@ -108,7 +108,7 @@ exports.syncRecentlyViewed = async (req, res) => {
         const { productIds } = req.body;
         if (!Array.isArray(productIds)) return res.status(400).json({ message: "Array of product IDs required" });
 
-        const user = await User.findOne({ firebaseUID: req.user.uid });
+        const user = await User.findOne({ googleUID: req.user.uid });
         if (!user) return res.status(404).json({ message: "User not found" });
 
         // deduplicate and keep only the last 12
@@ -149,7 +149,7 @@ exports.syncCustomerProfile = async (req, res) => {
     try {
         const { firstName, lastName, mobile, birthdate, gender } = req.body;
         
-        // Use the email from the verified Firebase token
+        // Use the email from the verified JWT
         const profileData = {
             email: req.user.email,
             firstName,
@@ -166,3 +166,4 @@ exports.syncCustomerProfile = async (req, res) => {
         res.status(500).json({ message: "Server error syncing profile" });
     }
 };
+

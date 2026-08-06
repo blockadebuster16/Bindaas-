@@ -1,21 +1,25 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from '../firebaseConfig';
-import {
-    GoogleAuthProvider,
-    FacebookAuthProvider,
-    signInWithPopup,
-    signInWithRedirect,
-    getRedirectResult,
-    signOut,
-    onAuthStateChanged,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    updateProfile
-} from 'firebase/auth';
+﻿import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import axios from "axios";
 
 const AuthContext = createContext();
 
-const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+const TOKEN_KEY = "bindass_user_token";
+const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5001";
+
+// ── Decode a JWT payload without a library (no signature verification needed client-side) ──
+function decodeToken(token) {
+    try {
+        const payload = token.split(".")[1];
+        return JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")));
+    } catch {
+        return null;
+    }
+}
+
+function isTokenExpired(decoded) {
+    if (!decoded?.exp) return true;
+    return Date.now() >= decoded.exp * 1000;
+}
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
@@ -23,72 +27,83 @@ export const AuthProvider = ({ children }) => {
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
     const [authError, setAuthError] = useState(null);
 
-    // Catches the result when Google/Facebook redirects back to your app (mobile flow)
+    // ── Restore session from localStorage on mount ─────────────────────────────
     useEffect(() => {
-        getRedirectResult(auth)
-            .then((result) => {
-                if (result?.user) setUser(result.user);
-            })
-            .catch((error) => {
-                if (error.code !== 'auth/null-user') {
-                    setAuthError(error.message);
-                }
-            });
-    }, []);
-
-    const signInWithProvider = async (provider) => {
-        setAuthError(null);
-        // Always use redirect on mobile — popup is always blocked there
-        if (isMobile()) {
-            return signInWithRedirect(auth, provider);
-        }
-        try {
-            return await signInWithPopup(auth, provider);
-        } catch (error) {
-            // Popup was blocked on desktop — fall back to redirect silently
-            if ([
-                'auth/popup-blocked',
-                'auth/popup-closed-by-user',
-                'auth/cancelled-popup-request'
-            ].includes(error.code)) {
-                return signInWithRedirect(auth, provider);
+        const token = localStorage.getItem(TOKEN_KEY);
+        if (token) {
+            const decoded = decodeToken(token);
+            if (decoded && !isTokenExpired(decoded)) {
+                setUser(decoded);
+            } else {
+                localStorage.removeItem(TOKEN_KEY);
             }
-            setAuthError(error.message);
-            throw error;
         }
-    };
-
-    const googleSignIn = () => signInWithProvider(new GoogleAuthProvider());
-    const facebookSignIn = () => signInWithProvider(new FacebookAuthProvider());
-
-    const signInWithEmail = (email, password) => {
-        setAuthError(null);
-        return signInWithEmailAndPassword(auth, email, password);
-    };
-
-    const signUpWithEmail = (email, password) => {
-        setAuthError(null);
-        return createUserWithEmailAndPassword(auth, email, password);
-    };
-
-    const updateUserProfile = (user, profileData) => updateProfile(user, profileData);
-
-    const logOut = () => signOut(auth);
-
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
-            setLoading(false);
-        });
-        return () => unsubscribe();
+        setLoading(false);
     }, []);
 
-    // Branded loading screen while Firebase resolves the auth state
+    // ── Store token and update user state ─────────────────────────────────────
+    const setSession = useCallback((token) => {
+        if (!token) {
+            localStorage.removeItem(TOKEN_KEY);
+            setUser(null);
+            return;
+        }
+        const decoded = decodeToken(token);
+        if (decoded && !isTokenExpired(decoded)) {
+            localStorage.setItem(TOKEN_KEY, token);
+            setUser(decoded);
+        }
+    }, []);
+
+    // ── Google Sign-In: redirect browser to server OAuth route ────────────────
+    const googleSignIn = () => {
+        setAuthError(null);
+        window.location.href = `${API_BASE}/api/auth/google`;
+    };
+
+    // ── Email/Password: Register ───────────────────────────────────────────────
+    const signUpWithEmail = async ({ email, password, firstName, lastName, mobile, birthdate, gender }) => {
+        setAuthError(null);
+        const { data } = await axios.post(`${API_BASE}/api/auth/register`, {
+            email, password, firstName, lastName, mobile, birthdate, gender,
+        });
+        if (data.success && data.token) {
+            setSession(data.token);
+        }
+        return data;
+    };
+
+    // ── Email/Password: Login ──────────────────────────────────────────────────
+    const signInWithEmail = async (email, password) => {
+        setAuthError(null);
+        const { data } = await axios.post(`${API_BASE}/api/auth/login`, { email, password });
+        if (data.success && data.token) {
+            setSession(data.token);
+        }
+        return data;
+    };
+
+    // ── Log out ────────────────────────────────────────────────────────────────
+    const logOut = () => {
+        localStorage.removeItem(TOKEN_KEY);
+        setUser(null);
+        setIsAuthModalOpen(false);
+    };
+
+    // ── (Unused — kept for API compatibility with SignInModal) ─────────────────
+    const updateUserProfile = async (profileData) => {
+        const token = localStorage.getItem(TOKEN_KEY);
+        if (!token) return;
+        await axios.put(`${API_BASE}/api/users/profile`, profileData, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+    };
+
+    // Branded loading screen while restoring session
     if (loading) {
         return (
             <div className="min-h-screen bg-[#F5F2EB] flex items-center justify-center">
                 <div className="flex flex-col items-center gap-4">
-                    {/* Animated brand mark */}
                     <div className="w-10 h-10 border-2 border-[#111111] border-t-[#FFD017] rounded-full animate-spin" />
                     <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#111111]/50">
                         BiNDAAS!
@@ -101,12 +116,12 @@ export const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider value={{
             user,
+            setSession,       // used by AuthCallback page to store token after Google redirect
             googleSignIn,
-            facebookSignIn,
-            logOut,
             signInWithEmail,
             signUpWithEmail,
             updateUserProfile,
+            logOut,
             isAuthModalOpen,
             setIsAuthModalOpen,
             authError,

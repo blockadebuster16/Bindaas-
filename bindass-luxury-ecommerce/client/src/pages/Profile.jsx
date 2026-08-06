@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
@@ -27,7 +27,7 @@ const Profile = () => {
         const fetchData = async () => {
             if (!user) return;
             try {
-                const token = await user.getIdToken();
+                const token = localStorage.getItem("bindass_user_token");
                 const headers = { Authorization: `Bearer ${token}` };
 
                 // Fetch Profile and Orders in parallel
@@ -52,7 +52,7 @@ const Profile = () => {
         e.preventDefault();
         setSaveLoading(true);
         try {
-            const token = await user.getIdToken();
+            const token = localStorage.getItem("bindass_user_token");
             const { data } = await axios.put('http://localhost:5001/api/users/profile', profile, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -188,7 +188,7 @@ const Profile = () => {
                                                     </div>
                                                     <div className="flex items-center justify-between border-t border-slate-50 pt-4 text-xs font-bold uppercase tracking-widest text-slate-400">
                                                         <span>Total Amount</span>
-                                                        <span className="text-xl font-black text-[#10221c]">₹{order.totalAmount.toLocaleString()}</span>
+                                                        <span className="text-xl font-black text-[#10221c]">â‚¹{order.totalAmount.toLocaleString()}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -320,3 +320,4 @@ const Profile = () => {
 };
 
 export default Profile;
+

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+﻿import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
 
@@ -25,7 +25,7 @@ export const RecentlyViewedProvider = ({ children }) => {
         const syncHistory = async () => {
             if (user) {
                 try {
-                    const token = await user.getIdToken();
+                    const token = localStorage.getItem("bindass_user_token");
                     const productIds = history.map(item => item._id || item);
 
                     // Bulk sync local history to server
@@ -59,7 +59,7 @@ export const RecentlyViewedProvider = ({ children }) => {
         // If logged in, inform the server
         if (user) {
             try {
-                const token = await user.getIdToken();
+                const token = localStorage.getItem("bindass_user_token");
                 await axios.post(BASE_URL,
                     { productId },
                     { headers: { Authorization: `Bearer ${token}` } }
@@ -81,3 +81,4 @@ export const RecentlyViewedProvider = ({ children }) => {
 };
 
 export const useRecentlyViewed = () => useContext(RecentlyViewedContext);
+

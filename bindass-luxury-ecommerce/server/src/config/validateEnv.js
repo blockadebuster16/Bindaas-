@@ -9,8 +9,11 @@ const logger = require('../utils/logger');
 
 const REQUIRED_VARS = [
     'ADMIN_JWT_SECRET',
-    'MONGODB_URI',
-    'FIREBASE_PROJECT_ID',
+    'MONGO_URI',
+    'GOOGLE_CLIENT_ID',
+    'GOOGLE_CLIENT_SECRET',
+    'GOOGLE_REDIRECT_URI',
+    'CUSTOMER_JWT_SECRET',
 ];
 
 const OPTIONAL_VARS_WITH_DEFAULTS = {

@@ -39,6 +39,7 @@ import NexaCases from './pages/Nexa/NexaCases';
 import NexaChat from './pages/Nexa/NexaChat';
 import NexaEmbed from './pages/Nexa/NexaEmbed';
 import FormSubmissions from './pages/FormSubmissions';
+import AuthCallback from './pages/AuthCallback';
 // AuthProvider is already mounted in index.js — do NOT add it here again
 import { CheckoutProvider } from './context/CheckoutContext';
 import { ToastProvider } from './context/ToastContext';
@@ -79,6 +80,9 @@ function App() {
             <Route path="/faq" element={<FAQ />} />
           </Route>
           
+          {/* Google OAuth callback — outside Layout, no navbar/footer */}
+          <Route path="/auth/callback" element={<AuthCallback />} />
+
           {/* Admin Login (Unprotected) */}
           <Route path="/admin-login" element={<AdminLogin />} />
 

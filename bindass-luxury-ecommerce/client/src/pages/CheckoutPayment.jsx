@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
@@ -22,7 +22,7 @@ const CheckoutReviewPay = () => {
         const logAnalytics = async () => {
             if (user) {
                 try {
-                    const token = await user.getIdToken();
+                    const token = localStorage.getItem("bindass_user_token");
                     const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:5001/api/analytics' : '/api/analytics';
                     await axios.post(`${API_BASE}/event`, {
                         eventType: 'checkout_payment_started',
@@ -46,7 +46,7 @@ const CheckoutReviewPay = () => {
         }
         setProcessing(true);
         try {
-            const token = await user.getIdToken();
+            const token = localStorage.getItem("bindass_user_token");
             const API_BASE = window.location.hostname === 'localhost'
                 ? 'http://localhost:5001/api/payments'
                 : '/api/payments';
@@ -137,7 +137,7 @@ const CheckoutReviewPay = () => {
                 </div>
 
                 <div className="flex flex-col lg:flex-row gap-8 xl:gap-12">
-                    {/* ── Left: Review ── */}
+                    {/* â”€â”€ Left: Review â”€â”€ */}
                     <div className="flex-1 min-w-0 space-y-6">
                         <div>
                             <h1 className="text-2xl font-black text-[#111111] tracking-tight mb-1">Review Your Order</h1>
@@ -180,7 +180,7 @@ const CheckoutReviewPay = () => {
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Secure Payment</h3>
                                 </div>
                                 <p className="text-sm font-black text-[#111111] mb-0.5">Razorpay Gateway</p>
-                                <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest mb-3">Cards · UPI · Netbanking</p>
+                                <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest mb-3">Cards Â· UPI Â· Netbanking</p>
                                 <div className="flex gap-3 items-center opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" className="h-2.5 w-auto" />
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" className="h-4 w-auto" />
@@ -207,9 +207,9 @@ const CheckoutReviewPay = () => {
                                             <div className="flex justify-between items-start gap-4">
                                                 <div>
                                                     <h4 className="text-[11px] font-black uppercase tracking-tight text-[#111111] leading-tight mb-1 truncate">{item.name}</h4>
-                                                    <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">{item.size} · Qty {item.quantity}</p>
+                                                    <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">{item.size} Â· Qty {item.quantity}</p>
                                                 </div>
-                                                <p className="text-sm font-black text-[#111111] flex-shrink-0">₹{(item.price || 0).toLocaleString()}</p>
+                                                <p className="text-sm font-black text-[#111111] flex-shrink-0">â‚¹{(item.price || 0).toLocaleString()}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -218,7 +218,7 @@ const CheckoutReviewPay = () => {
                         </div>
                     </div>
 
-                    {/* ── Right: Summary + CTA ── */}
+                    {/* â”€â”€ Right: Summary + CTA â”€â”€ */}
                     <aside className="w-full lg:w-[380px] flex-shrink-0">
                         <div className="sticky top-8 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
                             {/* Processing overlay */}
@@ -236,41 +236,41 @@ const CheckoutReviewPay = () => {
                             <div className="px-6 py-5 space-y-3">
                                 <div className="flex justify-between text-[12px] text-slate-500">
                                     <span className="font-medium">Subtotal</span>
-                                    <span className="font-bold text-[#111111]">₹{(checkoutTotals?.subtotal || 0).toLocaleString()}</span>
+                                    <span className="font-bold text-[#111111]">â‚¹{(checkoutTotals?.subtotal || 0).toLocaleString()}</span>
                                 </div>
                                 {(checkoutTotals?.discount || 0) > 0 && (
                                     <div className="flex justify-between text-[12px] text-emerald-600">
                                         <span className="font-medium">Discount</span>
-                                        <span className="font-bold">-₹{(checkoutTotals?.discount || 0).toLocaleString()}</span>
+                                        <span className="font-bold">-â‚¹{(checkoutTotals?.discount || 0).toLocaleString()}</span>
                                     </div>
                                 )}
                                 <div className="flex justify-between text-[12px] text-slate-500">
                                     <span className="font-medium">Shipping ({shippingMethod})</span>
                                     {(checkoutTotals?.shippingTotal ?? 0) > 0
-                                        ? <span className="font-bold text-[#111111]">₹{checkoutTotals.shippingTotal.toLocaleString()}</span>
+                                        ? <span className="font-bold text-[#111111]">â‚¹{checkoutTotals.shippingTotal.toLocaleString()}</span>
                                         : <span className="text-emerald-600 font-black text-[9px] uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded-full">Free</span>
                                     }
                                 </div>
                                 {isCOD && (checkoutTotals?.codFee ?? 0) > 0 && (
                                     <div className="flex justify-between text-[12px] text-amber-600">
                                         <span className="font-medium">COD Fee</span>
-                                        <span className="font-bold">₹{checkoutTotals.codFee.toLocaleString()}</span>
+                                        <span className="font-bold">â‚¹{checkoutTotals.codFee.toLocaleString()}</span>
                                     </div>
                                 )}
                                 <div className="flex justify-between text-[12px] text-slate-500">
                                     <span className="font-medium">CGST</span>
-                                    <span className="font-bold text-[#111111]">₹{(checkoutTotals?.cgst || 0).toLocaleString()}</span>
+                                    <span className="font-bold text-[#111111]">â‚¹{(checkoutTotals?.cgst || 0).toLocaleString()}</span>
                                 </div>
                                 <div className="flex justify-between text-[12px] text-slate-500 pb-3 border-b border-slate-100">
                                     <span className="font-medium">SGST</span>
-                                    <span className="font-bold text-[#111111]">₹{(checkoutTotals?.sgst || 0).toLocaleString()}</span>
+                                    <span className="font-bold text-[#111111]">â‚¹{(checkoutTotals?.sgst || 0).toLocaleString()}</span>
                                 </div>
 
                                 {storeConfig?.climateFeeEnabled && (
                                     <div className="flex justify-between text-[12px]">
-                                        <span className="font-medium text-emerald-700">🌿 Climate Action</span>
+                                        <span className="font-medium text-emerald-700">ðŸŒ¿ Climate Action</span>
                                         {isClimateSelected
-                                            ? <span className="font-bold text-emerald-700">₹{storeConfig.climateFeeAmount}</span>
+                                            ? <span className="font-bold text-emerald-700">â‚¹{storeConfig.climateFeeAmount}</span>
                                             : <span className="text-slate-400 text-[9px] font-bold uppercase tracking-widest">Opted Out</span>
                                         }
                                     </div>
@@ -278,7 +278,7 @@ const CheckoutReviewPay = () => {
 
                                 <div className="flex justify-between items-end pt-2 mt-1">
                                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Grand Total</span>
-                                    <span className="text-2xl font-black text-[#111111] leading-none">₹{(checkoutTotals?.totalAmount || 0).toLocaleString()}</span>
+                                    <span className="text-2xl font-black text-[#111111] leading-none">â‚¹{(checkoutTotals?.totalAmount || 0).toLocaleString()}</span>
                                 </div>
                             </div>
 
@@ -293,7 +293,7 @@ const CheckoutReviewPay = () => {
                                             <input type="checkbox" checked={isClimateSelected} onChange={e => setIsClimateSelected(e.target.checked)} className="hidden" />
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-emerald-800 mb-0.5">🌿 Climate Action — ₹{storeConfig.climateFeeAmount}</p>
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-emerald-800 mb-0.5">ðŸŒ¿ Climate Action â€” â‚¹{storeConfig.climateFeeAmount}</p>
                                             <p className="text-[9px] text-emerald-700 leading-relaxed">
                                                 Offset your delivery's carbon footprint. Supports <strong>{storeConfig.climateFeeCause}</strong>.
                                             </p>
@@ -325,3 +325,4 @@ const CheckoutReviewPay = () => {
 };
 
 export default CheckoutReviewPay;
+

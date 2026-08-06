@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
+﻿const mongoose = require('mongoose');
 
 const cartSchema = new mongoose.Schema({
-    userId: { type: String, required: true, unique: true }, // Firebase UID
+    userId: { type: String, required: true, unique: true }, // Google OAuth sub or MongoDB User _id
     items: [{
         productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
         name: String,

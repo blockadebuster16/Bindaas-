@@ -1,19 +1,32 @@
-const mongoose = require('mongoose');
+﻿const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-    firebaseUID: { 
-        type: String, 
-        required: true, 
-        unique: true 
+    // Google OAuth sub (unique Google user ID)
+    googleUID: {
+        type: String,
+        unique: true,
+        sparse: true, // sparse allows null for email-only users
     },
-    email: { 
-        type: String, 
-        required: true, 
-        unique: true 
+    // Authentication provider: "google" or "email"
+    authProvider: {
+        type: String,
+        enum: ['google', 'email'],
+        default: 'email',
     },
-    displayName: String, // Luxury Moniker
+    // Hashed password (only for email/password auth — not selected by default)
+    password: {
+        type: String,
+        select: false,
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    displayName: String,
+    picture: String,    // Google profile picture URL
     phoneNumber: String,
-    
+
     // Persistent Shipping Profile
     addressLine1: String,
     addressLine2: String,
@@ -21,14 +34,14 @@ const userSchema = new mongoose.Schema({
     state: String,
     pincode: String,
     country: { type: String, default: 'India' },
-    
-    membershipTier: { 
-        type: String, 
-        default: 'Value Member' 
+
+    membershipTier: {
+        type: String,
+        default: 'Value Member',
     },
-    recentlyViewed: [{ 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Product' 
+    recentlyViewed: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
     }]
 }, { timestamps: true });
 

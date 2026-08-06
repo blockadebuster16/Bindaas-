@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+﻿import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
 
@@ -17,7 +17,7 @@ export const MembershipProvider = ({ children }) => {
         const fetchTier = async () => {
             if (user) {
                 try {
-                    const token = await user.getIdToken();
+                    const token = localStorage.getItem("bindass_user_token");
                     const { data } = await axios.get(`${BASE_URL}/my-tier`, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
@@ -41,3 +41,4 @@ export const MembershipProvider = ({ children }) => {
 };
 
 export const useMembership = () => useContext(MembershipContext);
+
