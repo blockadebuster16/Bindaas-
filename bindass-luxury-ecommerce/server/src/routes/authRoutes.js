@@ -172,6 +172,9 @@ router.post('/admin-login', async (req, res) => {
         const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'secretadmin123';
         const JWT_SECRET = getAdminJWTSecret();
 
+        let isAuthenticated = false;
+        let authEmail = '';
+
         // 1. Try Database Admin
         const admin = await Admin.findOne({ email: email.toLowerCase().trim() });
         if (admin && (await admin.matchPassword(password))) {
