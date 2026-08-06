@@ -173,14 +173,14 @@ router.post('/admin-login', async (req, res) => {
         const JWT_SECRET = getAdminJWTSecret();
 
         // 1. Try Database Admin
-        const admin = await Admin.findOne({ email: email.toLowerCase() });
+        const admin = await Admin.findOne({ email: email.toLowerCase().trim() });
         if (admin && (await admin.matchPassword(password))) {
             isAuthenticated = true;
             authEmail = admin.email;
         } 
         
         // 2. Try Master ENV Admin (Fallback)
-        if (!isAuthenticated && email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && password === ADMIN_PASSWORD) {
+        if (!isAuthenticated && email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim() && password === ADMIN_PASSWORD) {
             isAuthenticated = true;
             authEmail = ADMIN_EMAIL;
         }
@@ -214,12 +214,12 @@ router.post('/admin-reset', async (req, res) => {
         }
 
         const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@bindaas.com';
-        if (predefinedEmail.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+        if (predefinedEmail.toLowerCase().trim() !== ADMIN_EMAIL.toLowerCase().trim()) {
             return res.status(403).json({ success: false, message: 'Unauthorized: Predefined verification email is incorrect.' });
         }
 
         await Admin.deleteMany({});
-        const admin = await Admin.create({ email: newEmail.toLowerCase(), password: newPassword });
+        const admin = await Admin.create({ email: newEmail.toLowerCase().trim(), password: newPassword });
 
         res.json({ success: true, message: 'Admin credentials successfully updated.', admin: { email: admin.email, role: 'admin' } });
     } catch (error) {
