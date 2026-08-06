@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const GeoContext = createContext();
 
-const GEO_URL = 'http://localhost:5001/api/geo/zone';
+const GEO_URL = `${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/geo/zone`;
 const CACHE_KEY = 'bindass_geo_zone';
 const CACHE_TTL_MS = 1000 * 60 * 60 * 6; // 6 hours
 

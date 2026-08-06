@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const CheckoutContext = createContext();
 
-const SETTINGS_URL = 'http://localhost:5001/api/settings';
+const SETTINGS_URL = `${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/settings`;
 
 // ── Pure shipping calculation (mirrors shippingCalculator.js on server) ────
 const computeShipping = (itemCount, method, isCOD, cfg) => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../components/AdminSidebar';
@@ -20,7 +20,7 @@ const OrdersManagement = () => {
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const API_URL = 'http://localhost:5001/api/orders';
+    const API_URL = `${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/orders`;
 
     const getAuthHeaders = () => {
         const token = localStorage.getItem('adminToken');
@@ -352,3 +352,5 @@ const OrdersManagement = () => {
 };
 
 export default OrdersManagement;
+
+

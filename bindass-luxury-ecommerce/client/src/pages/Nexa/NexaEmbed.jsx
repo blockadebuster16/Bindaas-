@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AdminSidebar from "../../components/AdminSidebar";
 import NexaAuthWrapper from "./components/NexaAuthWrapper";
@@ -40,7 +40,7 @@ export default function NexaEmbed() {
   async function saveConfig(updatedConfig = null) {
     const token = localStorage.getItem("nexa_token");
     if (!token) {
-        setMsg({ text: "❌ Not authenticated with Neural Core.", type: "error" });
+        setMsg({ text: "âŒ Not authenticated with Neural Core.", type: "error" });
         return;
     }
     
@@ -51,16 +51,16 @@ export default function NexaEmbed() {
         await axios.post("http://localhost:8000/api/widget/save", configToSave, {
             headers: { Authorization: `Bearer ${token}` }
         });
-        setMsg({ text: "✅ Configuration synchronized!", type: "success" });
+        setMsg({ text: "âœ… Configuration synchronized!", type: "success" });
         setTimeout(() => setMsg({ text: "", type: "success" }), 4000);
     } catch (err) {
         const errorMsg = err.response?.data?.detail || "Sync failed.";
         console.error("Nexa Sync Error:", err.response?.data || err.message);
-        setMsg({ text: `❌ ${errorMsg}`, type: "error" });
+        setMsg({ text: `âŒ ${errorMsg}`, type: "error" });
         
         if (err.response?.status === 401) {
             // Token might be expired or invalid due to server restart
-            setMsg({ text: "❌ Session expired. Please refresh and login again.", type: "error" });
+            setMsg({ text: "âŒ Session expired. Please refresh and login again.", type: "error" });
         }
     } finally {
         setIsSaving(false);
@@ -96,7 +96,7 @@ export default function NexaEmbed() {
     try {
       setIsUploading(true);
       const token = localStorage.getItem('adminToken');
-      const res = await axios.post('http://localhost:5001/api/upload', data, {
+      const res = await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/upload`, data, {
         headers: { 
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data' 
@@ -112,7 +112,7 @@ export default function NexaEmbed() {
       }
     } catch (err) {
       console.error("Logo upload failed", err);
-      setMsg({ text: "❌ Logo upload failed.", type: "error" });
+      setMsg({ text: "âŒ Logo upload failed.", type: "error" });
     } finally {
       setIsUploading(false);
     }
@@ -139,7 +139,7 @@ export default function NexaEmbed() {
       <div style={{ display: "grid", gridTemplateColumns: "400px 1fr", gap: "2rem", alignItems: "start" }}>
         {/* Config */}
         <div className="glass" style={{ borderRadius: 24, padding: "2rem" }}>
-          <h2 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "1.5rem" }}>⚙️ Appearance</h2>
+          <h2 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "1.5rem" }}>âš™ï¸ Appearance</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
             <div>
               <label className="label">Assistant Name</label>
@@ -149,7 +149,7 @@ export default function NexaEmbed() {
               <label className="label">Widget Logo (SVG preferred)</label>
               <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                 <div style={{ width: 48, height: 48, borderRadius: 12, background: "var(--color-surface-3)", display: "flex", alignItems: "center", justifyContent: "center", border: "1.5px solid var(--color-border)", overflow: "hidden" }}>
-                  {config.bot_logo ? <img src={config.bot_logo} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "contain" }} /> : <span style={{ fontSize: "1.2rem" }}>🤖</span>}
+                  {config.bot_logo ? <img src={config.bot_logo} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "contain" }} /> : <span style={{ fontSize: "1.2rem" }}>ðŸ¤–</span>}
                 </div>
                 <label className="btn-secondary" style={{ padding: "0.5rem 1rem", fontSize: "0.8rem", cursor: "pointer" }}>
                   {isUploading ? "Uploading..." : "Upload SVG"}
@@ -183,9 +183,9 @@ export default function NexaEmbed() {
         <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
           <div className="glass" style={{ borderRadius: 24, padding: "2rem" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
-              <h2 style={{ fontSize: "1.1rem", fontWeight: 700 }}>📋 Embed Code</h2>
+              <h2 style={{ fontSize: "1.1rem", fontWeight: 700 }}>ðŸ“‹ Embed Code</h2>
               <button className="btn-primary" onClick={copy} style={{ padding: "0.5rem 1.5rem", fontSize: "0.85rem" }}>
-                {copied ? "✅ Copied!" : "Copy Snippet"}
+                {copied ? "âœ… Copied!" : "Copy Snippet"}
               </button>
             </div>
             <div style={{ background: "#ffffff", border: "1px solid var(--color-border)", borderRadius: 16, padding: "1.5rem", position: "relative" }}>
@@ -205,20 +205,20 @@ export default function NexaEmbed() {
                 </button>
             </div>
             <div style={{ marginTop: "1.5rem", display: "flex", gap: "0.75rem", alignItems: "center", color: "var(--color-text-dim)", fontSize: "0.85rem" }}>
-                <span>💡</span>
+                <span>ðŸ’¡</span>
                 <span>Paste this snippet before the <code>&lt;/body&gt;</code> tag of your website.</span>
             </div>
           </div>
 
           <div className="glass" style={{ borderRadius: 24, padding: "2rem" }}>
-            <h2 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "1.25rem" }}>👁️ Visual Preview</h2>
+            <h2 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "1.25rem" }}>ðŸ‘ï¸ Visual Preview</h2>
             <div style={{ background: "#ffffff", borderRadius: 16, height: "200px", display: "flex", justifyContent: config.position === "bottom-right" ? "flex-end" : "flex-start", alignItems: "flex-end", padding: "2rem", border: "1px dashed var(--color-border)" }}>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: config.position === "bottom-right" ? "flex-end" : "flex-start", gap: "1rem" }}>
                     <div className="glass" style={{ padding: "1rem", borderRadius: "16px 16px 4px 16px", fontSize: "0.8rem", maxWidth: "200px", border: "1px solid var(--color-border)" }}>
                         {config.greeting}
                     </div>
                     <div style={{ width: 56, height: 56, borderRadius: "50%", background: config.primary_color, boxShadow: `0 0 20px ${config.primary_color}60`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem", overflow: "hidden" }}>
-                        {config.bot_logo ? <img src={config.bot_logo} alt="Logo" style={{ width: "60%", height: "60%", objectFit: "contain" }} /> : "💬"}
+                        {config.bot_logo ? <img src={config.bot_logo} alt="Logo" style={{ width: "60%", height: "60%", objectFit: "contain" }} /> : "ðŸ’¬"}
                     </div>
                 </div>
             </div>
@@ -239,3 +239,5 @@ export default function NexaEmbed() {
     </div>
   );
 }
+
+

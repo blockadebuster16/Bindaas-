@@ -1,13 +1,11 @@
-﻿import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
 
 const CartContext = createContext();
 
-// DYNAMIC URL: Uses localhost for dev, and relative path for Vercel production
-const BASE_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:5001/api/cart'
-    : '/api/cart';
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+const BASE_URL = `${API_BASE}/api/cart`;
 
 export const CartProvider = ({ children }) => {
     const { user } = useAuth();
@@ -144,4 +142,5 @@ export const CartProvider = ({ children }) => {
 };
 
 export const useCart = () => useContext(CartContext);
+
 

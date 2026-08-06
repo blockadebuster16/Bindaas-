@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
@@ -29,7 +29,7 @@ const Navbar = () => {
     const [hasHeroAtTop, setHasHeroAtTop] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-    // Replace polling setInterval with MutationObserver — no more 500ms DOM polling
+    // Replace polling setInterval with MutationObserver â€” no more 500ms DOM polling
     useEffect(() => {
         const checkHeroAtTop = () => {
             const heroEl = document.querySelector('.hero-banner-top');
@@ -38,7 +38,7 @@ const Navbar = () => {
 
         checkHeroAtTop();
 
-        // MutationObserver watches for DOM changes — zero cost vs setInterval
+        // MutationObserver watches for DOM changes â€” zero cost vs setInterval
         const observer = new MutationObserver(checkHeroAtTop);
         observer.observe(document.body, { childList: true, subtree: true });
         window.addEventListener('resize', checkHeroAtTop);
@@ -226,7 +226,7 @@ const Navbar = () => {
                                     </Link>
                                 </li>
 
-                                {/* ── COLLECTIONS MEGA DROPDOWN ── */}
+                                {/* â”€â”€ COLLECTIONS MEGA DROPDOWN â”€â”€ */}
                                 <li 
                                     className="group static"
                                     onMouseEnter={() => setIsCollectionsHovered(true)}
@@ -246,7 +246,7 @@ const Navbar = () => {
                                             <div className="flex items-center justify-between mb-5">
                                                 <span className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-slate-400">Featured Collections</span>
                                                 <Link to="/shop" className="text-[11px] font-bold uppercase tracking-wider text-black hover:text-[#D4AF37] transition-colors">
-                                                    View All Drops →
+                                                    View All Drops â†’
                                                 </Link>
                                             </div>
 
@@ -311,9 +311,9 @@ const Navbar = () => {
                         {user ? (
                             <div className="hidden md:flex items-center gap-3">
                                 <Link to="/profile" title="View Profile" className="flex items-center">
-                                    <img src={user.photoURL} className="w-7 h-7 rounded-full border border-white/30" alt="pfp" />
+                                    <img src={user.picture} className="w-7 h-7 rounded-full border border-white/30" alt="pfp" />
                                 </Link>
-                                {/* Inline logout confirm — replaces window.confirm() */}
+                                {/* Inline logout confirm â€” replaces window.confirm() */}
                                 {showLogoutConfirm ? (
                                     <div className="flex items-center gap-1.5 bg-red-50 border border-red-200 rounded-lg px-2 py-1">
                                         <span className="text-[10px] text-red-600 font-bold uppercase tracking-wider">Logout?</span>
@@ -365,7 +365,7 @@ const Navbar = () => {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onFocus={() => searchQuery.length > 2 && setShowResults(true)}
-                                placeholder="Find a piece…"
+                                placeholder="Find a pieceâ€¦"
                                 className={`w-full rounded-full py-3 pl-12 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-white font-medium transition-shadow ${
                                     isTransparentOverlay ? 'bg-white/10 text-white placeholder-slate-400' : 'bg-gray-100 text-black placeholder-gray-500'
                                 }`}
@@ -392,7 +392,7 @@ const Navbar = () => {
                                                     <div>
                                                         <p className="text-xs font-bold text-[#111111] uppercase tracking-wider">{product.name}</p>
                                                         <p className="text-[10px] text-[#6B6457] font-medium">{product.category}</p>
-                                                        <p className="text-xs font-black text-[#D4AF37] mt-1">₹{product.price.toLocaleString()}</p>
+                                                        <p className="text-xs font-black text-[#D4AF37] mt-1">â‚¹{product.price.toLocaleString()}</p>
                                                     </div>
                                                 </Link>
                                             ))}

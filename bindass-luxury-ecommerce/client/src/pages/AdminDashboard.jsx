@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../components/AdminSidebar';
@@ -50,7 +50,7 @@ const AdminDashboard = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
-  const API_URL = 'http://localhost:5001/api/products';
+  const API_URL = `${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/products`;
 
   // Fetch all products
   const fetchProducts = async () => {
@@ -180,7 +180,7 @@ const AdminDashboard = () => {
 
     try {
       setIsUploading(true);
-      const res = await axios.post('http://localhost:5001/api/upload', data, { ...getAuthHeaders(), headers: { ...getAuthHeaders().headers, 'Content-Type': 'multipart/form-data' }});
+      const res = await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/upload`, data, { ...getAuthHeaders(), headers: { ...getAuthHeaders().headers, 'Content-Type': 'multipart/form-data' }});
       
       if (res.data.success) {
          setFormData(prev => ({ ...prev, images: [...prev.images, ...res.data.urls] }));
@@ -479,10 +479,10 @@ const AdminDashboard = () => {
 
                           <div className="grid grid-cols-2 gap-4">
                             <div>
-                               <label className="block text-sm font-medium text-gray-900 mb-1">Price (₹) <span className="text-red-500">*</span></label>
+                               <label className="block text-sm font-medium text-gray-900 mb-1">Price (â‚¹) <span className="text-red-500">*</span></label>
                                <div className="relative rounded-md shadow-sm">
                                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                     <span className="text-gray-500 sm:text-sm">₹</span>
+                                     <span className="text-gray-500 sm:text-sm">â‚¹</span>
                                   </div>
                                   <input type="number" name="price" required min="0" step="0.01" value={formData.price} onChange={handleInputChange} className="block w-full pl-7 border-gray-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="0.00" />
                                </div>
@@ -532,7 +532,7 @@ const AdminDashboard = () => {
 
                           <div>
                              <label className="block text-sm font-medium text-gray-900 mb-1">Shipping &amp; Returns</label>
-                             <textarea name="shipping_returns" rows="3" value={formData.shipping_returns} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="e.g. Free express shipping on all orders over ₹5000. Returns accepted within 14 days in original packaging." />
+                             <textarea name="shipping_returns" rows="3" value={formData.shipping_returns} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary sm:text-sm px-3 py-2 border" placeholder="e.g. Free express shipping on all orders over â‚¹5000. Returns accepted within 14 days in original packaging." />
                           </div>
 
                           <div>
@@ -624,3 +624,5 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+
+

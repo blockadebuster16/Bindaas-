@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../components/AdminSidebar';
@@ -26,7 +26,7 @@ const CouponManager = () => {
     expiryDate: ''
   });
 
-  const API_URL = 'http://localhost:5001/api/coupons';
+  const API_URL = `${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/coupons`;
 
   const fetchCoupons = async () => {
     try {
@@ -215,11 +215,11 @@ const CouponManager = () => {
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
                                  <div className="text-sm font-semibold text-gray-900">
-                                   {coupon.discountType === 'percentage' ? `${coupon.discountValue}% Off` : `₹${coupon.discountValue} Off`}
+                                   {coupon.discountType === 'percentage' ? `${coupon.discountValue}% Off` : `â‚¹${coupon.discountValue} Off`}
                                  </div>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                 ₹{coupon.minPurchase?.toLocaleString() || 0}
+                                 â‚¹{coupon.minPurchase?.toLocaleString() || 0}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                  {coupon.expiryDate ? new Date(coupon.expiryDate).toLocaleDateString() : 'Never'}
@@ -297,7 +297,7 @@ const CouponManager = () => {
                                <label className="block text-sm font-semibold text-gray-900 mb-1">Discount Type</label>
                                <select name="discountType" value={formData.discountType} onChange={handleInputChange} className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm px-4 py-2.5 border">
                                   <option value="percentage">Percentage (%)</option>
-                                  <option value="fixed">Fixed Amount (₹)</option>
+                                  <option value="fixed">Fixed Amount (â‚¹)</option>
                                </select>
                             </div>
                             <div>
@@ -309,7 +309,7 @@ const CouponManager = () => {
                           <div>
                              <label className="block text-sm font-semibold text-gray-900 mb-1">Minimum Purchase Requirement</label>
                              <div className="relative rounded-md shadow-sm">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500 sm:text-sm">₹</div>
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500 sm:text-sm">â‚¹</div>
                                 <input type="number" name="minPurchase" min="0" value={formData.minPurchase} onChange={handleInputChange} className="block w-full pl-7 border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm px-4 py-2.5 border" placeholder="0" />
                              </div>
                           </div>
@@ -342,3 +342,5 @@ const CouponManager = () => {
 };
 
 export default CouponManager;
+
+

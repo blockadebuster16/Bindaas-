@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
 import GridProductCard from '../components/GridProductCard';
@@ -70,3 +70,5 @@ const SearchResults = () => {
 };
 
 export default SearchResults;
+
+

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -13,7 +13,7 @@ const Contact = () => {
         setSubmitting(true);
         setStatus({ type: '', message: '' });
         try {
-            await axios.post('http://localhost:5001/api/forms/contact', formData);
+            await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/forms/contact`, formData);
             setStatus({ type: 'success', message: 'Your message has been sent to the BiNDAAS! concierge.' });
             setFormData({ name: '', email: '', subject: 'Inquiry', message: '' });
         } catch (err) {
@@ -97,7 +97,7 @@ const Contact = () => {
                                 </div>
                                 <div className="space-y-2">
                                     <p className="text-2xl font-black text-[#10221c] tracking-tight hover:underline cursor-pointer">02522-669393</p>
-                                    <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Mon. – Sat. 10:00 AM – 7:00 PM</p>
+                                    <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Mon. â€“ Sat. 10:00 AM â€“ 7:00 PM</p>
                                 </div>
                             </div>
                         </div>
@@ -161,3 +161,5 @@ const Contact = () => {
 };
 
 export default Contact;
+
+

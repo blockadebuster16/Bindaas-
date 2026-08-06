@@ -32,8 +32,8 @@ const Profile = () => {
 
                 // Fetch Profile and Orders in parallel
                 const [profileRes, ordersRes] = await Promise.all([
-                    axios.get('http://localhost:5001/api/users/profile', { headers }),
-                    axios.get('http://localhost:5001/api/orders/my-orders', { headers })
+                    axios.get(`${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/users/profile`, { headers }),
+                    axios.get(`${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/orders/my-orders`, { headers })
                 ]);
 
                 setProfile(profileRes.data);
@@ -53,7 +53,7 @@ const Profile = () => {
         setSaveLoading(true);
         try {
             const token = localStorage.getItem("bindass_user_token");
-            const { data } = await axios.put('http://localhost:5001/api/users/profile', profile, {
+            const { data } = await axios.put(`${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/users/profile`, profile, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setProfile(data);
@@ -101,8 +101,8 @@ const Profile = () => {
                         <div className="sticky top-28 space-y-8">
                             <div className="space-y-4">
                                 <div className="w-20 h-20 bg-slate-200 rounded-full overflow-hidden border-2 border-white shadow-sm">
-                                    {user.photoURL ? (
-                                        <img src={user.photoURL} alt="User" className="w-full h-full object-cover" />
+                                    {user.picture ? (
+                                        <img src={user.picture} alt="User" className="w-full h-full object-cover" />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center bg-[#10221c] text-white font-bold text-2xl uppercase">
                                             {profile.displayName?.[0] || user.email?.[0]}
@@ -320,4 +320,7 @@ const Profile = () => {
 };
 
 export default Profile;
+
+
+
 

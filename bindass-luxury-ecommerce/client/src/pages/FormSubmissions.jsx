@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AdminSidebar from '../components/AdminSidebar';
 
@@ -9,7 +9,7 @@ const FormSubmissions = () => {
     const [loading, setLoading] = useState(true);
     const [isSidebarOpen, setSidebarOpen] = useState(false);
 
-    const API_URL = 'http://localhost:5001/api/forms';
+    const API_URL = `${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/forms`;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -132,3 +132,5 @@ const FormSubmissions = () => {
 };
 
 export default FormSubmissions;
+
+

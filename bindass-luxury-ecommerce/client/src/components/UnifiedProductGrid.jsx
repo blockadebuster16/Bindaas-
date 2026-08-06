@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+﻿import React, { useState, useEffect, useMemo, useRef } from 'react';
 import axios from 'axios';
 import GridProductCard from './GridProductCard';
 import FilterSidebar from './FilterSidebar';
@@ -293,3 +293,5 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
 };
 
 export default UnifiedProductGrid;
+
+

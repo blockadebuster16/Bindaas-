@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
@@ -23,7 +23,7 @@ const CheckoutReviewPay = () => {
             if (user) {
                 try {
                     const token = localStorage.getItem("bindass_user_token");
-                    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:5001/api/analytics' : '/api/analytics';
+                    const API_BASE = `${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/analytics`;
                     await axios.post(`${API_BASE}/event`, {
                         eventType: 'checkout_payment_started',
                         pagePath: '/checkout-payment',
@@ -47,9 +47,7 @@ const CheckoutReviewPay = () => {
         setProcessing(true);
         try {
             const token = localStorage.getItem("bindass_user_token");
-            const API_BASE = window.location.hostname === 'localhost'
-                ? 'http://localhost:5001/api/payments'
-                : '/api/payments';
+            const API_BASE = `${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/payments`;
             const { data: order } = await axios.post(`${API_BASE}/create-order`,
                 { amount: checkoutTotals.totalAmount },
                 { headers: { Authorization: `Bearer ${token}` } }
@@ -325,4 +323,7 @@ const CheckoutReviewPay = () => {
 };
 
 export default CheckoutReviewPay;
+
+
+
 

@@ -1,12 +1,11 @@
-﻿import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
 
 const RecentlyViewedContext = createContext();
 
-const BASE_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:5001/api/users/recently-viewed'
-    : '/api/users/recently-viewed';
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+const BASE_URL = `${API_BASE}/api/users/recently-viewed`;
 
 export const RecentlyViewedProvider = ({ children }) => {
     const { user } = useAuth();
@@ -81,4 +80,5 @@ export const RecentlyViewedProvider = ({ children }) => {
 };
 
 export const useRecentlyViewed = () => useContext(RecentlyViewedContext);
+
 

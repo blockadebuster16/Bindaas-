@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AdminSidebar from '../components/AdminSidebar';
 
@@ -20,7 +20,7 @@ const PageLayoutManager = () => {
         enabled: true
     });
 
-    const API_BASE = 'http://localhost:5001/api/page-layouts';
+    const API_BASE = `${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/page-layouts`;
 
     const pages = [
         { key: 'home', label: 'Home Page' },
@@ -286,7 +286,7 @@ const PageLayoutManager = () => {
                         <div className="flex justify-between items-center border-b pb-4">
                             <h3 className="text-lg font-extrabold uppercase tracking-tight text-[#111111]">Add Section / Ad to Page</h3>
                             <button onClick={() => setIsAddModalOpen(false)} className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 hover:text-black">
-                                ✕
+                                âœ•
                             </button>
                         </div>
 
@@ -357,3 +357,5 @@ const PageLayoutManager = () => {
 };
 
 export default PageLayoutManager;
+
+

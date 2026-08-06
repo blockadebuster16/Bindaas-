@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cropper from 'react-easy-crop';
 import AdminSidebar from '../components/AdminSidebar';
 
-// ── Google Fonts catalogue ────────────────────────────────────────────────────
+// â”€â”€ Google Fonts catalogue â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const FONT_GROUPS = [
   { group: 'Sans-serif', fonts: ['Inter','Roboto','Open Sans','Poppins','Montserrat','Nunito','Lato','Raleway','Oswald','Work Sans','DM Sans','Mulish','Barlow','Exo 2'] },
   { group: 'Serif',      fonts: ['Playfair Display','Merriweather','Cinzel','Cormorant Garamond','EB Garamond','Libre Baskerville','Lora'] },
@@ -21,7 +21,7 @@ const loadGoogleFont = (family) => {
   document.head.appendChild(link);
 };
 
-const UPLOAD_URL = 'http://localhost:5001/api/upload/ad';
+const UPLOAD_URL = `${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/upload/ad`;
 
   const ColorSwatch = ({ label, name, currentColor, setFormData }) => {
     const swatches = [
@@ -102,7 +102,7 @@ const UPLOAD_URL = 'http://localhost:5001/api/upload/ad';
             <button type="button"
               onClick={() => setFormData(p => ({ ...p, [svgUrlKey]: '' }))}
               className="absolute top-2 right-2 w-5 h-5 bg-red-500 text-white rounded-full text-[10px] flex items-center justify-center hover:bg-red-600"
-            >×</button>
+            >Ã—</button>
           </div>
         ) : (
           <input type="text" name={fieldKey} value={formData[fieldKey]} onChange={handleInputChange}
@@ -145,7 +145,7 @@ const UPLOAD_URL = 'http://localhost:5001/api/upload/ad';
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
             </svg>
-            {svgUploading ? 'Uploading…' : 'SVG'}
+            {svgUploading ? 'Uploadingâ€¦' : 'SVG'}
             <input type="file" accept=".svg,image/svg+xml" onChange={handleSvgUpload} disabled={svgUploading} className="absolute inset-0 opacity-0 cursor-pointer" />
           </label>
         </div>
@@ -166,7 +166,7 @@ const UPLOAD_URL = 'http://localhost:5001/api/upload/ad';
             >
               <option value="">Default Font</option>
               {FONT_GROUPS.map(g => (
-                <optgroup key={g.group} label={`── ${g.group} ──`}>
+                <optgroup key={g.group} label={`â”€â”€ ${g.group} â”€â”€`}>
                   {g.fonts.map(f => (
                     <option key={f} value={f}>{f}</option>
                   ))}
@@ -186,12 +186,12 @@ const UPLOAD_URL = 'http://localhost:5001/api/upload/ad';
               className="w-20 h-1 accent-gray-900"
             />
             <span className="text-[10px] font-bold text-gray-700 w-8 text-right">
-              {formData[sizeKey] || '—'}
+              {formData[sizeKey] || 'â€”'}
               {formData[sizeKey] ? 'px' : ''}
             </span>
             {formData[sizeKey] && (
               <button type="button" onClick={() => setFormData(p => ({ ...p, [sizeKey]: '' }))}
-                className="text-[9px] text-red-400 hover:text-red-600 font-bold ml-0.5">✕</button>
+                className="text-[9px] text-red-400 hover:text-red-600 font-bold ml-0.5">âœ•</button>
             )}
           </div>
         </div>
@@ -247,8 +247,8 @@ const AdvertisementManager = () => {
     ...STYLE_DEFAULTS,
   });
 
-  const API_URL = 'http://localhost:5001/api/advertisements';
-  const UPLOAD_URL = 'http://localhost:5001/api/upload/ad';
+  const API_URL = `${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/advertisements`;
+  const UPLOAD_URL = `${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/upload/ad`;
 
   const fetchAds = async () => {
     try {
@@ -919,7 +919,7 @@ const AdvertisementManager = () => {
                    </h5>
                    <StyledTextField label="Tag (e.g. BESTSELLERS)" fieldKey="tag" formData={formData} setFormData={setFormData} handleInputChange={handleInputChange} showToast={showToast} getAuthHeaders={getAuthHeaders} placeholder="BESTSELLERS" inputClass="font-bold" />
                    <ColorSwatch label="Tag" name="tagColor" currentColor={formData.tagColor} setFormData={setFormData} />
-                   <StyledTextField label="Tagline" fieldKey="tagline" formData={formData} setFormData={setFormData} handleInputChange={handleInputChange} showToast={showToast} getAuthHeaders={getAuthHeaders} placeholder="Free shipping on orders above ₹2000" />
+                   <StyledTextField label="Tagline" fieldKey="tagline" formData={formData} setFormData={setFormData} handleInputChange={handleInputChange} showToast={showToast} getAuthHeaders={getAuthHeaders} placeholder="Free shipping on orders above â‚¹2000" />
                    <ColorSwatch label="Tagline" name="taglineColor" currentColor={formData.taglineColor} setFormData={setFormData} />
                    <div className="grid grid-cols-3 gap-4">
                      <div>
@@ -1049,3 +1049,5 @@ const AdvertisementManager = () => {
 };
 
 export default AdvertisementManager;
+
+

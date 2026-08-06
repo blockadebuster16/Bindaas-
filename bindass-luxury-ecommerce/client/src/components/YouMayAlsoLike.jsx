@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useWishlist } from '../context/WishlistContext';
@@ -14,7 +14,7 @@ const YouMayAlsoLike = ({ currentProductId, category }) => {
     useEffect(() => {
         const fetchRelated = async () => {
             try {
-                const { data } = await axios.get('http://localhost:5001/api/products?limit=12');
+                const { data } = await axios.get(`${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/products?limit=12`);
                 // Filter out current product
                 const filtered = data.filter(p => p._id !== currentProductId);
                 setProducts(filtered);
@@ -138,3 +138,5 @@ const YouMayAlsoLike = ({ currentProductId, category }) => {
 };
 
 export default YouMayAlsoLike;
+
+
