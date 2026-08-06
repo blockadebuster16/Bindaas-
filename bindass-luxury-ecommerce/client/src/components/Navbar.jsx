@@ -4,33 +4,11 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
+import loadGoogleFont from '../utils/loadGoogleFont';
+import RenderText from './shared/RenderText';
 
 import logoBlack from '../assets/text-logo-black-transparent.png';
-
-const loadGoogleFont = (family) => {
-    if (!family || document.querySelector(`link[data-gfont="${family}"]`)) return;
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family).replace(/%20/g, '+')}:wght@300;400;500;600;700;800;900&display=swap`;
-    link.setAttribute('data-gfont', family);
-    document.head.appendChild(link);
-};
-
-const RenderText = ({ value, svgUrl, bold, italic, stroke, strokeColor, strokeWidth, fontSize, fontFamily, className = '', style = {}, tag: Tag = 'span' }) => {
-    if (svgUrl) {
-        return <img src={svgUrl} alt={value} className={`inline-block object-contain max-h-[1.4em] ${className}`} style={style} />;
-    }
-    const computedStyle = {
-        ...style,
-        fontWeight: bold ? '900' : undefined,
-        fontStyle: italic ? 'italic' : undefined,
-        WebkitTextStroke: stroke ? `${strokeWidth || '2'}px ${strokeColor || '#000000'}` : undefined,
-        paintOrder: stroke ? 'stroke fill' : undefined,
-        fontSize: fontSize ? `${fontSize}px` : undefined,
-        fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : undefined,
-    };
-    return <Tag className={className} style={computedStyle}>{value}</Tag>;
-};
 
 const Navbar = () => {
     const { user, setIsAuthModalOpen, logOut } = useAuth();
@@ -49,8 +27,9 @@ const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isCollectionsHovered, setIsCollectionsHovered] = useState(false);
     const [hasHeroAtTop, setHasHeroAtTop] = useState(false);
+    const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-    // Dynamic detection: check if a Hero Banner exists on the current page layout
+    // Replace polling setInterval with MutationObserver — no more 500ms DOM polling
     useEffect(() => {
         const checkHeroAtTop = () => {
             const heroEl = document.querySelector('.hero-banner-top');
@@ -58,11 +37,14 @@ const Navbar = () => {
         };
 
         checkHeroAtTop();
-        const timer = setInterval(checkHeroAtTop, 500);
+
+        // MutationObserver watches for DOM changes — zero cost vs setInterval
+        const observer = new MutationObserver(checkHeroAtTop);
+        observer.observe(document.body, { childList: true, subtree: true });
         window.addEventListener('resize', checkHeroAtTop);
 
         return () => {
-            clearInterval(timer);
+            observer.disconnect();
             window.removeEventListener('resize', checkHeroAtTop);
         };
     }, [location.pathname]);
@@ -92,7 +74,7 @@ const Navbar = () => {
     useEffect(() => {
         const fetchPromoAd = async () => {
             try {
-                const { data } = await axios.get('http://localhost:5001/api/advertisements?bannerType=promo');
+                const { data } = await axios.get(`${API_BASE_URL}/api/advertisements?bannerType=promo`);
                 const ad = data[0] || null;
                 setPromoAd(ad);
                 if (ad && ad.titleFontFamily) {
@@ -111,7 +93,7 @@ const Navbar = () => {
             if (searchQuery.length > 2) {
                 setSearchLoading(true);
                 try {
-                    const { data } = await axios.get(`http://localhost:5001/api/products/search?q=${searchQuery}`);
+                    const { data } = await axios.get(`${API_BASE_URL}/api/products/search?q=${encodeURIComponent(searchQuery)}`);
                     setSearchResults(data);
                     setShowResults(true);
                 } catch (err) {
@@ -160,7 +142,7 @@ const Navbar = () => {
     // Header transparent overlay ONLY applies if a Hero Banner is active at top of page, unscrolled, and not hovered
     const isTransparentOverlay = hasHeroAtTop && !isScrolled && !isCollectionsHovered;
 
-    let headerClasses = "fixed top-0 left-0 right-0 z-[100] transition-all duration-500 font-['Outfit','Manrope',sans-serif] ";
+    let headerClasses = "fixed top-0 left-0 right-0 z-[100] transition-all duration-500 font-sans ";
     if (isTransparentOverlay) {
         headerClasses += "bg-transparent text-white border-transparent shadow-none py-2";
     } else {
@@ -175,7 +157,7 @@ const Navbar = () => {
             {/* Promo Bar */}
             {promoAd && promoAd !== 'loading' ? (
                 <div
-                    className="w-full tracking-[0.2em] py-1.5 text-center border-b border-[#E8E3D8] font-['Outfit','Manrope',sans-serif] px-4 flex items-center justify-center overflow-hidden z-[101] relative"
+                    className="w-full tracking-[0.2em] py-1.5 text-center border-b border-[#E8E3D8] font-sans px-4 flex items-center justify-center overflow-hidden z-[101] relative"
                     style={{ backgroundColor: promoAd.tagColor || '#FFD017' }}
                 >
                     <RenderText
@@ -331,10 +313,26 @@ const Navbar = () => {
                                 <Link to="/profile" title="View Profile" className="flex items-center">
                                     <img src={user.photoURL} className="w-7 h-7 rounded-full border border-white/30" alt="pfp" />
                                 </Link>
-                                <button
-                                    onClick={() => { if (window.confirm("Logout?")) { logOut(); navigate('/'); } }}
-                                    className="material-icons-outlined hover:text-red-400 text-[22px] transition-colors flex items-center"
-                                >logout</button>
+                                {/* Inline logout confirm — replaces window.confirm() */}
+                                {showLogoutConfirm ? (
+                                    <div className="flex items-center gap-1.5 bg-red-50 border border-red-200 rounded-lg px-2 py-1">
+                                        <span className="text-[10px] text-red-600 font-bold uppercase tracking-wider">Logout?</span>
+                                        <button
+                                            onClick={() => { logOut(); navigate('/'); setShowLogoutConfirm(false); }}
+                                            className="text-[9px] bg-red-500 text-white font-bold uppercase px-2 py-0.5 rounded hover:bg-red-600 transition-colors"
+                                        >Yes</button>
+                                        <button
+                                            onClick={() => setShowLogoutConfirm(false)}
+                                            className="text-[9px] text-red-400 font-bold uppercase px-1 hover:text-red-600 transition-colors"
+                                        >No</button>
+                                    </div>
+                                ) : (
+                                    <button
+                                        onClick={() => setShowLogoutConfirm(true)}
+                                        className="material-icons-outlined hover:text-red-400 text-[22px] transition-colors flex items-center"
+                                        aria-label="Logout"
+                                    >logout</button>
+                                )}
                             </div>
                         ) : (
                             <button onClick={handleLogin} className="material-icons-outlined text-[24px] hover:opacity-80 hidden md:flex items-center">person_outline</button>

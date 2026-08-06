@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-
+import API_BASE_URL from '../config/api';
 import logoBlack from '../assets/text-logo-black-transparent.png';
 
 const Footer = () => {
@@ -15,7 +15,7 @@ const Footer = () => {
         setSubmitting(true);
         setStatus({ type: '', message: '' });
         try {
-            await axios.post('http://localhost:5001/api/forms/subscribe', { email });
+            await axios.post(`${API_BASE_URL}/api/forms/subscribe`, { email });
             setStatus({ type: 'success', message: 'Welcome to the inner circle!' });
             setEmail('');
         } catch (err) {
@@ -27,7 +27,7 @@ const Footer = () => {
     };
 
     return (
-        <footer className="bg-[#111111] text-white border-t border-[#2A2A2A] font-['Outfit','Manrope',sans-serif] relative overflow-hidden">
+        <footer className="bg-[#111111] text-white border-t border-[#2A2A2A] font-sans relative overflow-hidden">
             {/* Top Newsletter Strip (Bluorng Style) */}
             <div className="border-b border-[#2A2A2A] bg-[#161616] py-5 px-6 md:px-12">
                 <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-4">

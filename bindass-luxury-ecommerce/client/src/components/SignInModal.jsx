@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 const SignInModal = () => {
     const { user, googleSignIn, facebookSignIn, signInWithEmail, signUpWithEmail, updateUserProfile, isAuthModalOpen, setIsAuthModalOpen } = useAuth();
@@ -87,7 +88,7 @@ const SignInModal = () => {
             const token = await userCredential.user.getIdToken();
             
             // Sync extra fields to Supabase
-            await axios.post('http://localhost:5001/api/users/profile/sync', {
+            await axios.post(`${API_BASE_URL}/api/users/profile/sync`, {
                 firstName: regData.firstName,
                 lastName: regData.lastName,
                 birthdate: regData.birthdate,

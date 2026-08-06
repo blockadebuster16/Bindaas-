@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import API_BASE_URL from '../config/api';
 
 const AdSplitBanner = ({ page }) => {
   const [ad, setAd] = useState(null);
@@ -9,8 +10,8 @@ const AdSplitBanner = ({ page }) => {
   useEffect(() => {
     const fetchAd = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:5001/api/advertisements/active?page=${page}`);
-        const splitAd = data.find(a => a.bannerType === 'split');
+        const { data } = await axios.get(`${API_BASE_URL}/api/advertisements?bannerType=split&page=${page}`);
+        const splitAd = Array.isArray(data) ? data[0] : null;
         setAd(splitAd);
       } catch (err) {
         console.error("Failed to fetch split ad", err);

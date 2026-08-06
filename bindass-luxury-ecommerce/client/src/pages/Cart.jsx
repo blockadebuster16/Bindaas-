@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { useCheckout } from '../context/CheckoutContext';
+import { useToast } from '../context/ToastContext';
 
 const Cart = () => {
     const { cartItems, removeFromCart } = useCart();
@@ -11,6 +12,7 @@ const Cart = () => {
     const navigate = useNavigate();
     const { formatPrice } = useCurrency();
     const { updateTotals, clearCheckout } = useCheckout();
+    const toast = useToast();
 
     const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
     const totalAmount = subtotal;
@@ -22,7 +24,7 @@ const Cart = () => {
         }
 
         if (cartItems.length === 0) {
-            alert("Your bag is empty.");
+            toast.warning('Your bag is empty — add some pieces first!');
             return;
         }
 

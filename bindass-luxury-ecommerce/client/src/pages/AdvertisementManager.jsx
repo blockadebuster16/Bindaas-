@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import Cropper from 'react-easy-crop';
 import AdminSidebar from '../components/AdminSidebar';
 
@@ -12,7 +11,6 @@ const FONT_GROUPS = [
   { group: 'Script',     fonts: ['Dancing Script','Pacifico','Lobster','Sacramento','Great Vibes','Satisfy','Courgette'] },
   { group: 'Monospace',  fonts: ['Space Mono','Fira Code','JetBrains Mono','Source Code Pro'] },
 ];
-const ALL_FONTS = FONT_GROUPS.flatMap(g => g.fonts);
 
 const loadGoogleFont = (family) => {
   if (!family || document.querySelector(`link[data-gfont="${family}"]`)) return;
@@ -207,9 +205,7 @@ const AdvertisementManager = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [error, setError] = useState(null);
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
-  const navigate = useNavigate();
 
   const STYLE_DEFAULTS = {
     titleBold: false, titleItalic: false, titleStroke: false, titleStrokeColor: '#000000', titleStrokeWidth: '2', titleSvgUrl: '', titleFontSize: '', titleFontFamily: '',
@@ -263,7 +259,7 @@ const AdvertisementManager = () => {
       });
       setAds(data);
     } catch (err) {
-      setError("Failed to fetch advertisements.");
+      console.error("Failed to fetch advertisements.", err);
     } finally {
       setLoading(false);
     }

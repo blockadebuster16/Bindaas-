@@ -107,7 +107,8 @@ export const CartProvider = ({ children }) => {
             updatedCart = [...cartItems, {
                 ...product,
                 productId: product._id || product.productId,
-                cartId: Date.now()
+                // crypto.randomUUID() is collision-free even when adding multiple items simultaneously
+                cartId: crypto.randomUUID()
             }];
         }
 
@@ -116,7 +117,10 @@ export const CartProvider = ({ children }) => {
     };
 
     const addMultipleToCart = (products) => {
-        const updatedCart = [...cartItems, ...products.map((p, i) => ({ ...p, cartId: Date.now() + i }))];
+        const updatedCart = [...cartItems, ...products.map((p) => ({
+            ...p,
+            cartId: crypto.randomUUID()
+        }))];
         setCartItems(updatedCart);
         syncWithServer(updatedCart);
     };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 const AdBreak = ({ page = 'home', adId = null, fallbackTitle = 'WOMENSWEAR', fallbackImage = 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop', fallbackLink = '/women' }) => {
     const [ad, setAd] = useState(null);
@@ -9,7 +10,7 @@ const AdBreak = ({ page = 'home', adId = null, fallbackTitle = 'WOMENSWEAR', fal
         const fetchAd = async () => {
             try {
                 if (adId) {
-                    const { data } = await axios.get(`http://localhost:5001/api/advertisements/${adId}`);
+                    const { data } = await axios.get(`${API_BASE_URL}/api/advertisements/${adId}`);
                     if (data && data.isActive) {
                         setAd(data);
                         return;
@@ -17,7 +18,7 @@ const AdBreak = ({ page = 'home', adId = null, fallbackTitle = 'WOMENSWEAR', fal
                 }
 
                 // Fallback: fetch active break ads for page
-                const { data } = await axios.get(`http://localhost:5001/api/advertisements?bannerType=break&page=${page}`);
+                const { data } = await axios.get(`${API_BASE_URL}/api/advertisements?bannerType=break&page=${page}`);
                 if (data && data.length > 0) {
                     setAd(data[0]);
                 }
@@ -36,7 +37,7 @@ const AdBreak = ({ page = 'home', adId = null, fallbackTitle = 'WOMENSWEAR', fal
     const ctaText = ad?.ctaText || 'EXPLORE COLLECTION';
 
     return (
-        <section className="w-full relative overflow-hidden bg-black mt-8 md:mt-16 mb-0 font-['Outfit','Manrope',sans-serif]">
+        <section className="w-full relative overflow-hidden bg-black mt-8 md:mt-16 mb-0 font-sans">
             <Link to={ctaLink} className="group block relative w-full min-h-[70vh] md:min-h-[85vh] lg:min-h-[90vh] h-[550px] md:h-[750px] lg:h-[850px] overflow-hidden">
                 
                 {/* Background Media (Image or Video) */}

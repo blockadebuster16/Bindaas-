@@ -39,13 +39,16 @@ import NexaCases from './pages/Nexa/NexaCases';
 import NexaChat from './pages/Nexa/NexaChat';
 import NexaEmbed from './pages/Nexa/NexaEmbed';
 import FormSubmissions from './pages/FormSubmissions';
-import { AuthProvider } from './context/AuthContext';
+// AuthProvider is already mounted in index.js — do NOT add it here again
 import { CheckoutProvider } from './context/CheckoutContext';
+import { ToastProvider } from './context/ToastContext';
+import ErrorBoundary from './components/ErrorBoundary';
 import SmoothScroll from './components/SmoothScroll';
 
 function App() {
   return (
-    <AuthProvider>
+    <ErrorBoundary>
+      <ToastProvider>
       <CheckoutProvider>
         <SmoothScroll>
           <Routes>
@@ -98,8 +101,9 @@ function App() {
         </Routes>
         </SmoothScroll>
       </CheckoutProvider>
-    </AuthProvider>
+    </ToastProvider>
+    </ErrorBoundary>
   );
 }
 
-export default App;
+export default App;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
@@ -30,7 +30,7 @@ const RenderText = ({ value, svgUrl, bold, italic, stroke, strokeColor, strokeWi
 };
 
 const MiddleAdContent = ({ ad }) => {
-    const getResponsiveMedia = () => {
+    const getResponsiveMedia = useCallback(() => {
         if (typeof window === 'undefined') return ad.mediaUrl;
         const w = window.innerWidth;
         
@@ -47,14 +47,14 @@ const MiddleAdContent = ({ ad }) => {
         }
         
         return ad.mediaUrl;
-    };
+    }, [ad]);
 
     const [mediaUrl, setMediaUrl] = useState(getResponsiveMedia());
 
     // Update image URL if the advertisement object changes dynamically
     useEffect(() => {
         setMediaUrl(getResponsiveMedia());
-    }, [ad]);
+    }, [getResponsiveMedia]);
 
     // Handle responsive window resizing
     useEffect(() => {
@@ -64,7 +64,7 @@ const MiddleAdContent = ({ ad }) => {
 
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, [ad]);
+    }, [getResponsiveMedia]);
 
     return (
         <section className="relative w-full h-[300px] lg:h-[400px] overflow-hidden my-12">
@@ -148,7 +148,7 @@ const AdMiddle = ({ page = 'home' }) => {
     useEffect(() => {
         const fetchAds = async () => {
             try {
-                const { data } = await axios.get(`https://bindaas-ucyv.onrender.com/api/advertisements?bannerType=middle&page=${page}`);
+                const { data } = await axios.get(`${API_BASE_URL}/api/advertisements?bannerType=middle&page=${page}`);
                 setMiddleAds(data);
                 data.forEach(ad => {
                     [ad.titleFontFamily, ad.tagFontFamily, ad.subtitleFontFamily].forEach(f => f && loadGoogleFont(f));

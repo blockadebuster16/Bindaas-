@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AdminSidebar from '../components/AdminSidebar';
 
@@ -58,7 +57,6 @@ const Toggle = ({ label, hint, name, checked, onChange }) => (
 
 // ─── Main component ────────────────────────────────────────────────────────
 const SettingsManager = () => {
-  const navigate = useNavigate();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

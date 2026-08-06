@@ -8,7 +8,7 @@ const FilterAccordion = ({ title, children, showArrow = true }) => {
                 className="flex justify-between items-center py-4 hover:bg-[#FAE7A8]/60 cursor-pointer px-1 transition-colors"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <span className="text-[10px] tracking-[0.2em] text-[#111111] font-bold uppercase font-['Outfit','Manrope',sans-serif]">{title}</span>
+                <span className="text-[10px] tracking-[0.2em] text-[#111111] font-bold uppercase font-sans">{title}</span>
                 {showArrow ? (
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
@@ -78,7 +78,7 @@ const FilterSidebar = ({
 
             {/* Sidebar Drawer */}
             <div 
-                className={`fixed top-0 right-0 h-full w-[400px] max-w-[90vw] bg-white shadow-2xl z-50 transform transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col font-['Outfit','Manrope',sans-serif] ${
+                className={`fixed top-0 right-0 h-full w-[400px] max-w-[90vw] bg-white shadow-2xl z-50 transform transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col font-sans ${
                     isOpen ? 'translate-x-0' : 'translate-x-full'
                 }`}
             >

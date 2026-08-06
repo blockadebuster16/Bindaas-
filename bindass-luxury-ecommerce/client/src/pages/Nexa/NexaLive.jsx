@@ -37,6 +37,7 @@ export default function NexaLive() {
         setChatMessages([]);
         connectSocket(selected.id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
 
   useEffect(() => {

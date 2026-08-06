@@ -21,7 +21,11 @@ const adminProtect = (req, res, next) => {
     }
 
     try {
-        const JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'fallback_secret_for_dev';
+        const JWT_SECRET = process.env.ADMIN_JWT_SECRET;
+        if (!JWT_SECRET) {
+            console.error('ADMIN_JWT_SECRET is not configured');
+            return res.status(500).json({ success: false, message: 'Server configuration error' });
+        }
         const decoded = jwt.verify(token, JWT_SECRET);
         
         // Ensure the token represents the admin identity

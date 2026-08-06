@@ -59,7 +59,7 @@ export default function NexaKB() {
     setIsUploading(true);
     setMsg("");
     try {
-      const res = await axios.post("http://localhost:8000/api/kb/upload", formData, {
+      await axios.post("http://localhost:8000/api/kb/upload", formData, {
         headers: { 
             Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data"

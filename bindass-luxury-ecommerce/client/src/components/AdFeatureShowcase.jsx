@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 const loadGoogleFont = (family) => {
     if (!family || document.querySelector(`link[data-gfont="${family}"]`)) return;
@@ -35,7 +36,7 @@ const AdFeatureShowcase = ({ page = 'home', adId = null }) => {
         const fetchAd = async () => {
             try {
                 if (adId) {
-                    const { data } = await axios.get(`http://localhost:5001/api/advertisements/${adId}`);
+                    const { data } = await axios.get(`${API_BASE_URL}/api/advertisements/${adId}`);
                     if (data && data.isActive) {
                         setAd(data);
                         if (data.titleFontFamily) loadGoogleFont(data.titleFontFamily);
@@ -46,7 +47,7 @@ const AdFeatureShowcase = ({ page = 'home', adId = null }) => {
                 }
 
                 // Fetch active showcase or heritage ads
-                const { data } = await axios.get(`http://localhost:5001/api/advertisements?page=${page}`);
+                const { data } = await axios.get(`${API_BASE_URL}/api/advertisements?page=${page}`);
                 if (data && Array.isArray(data)) {
                     const showcaseAd = data.find(a => a.bannerType === 'feature_showcase' || a.bannerType === 'heritage');
                     if (showcaseAd) {
@@ -77,7 +78,7 @@ const AdFeatureShowcase = ({ page = 'home', adId = null }) => {
     const ctaText = ad?.ctaText || 'DISCOVER THE STORY';
 
     return (
-        <section className="bg-[#111111] text-white py-14 md:py-24 px-6 md:px-12 lg:px-20 relative overflow-hidden border-y border-[#222222] font-['Outfit','Manrope',sans-serif]">
+        <section className="bg-[#111111] text-white py-14 md:py-24 px-6 md:px-12 lg:px-20 relative overflow-hidden border-y border-[#222222] font-sans">
             <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
                 
                 {/* Left Column: Text & CTA */}

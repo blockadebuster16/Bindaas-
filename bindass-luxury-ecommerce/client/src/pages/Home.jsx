@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { useCart } from '../context/CartContext';
-import { useWishlist } from '../context/WishlistContext';
-import { useCurrency } from '../context/CurrencyContext';
 import AdHero from '../components/AdHero';
 import AdSplitBanner from '../components/AdSplitBanner';
 import AdStrip from '../components/AdStrip';
@@ -12,6 +9,7 @@ import AdFeatureShowcase from '../components/AdFeatureShowcase';
 import GridProductCard from '../components/GridProductCard';
 import RecentlyViewed from '../components/RecentlyViewed';
 import SEO from '../components/SEO';
+import API_BASE_URL from '../config/api';
 
 const Home = () => {
     // State
@@ -20,17 +18,14 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const scrollRef1 = React.useRef(null);
     const scrollRef2 = React.useRef(null);
-    const { addToCart } = useCart();
-    const { toggleWishlist, isInWishlist } = useWishlist();
-    const { formatPrice } = useCurrency();
 
     // Fetch Products & Page Layout
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const [prodRes, layoutRes] = await Promise.all([
-                    axios.get('https://bindaas-ucyv.onrender.com/api/products?limit=24&select=name,price,images,pages,stock_quantity,low_stock_threshold,category'),
-                    axios.get('http://localhost:5001/api/page-layouts/home')
+                    axios.get(`${API_BASE_URL}/api/products?limit=24&select=name,price,images,pages,stock_quantity,low_stock_threshold,category`),
+                    axios.get(`${API_BASE_URL}/api/page-layouts/home`)
                 ]);
                 setProducts(prodRes.data);
                 if (layoutRes.data && layoutRes.data.sections) {
@@ -73,7 +68,7 @@ const Home = () => {
     ];
 
     return (
-        <div className="font-['Outfit','Manrope',sans-serif]">
+        <div className="font-sans">
             <SEO
                 title="Home"
                 description="Experience the intersection of high-fashion luxury and athletic energy. Shop the latest collections from BiNDAAS!"

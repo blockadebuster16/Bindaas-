@@ -1,39 +1,47 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useWishlist } from '../context/WishlistContext';
 import { useCurrency } from '../context/CurrencyContext';
 
 const GridProductCard = ({ product }) => {
-    const [isHovered, setIsHovered] = useState(false);
     const { toggleWishlist, isInWishlist } = useWishlist();
     const { formatPrice } = useCurrency();
     const isWished = isInWishlist(product._id);
     
     // Images
-    const dominantImage = product.images?.[0] || 'https://via.placeholder.com/400x533';
+    const dominantImage = product.images?.[0] || '/images/product-placeholder.svg';
     const hoverImage = product.images?.[1] || dominantImage;
     const imagesCount = product.images?.length || 1;
+    const hasHoverImage = product.images?.length > 1;
 
     const formattedPrice = formatPrice(product.price);
 
     return (
         <div 
-            className="group block relative cursor-pointer font-['Outfit','Manrope',sans-serif]" 
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            className="group block relative cursor-pointer font-sans" 
         >
             {/* Image Card Container (Signature Bluorng Rounded Aspect 3:4) */}
             <div className="relative aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden bg-[#F5F5F5] border border-slate-200/50 shadow-sm mb-2.5">
                 <Link to={`/product/${product._id}`} className="block w-full h-full">
+                    {/* Base image — always visible */}
                     <img 
-                        src={isHovered ? hoverImage : dominantImage} 
+                        src={dominantImage}
                         alt={product.name} 
-                        className="w-full h-full object-cover object-top transition-all duration-700 group-hover:scale-105"
+                        className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                         loading="lazy"
                     />
+                    {/* Hover image — crossfades in on hover (CSS opacity transition, no src swap flash) */}
+                    {hasHoverImage && (
+                        <img 
+                            src={hoverImage}
+                            alt={`${product.name} alternate view`}
+                            className="absolute inset-0 w-full h-full object-cover object-top transition-all duration-700 group-hover:scale-105 opacity-0 group-hover:opacity-100"
+                            loading="lazy"
+                        />
+                    )}
                 </Link>
 
-                {/* Bookmark / Wishlist Badge Button (Bluorng Top Right Ribbon Tag) */}
+                {/* Bookmark / Wishlist Badge Button */}
                 <button 
                     className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-10 w-7 h-8 sm:w-8 sm:h-9 bg-white text-[#111111] rounded-sm shadow-md flex items-center justify-center transition-transform hover:scale-105"
                     onClick={(e) => {
@@ -41,7 +49,8 @@ const GridProductCard = ({ product }) => {
                         e.stopPropagation();
                         toggleWishlist(product);
                     }}
-                    title="Bookmark / Wishlist"
+                    aria-label={isWished ? 'Remove from wishlist' : 'Add to wishlist'}
+                    title={isWished ? 'Remove from wishlist' : 'Add to wishlist'}
                 >
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 
@@ -62,11 +71,11 @@ const GridProductCard = ({ product }) => {
                     </span>
                 )}
 
-                {/* Image Dots Indicator (Bluorng Style) */}
+                {/* Image Dots Indicator */}
                 {imagesCount > 1 && (
                     <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10 pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
-                        <span className={`w-1.5 h-1.5 rounded-full transition-all ${!isHovered ? 'bg-white w-3' : 'bg-white/60'}`} />
-                        <span className={`w-1.5 h-1.5 rounded-full transition-all ${isHovered ? 'bg-white w-3' : 'bg-white/60'}`} />
+                        <span className="w-1.5 h-1.5 rounded-full transition-all bg-white group-hover:w-3" />
+                        <span className="w-1.5 h-1.5 rounded-full transition-all bg-white/60 group-hover:bg-white" />
                         {imagesCount > 2 && <span className="w-1.5 h-1.5 rounded-full bg-white/60" />}
                     </div>
                 )}

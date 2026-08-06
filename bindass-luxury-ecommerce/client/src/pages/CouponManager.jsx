@@ -108,10 +108,6 @@ const CouponManager = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    navigate('/admin-login');
-  };
 
   return (
     <div className="flex h-screen bg-gray-50 text-gray-900 font-display overflow-hidden">

@@ -83,6 +83,21 @@ export const AuthProvider = ({ children }) => {
         return () => unsubscribe();
     }, []);
 
+    // Branded loading screen while Firebase resolves the auth state
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-[#F5F2EB] flex items-center justify-center">
+                <div className="flex flex-col items-center gap-4">
+                    {/* Animated brand mark */}
+                    <div className="w-10 h-10 border-2 border-[#111111] border-t-[#FFD017] rounded-full animate-spin" />
+                    <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#111111]/50">
+                        BiNDAAS!
+                    </span>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <AuthContext.Provider value={{
             user,
@@ -97,7 +112,7 @@ export const AuthProvider = ({ children }) => {
             authError,
             setAuthError,
         }}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     );
 };

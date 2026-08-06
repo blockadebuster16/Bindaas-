@@ -109,7 +109,6 @@ const AdminDashboard = () => {
         return products.filter(p => p.stock_quantity < 5);
     }, [products]);
 
-  const uniqueCategories = [...new Set(products.map(p => p.category).filter(Boolean))];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

@@ -161,7 +161,7 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
     };
 
     return (
-        <div className="bg-white min-h-screen relative font-['Outfit','Manrope',sans-serif]">
+        <div className="bg-white min-h-screen relative font-sans">
             {/* Pill Navigation */}
             <div className="pt-2 pb-4 px-2.5 sm:px-4 lg:px-6 max-w-[1800px] mx-auto">
                 <div className="flex flex-wrap gap-2 mb-8">

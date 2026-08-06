@@ -55,6 +55,7 @@ const PageLayoutManager = () => {
 
     useEffect(() => {
         fetchLayout(selectedPage);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedPage]);
 
     const showToast = (message, type = 'success') => {

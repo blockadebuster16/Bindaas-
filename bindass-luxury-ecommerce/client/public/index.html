@@ -32,18 +32,25 @@
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
-  <!-- NEXA AI Chat Widget -->
+  <!-- NEXA AI Chat Widget — env-aware: localhost in dev, production URLs in prod -->
   <script>
     (function() {
       // Don't load the widget on admin pages
       if (window.location.pathname.startsWith('/admin')) return;
-      
+
+      var isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
       window.NexaConfig = {
         ownerId: "system_admin",
-        apiUrl: "http://localhost:8000"
+        apiUrl: isLocalhost ? "http://localhost:8000" : (window.NEXA_API_URL || "https://nexa-api.bindaas.in")
       };
+
+      var widgetSrc = isLocalhost
+        ? "http://localhost:3000/nexa-widget.js"
+        : (window.NEXA_WIDGET_URL || "https://cdn.bindaas.in/nexa-widget.js");
+
       var s = document.createElement('script');
-      s.src = 'http://localhost:3000/nexa-widget.js';
+      s.src = widgetSrc;
       s.async = true;
       document.head.appendChild(s);
     })();

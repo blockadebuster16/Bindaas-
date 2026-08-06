@@ -8,8 +8,9 @@ import { useRecentlyViewed } from '../context/RecentlyViewedContext';
 import RecentlyViewed from '../components/RecentlyViewed';
 import YouMayAlsoLike from '../components/YouMayAlsoLike';
 import SEO from '../components/SEO';
-import clarity from '@microsoft/clarity';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
+import API_BASE_URL from '../config/api';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -18,6 +19,7 @@ const ProductDetail = () => {
     const { toggleWishlist, isInWishlist } = useWishlist();
     const { formatPrice } = useCurrency();
     const { addToHistory } = useRecentlyViewed();
+    const toast = useToast();
 
     // UI State
     const [product, setProduct] = useState(null);
@@ -35,10 +37,10 @@ const ProductDetail = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:5001/api/products/${id}`);
+                const { data } = await axios.get(`${API_BASE_URL}/api/products/${id}`);
                 setProduct(data);
 
-                const reviewsRes = await axios.get(`http://localhost:5001/api/reviews/${id}`);
+                const reviewsRes = await axios.get(`${API_BASE_URL}/api/reviews/${id}`);
                 setReviewsData(reviewsRes.data);
 
                 setLoading(false);
@@ -55,6 +57,7 @@ const ProductDetail = () => {
         if (product) {
             addToHistory(product);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [product]);
 
     const addToCartHandler = async () => {
@@ -69,7 +72,7 @@ const ProductDetail = () => {
         };
 
         await addToCart(cartItem);
-        alert(`${product.name} (Size ${selectedSize}) added to your bag.`);
+        toast.success(`${product.name} (Size ${selectedSize}) added to your bag! 🛍️`);
     };
 
     const handleBuyNow = async () => {
@@ -97,12 +100,13 @@ const ProductDetail = () => {
         setReviewError('');
         try {
             const token = await user.getIdToken();
-            await axios.post(`http://localhost:5001/api/reviews/${product._id}`, newReview, {
+            await axios.post(`${API_BASE_URL}/api/reviews/${product._id}`, newReview, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            const reviewsRes = await axios.get(`http://localhost:5001/api/reviews/${product._id}`);
+            const reviewsRes = await axios.get(`${API_BASE_URL}/api/reviews/${product._id}`);
             setReviewsData(reviewsRes.data);
             setNewReview({ rating: 5, comment: '' });
+            toast.success('Review submitted successfully!');
         } catch (err) {
             setReviewError(err.response?.data?.message || "Failed to submit review");
         } finally {
@@ -123,7 +127,7 @@ const ProductDetail = () => {
         : ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
     return (
-        <div className="bg-white min-h-screen font-['Outfit','Manrope',sans-serif]">
+        <div className="bg-white min-h-screen font-sans">
             <SEO
                 title={product.name}
                 description={product.description?.substring(0, 160)}

@@ -42,6 +42,7 @@ export const RecentlyViewedProvider = ({ children }) => {
         };
 
         syncHistory();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     // 3. Add to History

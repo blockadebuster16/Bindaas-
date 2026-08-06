@@ -41,7 +41,7 @@ const YouMayAlsoLike = ({ currentProductId, category }) => {
     if (loading || products.length === 0) return null;
 
     return (
-        <section className="py-12 px-4 md:px-8 font-['Outfit','Manrope',sans-serif]">
+        <section className="py-12 px-4 md:px-8 font-sans">
             <div className="max-w-[1440px] mx-auto">
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#111111]">

@@ -2,31 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
-
-const loadGoogleFont = (family) => {
-    if (!family || document.querySelector(`link[data-gfont="${family}"]`)) return;
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family).replace(/%20/g, '+')}:wght@300;400;500;600;700;800;900&display=swap`;
-    link.setAttribute('data-gfont', family);
-    document.head.appendChild(link);
-};
-
-const RenderText = ({ value, svgUrl, bold, italic, stroke, strokeColor, strokeWidth, fontSize, fontFamily, className = '', style = {}, tag: Tag = 'span' }) => {
-    if (svgUrl) {
-        return <img src={svgUrl} alt={value} className={`inline-block object-contain max-h-[1.4em] ${className}`} style={style} />;
-    }
-    const computedStyle = {
-        ...style,
-        fontWeight: bold ? '900' : undefined,
-        fontStyle: italic ? 'italic' : undefined,
-        WebkitTextStroke: stroke ? `${strokeWidth || '2'}px ${strokeColor || '#000000'}` : undefined,
-        paintOrder: stroke ? 'stroke fill' : undefined,
-        fontSize: fontSize ? `${fontSize}px` : undefined,
-        fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : undefined,
-    };
-    return <Tag className={className} style={computedStyle}>{value}</Tag>;
-};
+import loadGoogleFont from '../utils/loadGoogleFont';
+import RenderText from './shared/RenderText';
 
 const AdStrip = ({ page = 'home' }) => {
     const [stripAds, setStripAds] = useState([]);
@@ -37,7 +14,7 @@ const AdStrip = ({ page = 'home' }) => {
     useEffect(() => {
         const fetchAds = async () => {
             try {
-                const { data } = await axios.get(`https://bindaas-ucyv.onrender.com/api/advertisements?bannerType=strip&page=${page}`);
+                const { data } = await axios.get(`${API_BASE_URL}/api/advertisements?bannerType=strip&page=${page}`);
                 setStripAds(data);
                 data.forEach(ad => {
                     [ad.tagFontFamily, ad.taglineFontFamily].forEach(f => f && loadGoogleFont(f));

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 const loadGoogleFont = (family) => {
     if (!family || document.querySelector(`link[data-gfont="${family}"]`)) return;
@@ -128,7 +129,7 @@ const AdHero = ({ page = 'home' }) => {
     useEffect(() => {
         const fetchAds = async () => {
             try {
-                const { data } = await axios.get(`https://bindaas-ucyv.onrender.com/api/advertisements?bannerType=hero&page=${page}`);
+                const { data } = await axios.get(`${API_BASE_URL}/api/advertisements?bannerType=hero&page=${page}`);
                 setHeroAds(data);
                 data.forEach(ad => {
                     [ad.titleFontFamily, ad.tagFontFamily, ad.subtitleFontFamily].forEach(f => f && loadGoogleFont(f));

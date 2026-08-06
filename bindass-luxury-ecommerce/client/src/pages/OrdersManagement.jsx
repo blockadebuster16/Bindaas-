@@ -57,6 +57,7 @@ const OrdersManagement = () => {
             fetchOrders();
         }, 300); // debounce search
         return () => clearTimeout(delayDebounceFn);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchTerm, statusFilter, sortBy]);
 
     const showToast = (message, type = 'success') => {
@@ -64,14 +65,10 @@ const OrdersManagement = () => {
         setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 3000);
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem('adminToken');
-        navigate('/admin-login');
-    };
 
     const handleStatusChange = async (orderId, newStatus) => {
         try {
-            const { data } = await axios.put(`${API_URL}/${orderId}/status`, { status: newStatus }, getAuthHeaders());
+            await axios.put(`${API_URL}/${orderId}/status`, { status: newStatus }, getAuthHeaders());
             
             // Update local state without refetching everything
             setOrders(prevOrders => prevOrders.map(order => 

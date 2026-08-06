@@ -2,62 +2,83 @@ import React, { useState, useEffect } from 'react';
 
 const CookieBanner = () => {
     const [isVisible, setIsVisible] = useState(false);
+    const [showDetails, setShowDetails] = useState(false);
 
     useEffect(() => {
-        // Check if user has already accepted or dismissed cookies globally
-        const hasAccepted = localStorage.getItem('cookiesAccepted');
-        
-        // Show immediately upon load if no record is found
-        if (!hasAccepted) {
+        // Show only if user hasn't made a choice yet
+        const cookieChoice = localStorage.getItem('cookieConsent');
+        if (!cookieChoice) {
             setIsVisible(true);
         }
     }, []);
 
     const handleAcceptAll = () => {
         setIsVisible(false);
-        localStorage.setItem('cookiesAccepted', 'true');
+        localStorage.setItem('cookieConsent', 'all');
+        // Here you would enable analytics, marketing cookies etc.
+    };
+
+    // GDPR/PDPB compliant: allow declining optional cookies
+    const handleRequiredOnly = () => {
+        setIsVisible(false);
+        localStorage.setItem('cookieConsent', 'required');
+        // Disable analytics/marketing scripts here
+        window['ga-disable-GA_MEASUREMENT_ID'] = true; // Opt out of GA if used
     };
 
     if (!isVisible) return null;
 
     return (
-        <div className="fixed bottom-6 right-6 z-[60] flex flex-col font-display pointer-events-none">
-            <div className="bg-white w-full max-w-[400px] px-8 py-10 shadow-2xl relative border border-gray-100 animate-fade-in-up pointer-events-auto">
-                
-                <h2 className="text-center text-[13px] tracking-wider text-black font-medium mb-8">
-                    BEFORE YOU START SHOPPING
+        <div className="fixed bottom-6 right-6 z-[60] flex flex-col font-display pointer-events-none max-w-[420px]">
+            <div className="bg-white w-full px-7 py-8 shadow-2xl relative border border-gray-100 pointer-events-auto rounded-xl">
+
+                <h2 className="text-center text-[13px] tracking-wider text-black font-bold mb-5 uppercase">
+                    Before You Start Shopping
                 </h2>
 
-                <div className="text-[13px] leading-relaxed text-gray-800 space-y-4 mb-6">
+                <div className="text-[12px] leading-relaxed text-gray-700 mb-4">
                     <p>
-                        We use first- and third-party cookies including other tracking technologies from third party publishers to give you the full functionality of our website, customize your user experience, perform analytics and deliver personalized advertising on our websites, apps and newsletters across internet and via social media platforms. For that purpose, we collect information about user, browsing patterns and device.
-                    </p>
-                    <p>
-                        By clicking "Accept all", you accept and agree that we share this information with third parties, such as our advertising partners. By choosing "Only required cookies", optional cookies are blocked, limiting our delivery of tailored content and features. Click on "Cookies and services settings" to customize your options. Visit our Cookie and data sharing notice to learn more.
+                        We use first- and third-party cookies to personalise content, run analytics, and deliver relevant advertising.
                     </p>
                 </div>
 
-                <div className="text-center mb-8">
-                    <a href="#" className="text-[13px] font-medium text-black border-b border-black pb-[1px] hover:text-gray-500 hover:border-gray-500 transition-colors">
-                        Cookie and data sharing notice
-                    </a>
-                </div>
+                {/* Expandable details */}
+                <button
+                    type="button"
+                    onClick={() => setShowDetails(v => !v)}
+                    className="text-[11px] font-semibold text-black border-b border-dashed border-gray-400 pb-px hover:text-gray-600 transition-colors bg-transparent mb-4 block"
+                >
+                    {showDetails ? 'Hide details ↑' : 'Cookie and data sharing notice ↓'}
+                </button>
 
-                <div className="space-y-3">
-                    <button 
+                {showDetails && (
+                    <div className="text-[11px] text-gray-600 leading-relaxed mb-4 bg-gray-50 rounded-lg p-3 border border-gray-100 space-y-2">
+                        <p><strong>Required cookies:</strong> Session management, cart, authentication — always active.</p>
+                        <p><strong>Analytics cookies:</strong> Microsoft Clarity, usage metrics — optional.</p>
+                        <p><strong>Marketing cookies:</strong> Personalised ads — optional, requires your consent.</p>
+                    </div>
+                )}
+
+                <div className="space-y-2.5">
+                    <button
                         onClick={handleAcceptAll}
-                        className="w-full bg-black text-white py-4 text-xs font-bold tracking-widest hover:bg-gray-800 transition-colors"
+                        className="w-full bg-[#111111] text-white py-3.5 text-[11px] font-bold tracking-widest hover:bg-gray-800 transition-colors rounded-lg uppercase"
                     >
-                        ACCEPT ALL
+                        Accept All
                     </button>
-                    
-                    <button 
-                        onClick={() => { /* Open settings modal in future */ }}
-                        className="w-full bg-white text-black py-4 text-xs font-medium tracking-widest border border-black hover:bg-gray-50 transition-colors"
+
+                    <button
+                        onClick={handleRequiredOnly}
+                        className="w-full bg-white text-black py-3.5 text-[11px] font-bold tracking-widest border border-black hover:bg-gray-50 transition-colors rounded-lg uppercase"
                     >
-                        COOKIES AND SERVICES SETTINGS
+                        Required Cookies Only
                     </button>
                 </div>
+
+                <p className="text-[10px] text-gray-400 text-center mt-3 leading-relaxed">
+                    By clicking "Accept All" you agree to the use of cookies as described in our{' '}
+                    <a href="/privacy" className="underline hover:text-black transition-colors">Privacy Policy</a>.
+                </p>
             </div>
         </div>
     );
