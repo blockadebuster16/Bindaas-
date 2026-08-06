@@ -27,7 +27,9 @@ const allowedOrigins = [
     'http://localhost:5000',
     // NOTE: no trailing slash — browsers send origin without one
     'https://bindaas-kbb5lsuro-blockadebuster16s-projects.vercel.app',
-    'https://bindaas.vercel.app'
+    'https://bindaas.vercel.app',
+    'https://www.bindaas.social',
+    'https://bindaas.social'
 ].filter(Boolean);
 
 app.use(cors({
