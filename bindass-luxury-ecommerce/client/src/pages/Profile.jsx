@@ -188,7 +188,7 @@ const Profile = () => {
                                                     </div>
                                                     <div className="flex items-center justify-between border-t border-slate-50 pt-4 text-xs font-bold uppercase tracking-widest text-slate-400">
                                                         <span>Total Amount</span>
-                                                        <span className="text-xl font-black text-[#10221c]">â‚¹{order.totalAmount.toLocaleString()}</span>
+                                                        <span className="text-xl font-black text-[#10221c]">₹{order.totalAmount.toLocaleString()}</span>
                                                     </div>
                                                 </div>
                                             </div>

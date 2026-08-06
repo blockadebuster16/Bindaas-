@@ -4,7 +4,7 @@ import AdminSidebar from '../components/AdminSidebar';
 
 const API_URL = `${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/settings`;
 
-// â”€â”€â”€ Reusable input card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Reusable input card ───────────────────────────────────────────────────
 const SettingCard = ({ title, description, children }) => (
   <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
     <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50">
@@ -55,7 +55,7 @@ const Toggle = ({ label, hint, name, checked, onChange }) => (
   </div>
 );
 
-// â”€â”€â”€ Main component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Main component ────────────────────────────────────────────────────────
 const SettingsManager = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -78,7 +78,7 @@ const SettingsManager = () => {
     climateFeeCause: 'Certified Mangrove Restoration Projects',
   });
 
-  // â”€â”€ Fetch settings on mount â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Fetch settings on mount ──────────────────────────────────────────────
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -128,7 +128,7 @@ const SettingsManager = () => {
       await axios.patch(API_URL, form, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      showToast('Settings saved successfully âœ“');
+      showToast('Settings saved successfully ✓');
     } catch (err) {
       showToast(err.response?.data?.message || 'Failed to save settings', 'error');
     } finally {
@@ -136,7 +136,7 @@ const SettingsManager = () => {
     }
   };
 
-  // â”€â”€ Shipping preview â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Shipping preview ─────────────────────────────────────────────────────
   const preview = (() => {
     const qty = 2;
     const totalWeight = qty * form.itemWeight;
@@ -181,7 +181,7 @@ const SettingsManager = () => {
                 {saving ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                    Savingâ€¦
+                    Saving…
                   </>
                 ) : (
                   <>
@@ -199,7 +199,7 @@ const SettingsManager = () => {
             ) : (
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
-                {/* â”€â”€ Left column â”€â”€ */}
+                {/* ── Left column ── */}
                 <div className="xl:col-span-2 space-y-6">
 
                   {/* Taxation */}
@@ -250,7 +250,7 @@ const SettingsManager = () => {
                         name="airRate"
                         value={form.airRate}
                         onChange={handleChange}
-                        prefix="â‚¹"
+                        prefix="₹"
                         min={0}
                       />
                       <Field
@@ -259,7 +259,7 @@ const SettingsManager = () => {
                         name="surfaceRate"
                         value={form.surfaceRate}
                         onChange={handleChange}
-                        prefix="â‚¹"
+                        prefix="₹"
                         min={0}
                       />
                     </div>
@@ -267,11 +267,11 @@ const SettingsManager = () => {
                     <div className="pt-2 border-t border-gray-100">
                       <Field
                         label="Free Shipping Threshold"
-                        hint="Set to 0 to disable. Orders above this value (â‚¹) get free shipping."
+                        hint="Set to 0 to disable. Orders above this value (₹) get free shipping."
                         name="freeShippingThreshold"
                         value={form.freeShippingThreshold}
                         onChange={handleChange}
-                        prefix="â‚¹"
+                        prefix="₹"
                         min={0}
                       />
                     </div>
@@ -304,7 +304,7 @@ const SettingsManager = () => {
                     </div>
                     <div className="bg-gray-50 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">
                       <strong className="text-gray-900">Formula: </strong>
-                      Units = âŒˆ (Items Ã— {form.itemWeight}g) Ã· {form.unitWeight}g âŒ‰ &nbsp;â†’&nbsp;
+                      Units = ⌈ (Items × {form.itemWeight}g) ÷ {form.unitWeight}g ⌉ &nbsp;→&nbsp;
                       e.g., 2 items = {Math.ceil((2 * form.itemWeight) / form.unitWeight)} billing unit(s)
                     </div>
                   </SettingCard>
@@ -328,7 +328,7 @@ const SettingsManager = () => {
                         name="codFee"
                         value={form.codFee}
                         onChange={handleChange}
-                        prefix="â‚¹"
+                        prefix="₹"
                         min={0}
                       />
                     )}
@@ -350,11 +350,11 @@ const SettingsManager = () => {
                       <>
                         <Field
                           label="Fee Amount"
-                          hint="Fixed amount per order in â‚¹ (non-refundable)"
+                          hint="Fixed amount per order in ₹ (non-refundable)"
                           name="climateFeeAmount"
                           value={form.climateFeeAmount}
                           onChange={handleChange}
-                          prefix="â‚¹"
+                          prefix="₹"
                           min={0}
                         />
                         <div>
@@ -372,7 +372,7 @@ const SettingsManager = () => {
                         <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-4">
                           <p className="text-[10px] font-black uppercase tracking-widest text-emerald-800 mb-1">Customer will see:</p>
                           <p className="text-xs text-emerald-700 leading-relaxed italic">
-                            "Contribute â‚¹{form.climateFeeAmount} to offset the carbon footprint of your delivery. This supports <strong>{form.climateFeeCause}</strong> and is non-refundable."
+                            "Contribute ₹{form.climateFeeAmount} to offset the carbon footprint of your delivery. This supports <strong>{form.climateFeeCause}</strong> and is non-refundable."
                           </p>
                         </div>
                       </>
@@ -380,7 +380,7 @@ const SettingsManager = () => {
                   </SettingCard>
                 </div>
 
-                {/* â”€â”€ Right column: Live Preview â”€â”€ */}
+                {/* ── Right column: Live Preview ── */}
                 <div className="space-y-6">
                   <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden sticky top-6">
                     <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex items-center gap-2">
@@ -389,7 +389,7 @@ const SettingsManager = () => {
                     </div>
                     <div className="px-6 py-6">
                       <p className="text-xs text-gray-400 mb-4 leading-relaxed">
-                        Showing shipping cost for <strong className="text-gray-600">{preview.qty} T-shirts</strong> ({preview.totalWeight}g total â†’ {preview.units} billing unit{preview.units !== 1 ? 's' : ''}).
+                        Showing shipping cost for <strong className="text-gray-600">{preview.qty} T-shirts</strong> ({preview.totalWeight}g total → {preview.units} billing unit{preview.units !== 1 ? 's' : ''}).
                       </p>
 
                       <div className="space-y-3">
@@ -398,7 +398,7 @@ const SettingsManager = () => {
                             <p className="text-xs font-semibold text-blue-800">Air Shipping</p>
                             <p className="text-[10px] text-blue-500 mt-0.5">Incl. {form.shippingGst}% GST</p>
                           </div>
-                          <span className="text-lg font-black text-blue-900">â‚¹{preview.airTotal}</span>
+                          <span className="text-lg font-black text-blue-900">₹{preview.airTotal}</span>
                         </div>
 
                         <div className="flex items-center justify-between p-3 bg-emerald-50 rounded-lg">
@@ -406,16 +406,16 @@ const SettingsManager = () => {
                             <p className="text-xs font-semibold text-emerald-800">Surface Shipping</p>
                             <p className="text-[10px] text-emerald-500 mt-0.5">Incl. {form.shippingGst}% GST</p>
                           </div>
-                          <span className="text-lg font-black text-emerald-900">â‚¹{preview.surfTotal}</span>
+                          <span className="text-lg font-black text-emerald-900">₹{preview.surfTotal}</span>
                         </div>
 
                         {form.codEnabled && (
                           <div className="flex items-center justify-between p-3 bg-amber-50 rounded-lg">
                             <div>
                               <p className="text-xs font-semibold text-amber-800">Surface + COD</p>
-                              <p className="text-[10px] text-amber-500 mt-0.5">Incl. â‚¹{form.codFee} COD fee + {form.shippingGst}% GST</p>
+                              <p className="text-[10px] text-amber-500 mt-0.5">Incl. ₹{form.codFee} COD fee + {form.shippingGst}% GST</p>
                             </div>
-                            <span className="text-lg font-black text-amber-900">â‚¹{preview.codTotal}</span>
+                            <span className="text-lg font-black text-amber-900">₹{preview.codTotal}</span>
                           </div>
                         )}
 
@@ -423,26 +423,26 @@ const SettingsManager = () => {
                           <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100">
                             <div>
                               <p className="text-xs font-semibold text-gray-700">Free Shipping</p>
-                              <p className="text-[10px] text-gray-400 mt-0.5">For orders above â‚¹{form.freeShippingThreshold.toLocaleString()}</p>
+                              <p className="text-[10px] text-gray-400 mt-0.5">For orders above ₹{form.freeShippingThreshold.toLocaleString()}</p>
                             </div>
-                            <span className="text-sm font-bold text-gray-500">â‚¹0</span>
+                            <span className="text-sm font-bold text-gray-500">₹0</span>
                           </div>
                         )}
                       </div>
 
                       <div className="mt-6 pt-5 border-t border-gray-100 space-y-2">
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Tax on a â‚¹2,000 cart (CGST + SGST = {preview.combinedTaxRate}%)</p>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Tax on a ₹2,000 cart (CGST + SGST = {preview.combinedTaxRate}%)</p>
                         <div className="flex justify-between text-xs text-gray-600">
                           <span>CGST ({form.cgst}%)</span>
-                          <span className="font-semibold">â‚¹{Math.round(2000 * form.cgst / 100)}</span>
+                          <span className="font-semibold">₹{Math.round(2000 * form.cgst / 100)}</span>
                         </div>
                         <div className="flex justify-between text-xs text-gray-600">
                           <span>SGST ({form.sgst}%)</span>
-                          <span className="font-semibold">â‚¹{Math.round(2000 * form.sgst / 100)}</span>
+                          <span className="font-semibold">₹{Math.round(2000 * form.sgst / 100)}</span>
                         </div>
                         <div className="flex justify-between text-xs font-bold text-gray-900 border-t border-gray-100 pt-2 mt-1">
                           <span>Total Tax</span>
-                          <span>â‚¹{Math.round(2000 * (form.cgst + form.sgst) / 100)}</span>
+                          <span>₹{Math.round(2000 * (form.cgst + form.sgst) / 100)}</span>
                         </div>
                         <div className="flex justify-between text-xs text-gray-500 mt-2">
                           <span>Shipping GST ({form.shippingGst}%)</span>

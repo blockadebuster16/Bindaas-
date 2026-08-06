@@ -97,7 +97,7 @@ const Contact = () => {
                                 </div>
                                 <div className="space-y-2">
                                     <p className="text-2xl font-black text-[#10221c] tracking-tight hover:underline cursor-pointer">02522-669393</p>
-                                    <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Mon. â€“ Sat. 10:00 AM â€“ 7:00 PM</p>
+                                    <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Mon. – Sat. 10:00 AM – 7:00 PM</p>
                                 </div>
                             </div>
                         </div>

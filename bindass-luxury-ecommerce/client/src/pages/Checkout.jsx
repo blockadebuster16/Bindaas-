@@ -134,7 +134,7 @@ const Checkout = () => {
                 </div>
 
                 <div className="flex flex-col lg:flex-row gap-8 xl:gap-12">
-                    {/* â”€â”€ Left: Form â”€â”€ */}
+                    {/* ── Left: Form ── */}
                     <div className="flex-1 min-w-0">
                         <h1 className="text-2xl font-black text-[#111111] tracking-tight mb-1">Shipping Details</h1>
                         <p className="text-sm text-slate-400 font-medium mb-7">Where should we send your order?</p>
@@ -248,7 +248,7 @@ const Checkout = () => {
                         </form>
                     </div>
 
-                    {/* â”€â”€ Right: Order Summary â”€â”€ */}
+                    {/* ── Right: Order Summary ── */}
                     <aside className="w-full lg:w-[380px] flex-shrink-0">
                         <div className="sticky top-8 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
                             {/* Header */}
@@ -269,9 +269,9 @@ const Checkout = () => {
                                         <div className="flex-1 py-0.5 min-w-0">
                                             <h4 className="text-[11px] font-bold text-[#111111] truncate leading-tight">{item.name}</h4>
                                             <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">
-                                                {item.size} Â· Qty {item.quantity}
+                                                {item.size} · Qty {item.quantity}
                                             </p>
-                                            <div className="text-[11px] font-black text-[#111111] mt-1.5">â‚¹{(item.price || 0).toLocaleString()}</div>
+                                            <div className="text-[11px] font-black text-[#111111] mt-1.5">₹{(item.price || 0).toLocaleString()}</div>
                                         </div>
                                     </div>
                                 ))}
@@ -304,7 +304,7 @@ const Checkout = () => {
                                                     </div>
                                                     <div>
                                                         <span className="text-[11px] font-bold text-[#111111]">Cash on Delivery</span>
-                                                        <p className="text-[9px] text-amber-600 font-bold">+â‚¹{storeConfig?.codFee} + GST</p>
+                                                        <p className="text-[9px] text-amber-600 font-bold">+₹{storeConfig?.codFee} + GST</p>
                                                     </div>
                                                 </div>
                                                 <input type="checkbox" checked={isCOD} onChange={e => setIsCOD(e.target.checked)} className="hidden" />
@@ -364,38 +364,38 @@ const Checkout = () => {
                                 <div className="space-y-2.5 border-t border-slate-100 pt-4">
                                     <div className="flex justify-between text-[12px] text-slate-500">
                                         <span className="font-medium">Subtotal</span>
-                                        <span className="font-semibold text-[#111111]">â‚¹{(checkoutTotals?.subtotal || 0).toLocaleString()}</span>
+                                        <span className="font-semibold text-[#111111]">₹{(checkoutTotals?.subtotal || 0).toLocaleString()}</span>
                                     </div>
                                     {checkoutTotals?.discount > 0 && (
                                         <div className="flex justify-between text-[12px] text-emerald-600">
                                             <span className="font-medium">Discount</span>
-                                            <span className="font-bold">-â‚¹{(checkoutTotals?.discount || 0).toLocaleString()}</span>
+                                            <span className="font-bold">-₹{(checkoutTotals?.discount || 0).toLocaleString()}</span>
                                         </div>
                                     )}
                                     <div className="flex justify-between text-[12px] text-slate-500">
                                         <span className="font-medium">Shipping</span>
                                         {checkoutTotals?.shippingTotal > 0
-                                            ? <span className="font-semibold text-[#111111]">â‚¹{checkoutTotals.shippingTotal.toLocaleString()}</span>
+                                            ? <span className="font-semibold text-[#111111]">₹{checkoutTotals.shippingTotal.toLocaleString()}</span>
                                             : <span className="text-emerald-600 font-bold text-[9px] uppercase tracking-widest">Free</span>
                                         }
                                     </div>
                                     {isCOD && checkoutTotals?.codFee > 0 && (
                                         <div className="flex justify-between text-[12px] text-amber-600">
                                             <span className="font-medium">COD Fee</span>
-                                            <span className="font-bold">â‚¹{checkoutTotals.codFee.toLocaleString()}</span>
+                                            <span className="font-bold">₹{checkoutTotals.codFee.toLocaleString()}</span>
                                         </div>
                                     )}
                                     <div className="flex justify-between text-[12px] text-slate-500">
                                         <span className="font-medium">CGST ({storeConfig?.cgst ?? 9}%)</span>
-                                        <span className="font-semibold text-[#111111]">â‚¹{(checkoutTotals?.cgst || 0).toLocaleString()}</span>
+                                        <span className="font-semibold text-[#111111]">₹{(checkoutTotals?.cgst || 0).toLocaleString()}</span>
                                     </div>
                                     <div className="flex justify-between text-[12px] text-slate-500">
                                         <span className="font-medium">SGST ({storeConfig?.sgst ?? 9}%)</span>
-                                        <span className="font-semibold text-[#111111]">â‚¹{(checkoutTotals?.sgst || 0).toLocaleString()}</span>
+                                        <span className="font-semibold text-[#111111]">₹{(checkoutTotals?.sgst || 0).toLocaleString()}</span>
                                     </div>
                                     <div className="flex justify-between items-end pt-3 border-t border-slate-100 mt-3">
                                         <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Total</span>
-                                        <span className="text-2xl font-black text-[#111111] leading-none">â‚¹{(checkoutTotals?.totalAmount || 0).toLocaleString()}</span>
+                                        <span className="text-2xl font-black text-[#111111] leading-none">₹{(checkoutTotals?.totalAmount || 0).toLocaleString()}</span>
                                     </div>
                                 </div>
                             </div>

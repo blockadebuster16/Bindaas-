@@ -51,7 +51,7 @@ export default function NexaEmbed() {
         await axios.post("http://localhost:8000/api/widget/save", configToSave, {
             headers: { Authorization: `Bearer ${token}` }
         });
-        setMsg({ text: "âœ… Configuration synchronized!", type: "success" });
+        setMsg({ text: "✅ Configuration synchronized!", type: "success" });
         setTimeout(() => setMsg({ text: "", type: "success" }), 4000);
     } catch (err) {
         const errorMsg = err.response?.data?.detail || "Sync failed.";
@@ -185,7 +185,7 @@ export default function NexaEmbed() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
               <h2 style={{ fontSize: "1.1rem", fontWeight: 700 }}>ðŸ“‹ Embed Code</h2>
               <button className="btn-primary" onClick={copy} style={{ padding: "0.5rem 1.5rem", fontSize: "0.85rem" }}>
-                {copied ? "âœ… Copied!" : "Copy Snippet"}
+                {copied ? "✅ Copied!" : "Copy Snippet"}
               </button>
             </div>
             <div style={{ background: "#ffffff", border: "1px solid var(--color-border)", borderRadius: 16, padding: "1.5rem", position: "relative" }}>

@@ -145,7 +145,7 @@ const ProductDetail = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
 
-                    {/* â”€â”€ Left Column: Exact Bluorng 2-Column Asymmetrical Image Grid & Smooth Scroll â”€â”€ */}
+                    {/* ── Left Column: Exact Bluorng 2-Column Asymmetrical Image Grid & Smooth Scroll ── */}
                     <div className="lg:col-span-7">
                         {imagesList.length === 1 && (
                             <div className="w-full aspect-[3/4] bg-[#f5f5f5] rounded-3xl overflow-hidden border border-slate-100/80 shadow-sm">
@@ -197,7 +197,7 @@ const ProductDetail = () => {
                         )}
                     </div>
 
-                    {/* â”€â”€ Right Column: Sticky Product Info Panel â”€â”€ */}
+                    {/* ── Right Column: Sticky Product Info Panel ── */}
                     <div className="lg:col-span-5 sticky top-24 h-fit bg-[#F9F9F9] p-6 md:p-8 rounded-3xl border border-slate-100 space-y-6">
 
                         {/* Title & Bookmark/Wishlist */}
@@ -452,7 +452,7 @@ const ProductDetail = () => {
                 </div>
             </div>
 
-            {/* â”€â”€ Size Guide Modal â”€â”€ */}
+            {/* ── Size Guide Modal ── */}
             {isSizeGuideOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={() => setIsSizeGuideOpen(false)}>
                     <div className="bg-white rounded-3xl p-6 md:p-8 max-w-lg w-full space-y-6 shadow-2xl relative" onClick={e => e.stopPropagation()}>
