@@ -266,7 +266,7 @@ const CheckoutReviewPay = () => {
 
                                 {storeConfig?.climateFeeEnabled && (
                                     <div className="flex justify-between text-[12px]">
-                                        <span className="font-medium text-emerald-700">ðŸŒ¿ Climate Action</span>
+                                        <span className="font-medium text-emerald-700">🌿 Climate Action</span>
                                         {isClimateSelected
                                             ? <span className="font-bold text-emerald-700">₹{storeConfig.climateFeeAmount}</span>
                                             : <span className="text-slate-400 text-[9px] font-bold uppercase tracking-widest">Opted Out</span>
@@ -291,7 +291,7 @@ const CheckoutReviewPay = () => {
                                             <input type="checkbox" checked={isClimateSelected} onChange={e => setIsClimateSelected(e.target.checked)} className="hidden" />
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-emerald-800 mb-0.5">ðŸŒ¿ Climate Action — ₹{storeConfig.climateFeeAmount}</p>
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-emerald-800 mb-0.5">🌿 Climate Action — ₹{storeConfig.climateFeeAmount}</p>
                                             <p className="text-[9px] text-emerald-700 leading-relaxed">
                                                 Offset your delivery's carbon footprint. Supports <strong>{storeConfig.climateFeeCause}</strong>.
                                             </p>

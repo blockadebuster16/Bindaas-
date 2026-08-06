@@ -336,7 +336,7 @@ const SettingsManager = () => {
 
                   {/* Climate Action Fee */}
                   <SettingCard
-                    title="ðŸŒ¿ Climate Action Fee"
+                    title="🌿 Climate Action Fee"
                     description="A non-refundable contribution per order supporting environmental restoration. Shown as an opt-out checkbox at checkout."
                   >
                     <Toggle

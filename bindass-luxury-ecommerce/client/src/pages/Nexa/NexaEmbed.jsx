@@ -139,7 +139,7 @@ export default function NexaEmbed() {
       <div style={{ display: "grid", gridTemplateColumns: "400px 1fr", gap: "2rem", alignItems: "start" }}>
         {/* Config */}
         <div className="glass" style={{ borderRadius: 24, padding: "2rem" }}>
-          <h2 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "1.5rem" }}>âš™ï¸ Appearance</h2>
+          <h2 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "1.5rem" }}>⚙️ Appearance</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
             <div>
               <label className="label">Assistant Name</label>
