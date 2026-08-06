@@ -168,7 +168,7 @@ router.post('/admin-login', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Email and password are required' });
         }
 
-        const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@bindass.com';
+        const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@bindaas.com';
         const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'secretadmin123';
         const JWT_SECRET = getAdminJWTSecret();
 
@@ -213,7 +213,7 @@ router.post('/admin-reset', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Password must be at least 6 characters' });
         }
 
-        const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@bindass.com';
+        const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@bindaas.com';
         if (predefinedEmail.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
             return res.status(403).json({ success: false, message: 'Unauthorized: Predefined verification email is incorrect.' });
         }

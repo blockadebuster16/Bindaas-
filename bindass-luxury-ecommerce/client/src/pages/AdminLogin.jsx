@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
@@ -123,7 +123,7 @@ const AdminLogin = () => {
                       value={email} 
                       onChange={(e) => setEmail(e.target.value)} 
                       className="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-black focus:border-black"
-                      placeholder="admin@bindass.com"
+                      placeholder="admin@bindaas.com"
                     />
                   </div>
                 </div>
@@ -176,7 +176,7 @@ const AdminLogin = () => {
                       value={predefinedEmail} 
                       onChange={(e) => setPredefinedEmail(e.target.value)} 
                       className="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-black focus:border-black"
-                      placeholder="admin@bindass.com"
+                      placeholder="admin@bindaas.com"
                     />
                   </div>
                 </div>
