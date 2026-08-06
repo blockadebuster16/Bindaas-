@@ -215,7 +215,7 @@ router.post('/admin-reset', async (req, res) => {
 
         const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@bindaas.com';
         if (predefinedEmail.toLowerCase().trim() !== ADMIN_EMAIL.toLowerCase().trim()) {
-            return res.status(403).json({ success: false, message: 'Unauthorized: Predefined verification email is incorrect.' });
+            return res.status(403).json({ success: false, message: `Unauthorized: Predefined verification email is incorrect. Expected: ${ADMIN_EMAIL}` });
         }
 
         await Admin.deleteMany({});
