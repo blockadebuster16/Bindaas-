@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { CheckoutProvider } from './context/CheckoutContext';
-import { ToastProvider } from './context/ToastContext';
 import ErrorBoundary from './components/ErrorBoundary';
 import SmoothScroll from './components/SmoothScroll';
 import PageLoader from './components/shared/PageLoader';
@@ -52,7 +51,6 @@ const AuthCallback = React.lazy(() => import('./pages/AuthCallback'));
 function App() {
   return (
     <ErrorBoundary>
-      <ToastProvider>
       <CheckoutProvider>
         <SmoothScroll>
           <Suspense fallback={<PageLoader />}>
@@ -123,7 +121,6 @@ function App() {
           </Suspense>
         </SmoothScroll>
       </CheckoutProvider>
-    </ToastProvider>
     </ErrorBoundary>
   );
 }
