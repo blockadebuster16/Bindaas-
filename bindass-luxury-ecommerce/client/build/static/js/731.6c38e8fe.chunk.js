@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkclient=self.webpackChunkclient||[]).push([[731],{8731(e,t,a){a.r(t),a.d(t,{default:()=>s});a(5043);var l=a(3216),n=a(579);const s=()=>localStorage.getItem("adminToken")?(0,n.jsx)(l.sv,{}):(0,n.jsx)(l.C5,{to:"/admin-login",replace:!0})}}]);
-//# sourceMappingURL=731.6c38e8fe.chunk.js.map

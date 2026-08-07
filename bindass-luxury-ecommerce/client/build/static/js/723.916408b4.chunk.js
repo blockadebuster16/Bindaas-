@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkclient=self.webpackChunkclient||[]).push([[723],{4723(e,s,t){t.r(s),t.d(s,{default:()=>p});t(5043);var c=t(9332),l=t(7600),o=t(5862),i=t(1307),n=t(579);const p=()=>(0,n.jsxs)("div",{className:"min-h-screen bg-white",children:[(0,n.jsx)(c.A,{page:"sportscollection"}),(0,n.jsx)(l.A,{page:"sportscollection"}),(0,n.jsx)(o.A,{page:"sportscollection"}),(0,n.jsx)(i.A,{title:"Sport Collection",pageTarget:"sportscollection"})]})}}]);
-//# sourceMappingURL=723.916408b4.chunk.js.map

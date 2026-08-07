@@ -256,7 +256,7 @@ const Navbar = () => {
                                 </li>
 
                                 {/* ── COLLECTIONS MEGA DROPDOWN ── */}
-                                <li className="relative" ref={collectionsRef}>
+                                <li className="" ref={collectionsRef}>
                                     <button
                                         type="button"
                                         onClick={() => setIsCollectionsOpen(p => !p)}
@@ -270,7 +270,7 @@ const Navbar = () => {
 
                                     {/* Mega Dropdown Menu */}
                                     <div
-                                        className={`absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[calc(100vw-4rem)] max-w-[1200px] bg-white text-black shadow-2xl border border-slate-100 z-50 rounded-2xl p-6 md:p-8 transition-all duration-300 origin-top ${
+                                        className={`absolute left-0 right-0 mx-auto top-full mt-2 w-[calc(100%-2rem)] max-w-[1200px] bg-white text-black shadow-2xl border border-slate-100 z-50 rounded-2xl p-6 md:p-8 transition-all duration-300 origin-top ${
                                             isCollectionsOpen
                                                 ? 'opacity-100 scale-y-100 pointer-events-auto translate-y-0'
                                                 : 'opacity-0 scale-y-95 pointer-events-none -translate-y-2'

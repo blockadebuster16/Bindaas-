@@ -1,0 +1,1 @@
+import{n as e,t}from"./jsx-runtime-OQpaS_Dv.js";import{A as n,j as r}from"./index-Ckm75vKP.js";e();var i=t(),a=()=>localStorage.getItem(`adminToken`)?(0,i.jsx)(r,{}):(0,i.jsx)(n,{to:`/admin-login`,replace:!0});export{a as default};

@@ -1,0 +1,1 @@
+var e={}.REACT_APP_API_URL||`http://localhost:5001`;export{e as t};
