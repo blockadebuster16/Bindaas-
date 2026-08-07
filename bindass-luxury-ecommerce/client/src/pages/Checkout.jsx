@@ -112,7 +112,7 @@ const Checkout = () => {
     };
 
     const inputClass = (hasError) =>
-        `w-full border ${hasError ? 'border-red-400' : 'border-slate-200'} rounded-lg px-4 pt-5 pb-3 text-sm font-medium text-[#111111] bg-white outline-none focus:border-[#111111] focus:ring-0 transition-colors duration-200 placeholder-transparent peer`;
+        `w-full border ${hasError ? 'border-red-400' : 'border-slate-200'} rounded-lg px-4 pt-5 pb-3 text-sm font-medium text-bindas-onyx bg-white outline-none focus:border-bindas-onyx focus:ring-0 transition-colors duration-200 placeholder-transparent peer`;
 
     return (
         <div className="bg-[#FAFAF9] min-h-screen font-sans">
@@ -122,8 +122,8 @@ const Checkout = () => {
                 <div className="mb-10 max-w-sm mx-auto">
                     <div className="flex items-center gap-0">
                         <div className="flex flex-col items-center">
-                            <div className="w-9 h-9 rounded-full bg-[#111111] text-white flex items-center justify-center text-xs font-black shadow-md">1</div>
-                            <span className="text-[9px] font-black uppercase tracking-widest text-[#111111] mt-1.5">Shipping</span>
+                            <div className="w-9 h-9 rounded-full bg-bindas-onyx text-white flex items-center justify-center text-xs font-black shadow-md">1</div>
+                            <span className="text-[9px] font-black uppercase tracking-widest text-bindas-onyx mt-1.5">Shipping</span>
                         </div>
                         <div className="flex-1 h-px bg-slate-200 mx-3 mt-[-14px]" />
                         <div className="flex flex-col items-center opacity-40">
@@ -136,7 +136,7 @@ const Checkout = () => {
                 <div className="flex flex-col lg:flex-row gap-8 xl:gap-12">
                     {/* ── Left: Form ── */}
                     <div className="flex-1 min-w-0">
-                        <h1 className="text-2xl font-black text-[#111111] tracking-tight mb-1">Shipping Details</h1>
+                        <h1 className="text-2xl font-black text-bindas-onyx tracking-tight mb-1">Shipping Details</h1>
                         <p className="text-sm text-slate-400 font-medium mb-7">Where should we send your order?</p>
 
                         <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
@@ -198,7 +198,7 @@ const Checkout = () => {
                                 <FloatingInput label="Country">
                                     <select
                                         {...register("countryCode")}
-                                        className="w-full border border-slate-200 rounded-lg px-4 pt-5 pb-3 text-sm font-medium text-[#111111] bg-white outline-none focus:border-[#111111] transition-colors"
+                                        className="w-full border border-slate-200 rounded-lg px-4 pt-5 pb-3 text-sm font-medium text-bindas-onyx bg-white outline-none focus:border-bindas-onyx transition-colors"
                                     >
                                         <option value="">Select Country</option>\n                                        <option value="AF">Afghanistan</option>\n                                        <option value="AL">Albania</option>\n                                        <option value="DZ">Algeria</option>\n                                        <option value="AR">Argentina</option>\n                                        <option value="AU">Australia</option>\n                                        <option value="AT">Austria</option>\n                                        <option value="BD">Bangladesh</option>\n                                        <option value="BE">Belgium</option>\n                                        <option value="BR">Brazil</option>\n                                        <option value="CA">Canada</option>\n                                        <option value="CN">China</option>\n                                        <option value="CO">Colombia</option>\n                                        <option value="DK">Denmark</option>\n                                        <option value="EG">Egypt</option>\n                                        <option value="FI">Finland</option>\n                                        <option value="FR">France</option>\n                                        <option value="DE">Germany</option>\n                                        <option value="GR">Greece</option>\n                                        <option value="IN">India</option>\n                                        <option value="ID">Indonesia</option>\n                                        <option value="IE">Ireland</option>\n                                        <option value="IL">Israel</option>\n                                        <option value="IT">Italy</option>\n                                        <option value="JP">Japan</option>\n                                        <option value="MY">Malaysia</option>\n                                        <option value="MX">Mexico</option>\n                                        <option value="NL">Netherlands</option>\n                                        <option value="NZ">New Zealand</option>\n                                        <option value="NG">Nigeria</option>\n                                        <option value="NO">Norway</option>\n                                        <option value="PK">Pakistan</option>\n                                        <option value="PH">Philippines</option>\n                                        <option value="PL">Poland</option>\n                                        <option value="PT">Portugal</option>\n                                        <option value="RU">Russia</option>\n                                        <option value="SA">Saudi Arabia</option>\n                                        <option value="SG">Singapore</option>\n                                        <option value="ZA">South Africa</option>\n                                        <option value="KR">South Korea</option>\n                                        <option value="ES">Spain</option>\n                                        <option value="SE">Sweden</option>\n                                        <option value="CH">Switzerland</option>\n                                        <option value="TW">Taiwan</option>\n                                        <option value="TH">Thailand</option>\n                                        <option value="TR">Turkey</option>\n                                        <option value="AE">United Arab Emirates</option>\n                                        <option value="GB">United Kingdom</option>\n                                        <option value="US">United States</option>\n                                        <option value="VN">Vietnam</option>
                                     </select>
@@ -239,7 +239,7 @@ const Checkout = () => {
 
                             <button
                                 type="submit"
-                                className="w-full bg-[#111111] text-white py-4 rounded-xl text-xs font-black uppercase tracking-[0.25em] hover:bg-[#222] transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-black/10"
+                                className="w-full bg-bindas-onyx text-white py-4 rounded-xl text-xs font-black uppercase tracking-[0.25em] hover:bg-[#222] transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-black/10"
                             >
                                 <span>Continue to Review & Pay</span>
                                 <span className="material-icons text-sm">arrow_forward</span>
@@ -252,7 +252,7 @@ const Checkout = () => {
                         <div className="sticky top-8 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
                             {/* Header */}
                             <div className="px-6 py-5 border-b border-slate-50 flex items-center justify-between">
-                                <h3 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#111111]">Order Summary</h3>
+                                <h3 className="text-[11px] font-black uppercase tracking-[0.25em] text-bindas-onyx">Order Summary</h3>
                                 <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 bg-slate-50 px-2 py-1 rounded-full">
                                     {cartItems.length} {cartItems.length === 1 ? 'Item' : 'Items'}
                                 </span>
@@ -266,11 +266,11 @@ const Checkout = () => {
                                             <img src={item.image} className="w-full h-full object-cover object-top" alt={item.name} />
                                         </div>
                                         <div className="flex-1 py-0.5 min-w-0">
-                                            <h4 className="text-[11px] font-bold text-[#111111] truncate leading-tight">{item.name}</h4>
+                                            <h4 className="text-[11px] font-bold text-bindas-onyx truncate leading-tight">{item.name}</h4>
                                             <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">
                                                 {item.size} · Qty {item.quantity}
                                             </p>
-                                            <div className="text-[11px] font-black text-[#111111] mt-1.5">₹{(item.price || 0).toLocaleString()}</div>
+                                            <div className="text-[11px] font-black text-bindas-onyx mt-1.5">₹{(item.price || 0).toLocaleString()}</div>
                                         </div>
                                     </div>
                                 ))}
@@ -282,13 +282,13 @@ const Checkout = () => {
                                     <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3">Shipping Method</p>
                                     <div className="space-y-2">
                                         {['Air', 'Surface'].map(m => (
-                                            <label key={m} className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${shippingMethod === m ? 'border-[#111111] bg-[#111111]/3' : 'border-slate-100 hover:border-slate-300'}`}>
+                                            <label key={m} className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${shippingMethod === m ? 'border-bindas-onyx bg-bindas-onyx/3' : 'border-slate-100 hover:border-slate-300'}`}>
                                                 <div className="flex items-center gap-2.5">
-                                                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all ${shippingMethod === m ? 'border-[#111111]' : 'border-slate-300'}`}>
-                                                        {shippingMethod === m && <div className="w-2 h-2 rounded-full bg-[#111111]" />}
+                                                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all ${shippingMethod === m ? 'border-bindas-onyx' : 'border-slate-300'}`}>
+                                                        {shippingMethod === m && <div className="w-2 h-2 rounded-full bg-bindas-onyx" />}
                                                     </div>
                                                     <div>
-                                                        <span className="text-[11px] font-bold text-[#111111]">{m} Shipping</span>
+                                                        <span className="text-[11px] font-bold text-bindas-onyx">{m} Shipping</span>
                                                         <p className="text-[9px] text-slate-400 font-medium">{m === 'Air' ? 'Express 2-3 days' : 'Standard 5-7 days'}</p>
                                                     </div>
                                                 </div>
@@ -302,7 +302,7 @@ const Checkout = () => {
                                                         {isCOD && <span className="material-icons text-white text-[8px]">check</span>}
                                                     </div>
                                                     <div>
-                                                        <span className="text-[11px] font-bold text-[#111111]">Cash on Delivery</span>
+                                                        <span className="text-[11px] font-bold text-bindas-onyx">Cash on Delivery</span>
                                                         <p className="text-[9px] text-amber-600 font-bold">+₹{storeConfig?.codFee} + GST</p>
                                                     </div>
                                                 </div>
@@ -344,12 +344,12 @@ const Checkout = () => {
                                                     value={couponCode}
                                                     onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                                                     placeholder="ENTER CODE"
-                                                    className="flex-1 border border-slate-200 rounded-xl px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-[#111111] outline-none focus:border-[#111111] bg-slate-50"
+                                                    className="flex-1 border border-slate-200 rounded-xl px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-bindas-onyx outline-none focus:border-bindas-onyx bg-slate-50"
                                                 />
                                                 <button
                                                     onClick={handleApplyCoupon}
                                                     disabled={couponLoading || !couponCode}
-                                                    className="bg-[#111111] text-white px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest disabled:opacity-40 hover:bg-[#222] transition-colors"
+                                                    className="bg-bindas-onyx text-white px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest disabled:opacity-40 hover:bg-[#222] transition-colors"
                                                 >
                                                     {couponLoading ? '...' : 'Apply'}
                                                 </button>
@@ -363,7 +363,7 @@ const Checkout = () => {
                                 <div className="space-y-2.5 border-t border-slate-100 pt-4">
                                     <div className="flex justify-between text-[12px] text-slate-500">
                                         <span className="font-medium">Subtotal</span>
-                                        <span className="font-semibold text-[#111111]">₹{(checkoutTotals?.subtotal || 0).toLocaleString()}</span>
+                                        <span className="font-semibold text-bindas-onyx">₹{(checkoutTotals?.subtotal || 0).toLocaleString()}</span>
                                     </div>
                                     {checkoutTotals?.discount > 0 && (
                                         <div className="flex justify-between text-[12px] text-emerald-600">
@@ -374,7 +374,7 @@ const Checkout = () => {
                                     <div className="flex justify-between text-[12px] text-slate-500">
                                         <span className="font-medium">Shipping</span>
                                         {checkoutTotals?.shippingTotal > 0
-                                            ? <span className="font-semibold text-[#111111]">₹{checkoutTotals.shippingTotal.toLocaleString()}</span>
+                                            ? <span className="font-semibold text-bindas-onyx">₹{checkoutTotals.shippingTotal.toLocaleString()}</span>
                                             : <span className="text-emerald-600 font-bold text-[9px] uppercase tracking-widest">Free</span>
                                         }
                                     </div>
@@ -386,15 +386,15 @@ const Checkout = () => {
                                     )}
                                     <div className="flex justify-between text-[12px] text-slate-500">
                                         <span className="font-medium">CGST ({storeConfig?.cgst ?? 9}%)</span>
-                                        <span className="font-semibold text-[#111111]">₹{(checkoutTotals?.cgst || 0).toLocaleString()}</span>
+                                        <span className="font-semibold text-bindas-onyx">₹{(checkoutTotals?.cgst || 0).toLocaleString()}</span>
                                     </div>
                                     <div className="flex justify-between text-[12px] text-slate-500">
                                         <span className="font-medium">SGST ({storeConfig?.sgst ?? 9}%)</span>
-                                        <span className="font-semibold text-[#111111]">₹{(checkoutTotals?.sgst || 0).toLocaleString()}</span>
+                                        <span className="font-semibold text-bindas-onyx">₹{(checkoutTotals?.sgst || 0).toLocaleString()}</span>
                                     </div>
                                     <div className="flex justify-between items-end pt-3 border-t border-slate-100 mt-3">
                                         <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Total</span>
-                                        <span className="text-2xl font-black text-[#111111] leading-none">₹{(checkoutTotals?.totalAmount || 0).toLocaleString()}</span>
+                                        <span className="text-2xl font-black text-bindas-onyx leading-none">₹{(checkoutTotals?.totalAmount || 0).toLocaleString()}</span>
                                     </div>
                                 </div>
                             </div>

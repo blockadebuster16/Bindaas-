@@ -47,16 +47,16 @@ class ErrorBoundary extends React.Component {
             }
 
             return (
-                <div className="min-h-screen bg-[#F5F2EB] flex items-center justify-center px-6 font-sans">
+                <div className="min-h-screen bg-bindas-parchment flex items-center justify-center px-6 font-sans">
                     <div className="text-center max-w-md">
                         {/* Brand icon */}
-                        <div className="w-16 h-16 bg-[#111111] rounded-2xl flex items-center justify-center mx-auto mb-6">
-                            <svg className="w-8 h-8 text-[#FFD017]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <div className="w-16 h-16 bg-bindas-onyx rounded-2xl flex items-center justify-center mx-auto mb-6">
+                            <svg className="w-8 h-8 text-bindas-amber" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                             </svg>
                         </div>
 
-                        <h1 className="text-2xl font-bold text-[#111111] mb-2 tracking-tight">
+                        <h1 className="text-2xl font-bold text-bindas-onyx mb-2 tracking-tight">
                             Something went wrong
                         </h1>
                         <p className="text-sm text-gray-500 mb-8 leading-relaxed">
@@ -81,13 +81,13 @@ class ErrorBoundary extends React.Component {
                         <div className="flex gap-3 justify-center">
                             <button
                                 onClick={this.handleReload}
-                                className="bg-[#111111] text-white text-xs font-bold tracking-widest uppercase px-6 py-3 rounded-xl hover:bg-[#2a2a2a] transition-colors"
+                                className="bg-bindas-onyx text-white text-xs font-bold tracking-widest uppercase px-6 py-3 rounded-xl hover:bg-[#2a2a2a] transition-colors"
                             >
                                 Refresh Page
                             </button>
                             <a
                                 href="/"
-                                className="bg-white border border-[#111111] text-[#111111] text-xs font-bold tracking-widest uppercase px-6 py-3 rounded-xl hover:bg-gray-50 transition-colors"
+                                className="bg-white border border-bindas-onyx text-bindas-onyx text-xs font-bold tracking-widest uppercase px-6 py-3 rounded-xl hover:bg-gray-50 transition-colors"
                             >
                                 Go Home
                             </a>

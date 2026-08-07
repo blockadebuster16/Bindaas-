@@ -169,25 +169,25 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
                 <div className="flex flex-wrap gap-2 mb-8">
                     <button 
                         onClick={() => setActivePill('')}
-                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 ${activePill === '' ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-[#111111] border-[#D4AF37] hover:border-[#111111] hover:bg-[#111111]/5'}`}
+                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 ${activePill === '' ? 'bg-bindas-onyx text-white border-bindas-onyx' : 'bg-transparent text-bindas-onyx border-bindas-gold hover:border-bindas-onyx hover:bg-bindas-onyx/5'}`}
                     >
                         View All
                     </button>
                     <button 
                         onClick={() => handlePillClick('Accessories')}
-                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 ${activePill === 'Accessories' ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-[#111111] border-[#D4AF37] hover:border-[#111111] hover:bg-[#111111]/5'}`}
+                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 ${activePill === 'Accessories' ? 'bg-bindas-onyx text-white border-bindas-onyx' : 'bg-transparent text-bindas-onyx border-bindas-gold hover:border-bindas-onyx hover:bg-bindas-onyx/5'}`}
                     >
                         Accessories
                     </button>
                     <button 
                         onClick={() => handlePillClick('Shoes')}
-                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 ${activePill === 'Shoes' ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-[#111111] border-[#D4AF37] hover:border-[#111111] hover:bg-[#111111]/5'}`}
+                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 ${activePill === 'Shoes' ? 'bg-bindas-onyx text-white border-bindas-onyx' : 'bg-transparent text-bindas-onyx border-bindas-gold hover:border-bindas-onyx hover:bg-bindas-onyx/5'}`}
                     >
                         Shoes
                     </button>
                     <button 
                         onClick={() => handlePillClick('Clothes')}
-                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 ${activePill === 'Clothes' ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-[#111111] border-[#D4AF37] hover:border-[#111111] hover:bg-[#111111]/5'}`}
+                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 ${activePill === 'Clothes' ? 'bg-bindas-onyx text-white border-bindas-onyx' : 'bg-transparent text-bindas-onyx border-bindas-gold hover:border-bindas-onyx hover:bg-bindas-onyx/5'}`}
                     >
                         Clothes
                     </button>
@@ -200,7 +200,7 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
                     <div className="relative" ref={sortDropdownRef}>
                         <button 
                             onClick={() => setIsSortOpen(!isSortOpen)}
-                            className="text-xs uppercase tracking-widest font-medium text-[#111111] flex items-center gap-1 hover:text-[#D4AF37] transition-colors focus:outline-none"
+                            className="text-xs uppercase tracking-widest font-medium text-bindas-onyx flex items-center gap-1 hover:text-bindas-gold transition-colors focus:outline-none"
                         >
                             Sort By 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-4 h-4 ml-0.5 transition-transform ${isSortOpen ? '-rotate-180' : ''}`}>
@@ -213,25 +213,25 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
                             <div className="absolute top-full left-0 mt-3 w-52 bg-white shadow-xl border border-[#E8E3D8] z-30 py-2">
                                 <button 
                                     onClick={() => { setSortBy(''); setIsSortOpen(false); }}
-                                    className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === '' ? 'font-bold text-[#111111] bg-[#FFD017]' : 'text-[#6B6457] hover:bg-[#FFD017]/40 hover:text-[#111111]'}`}
+                                    className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === '' ? 'font-bold text-bindas-onyx bg-bindas-amber' : 'text-[#6B6457] hover:bg-bindas-amber/40 hover:text-bindas-onyx'}`}
                                 >
                                     Recommended
                                 </button>
                                 <button 
                                     onClick={() => { setSortBy('newest'); setIsSortOpen(false); }}
-                                    className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === 'newest' ? 'font-bold text-[#111111] bg-[#FFD017]' : 'text-[#6B6457] hover:bg-[#FFD017]/40 hover:text-[#111111]'}`}
+                                    className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === 'newest' ? 'font-bold text-bindas-onyx bg-bindas-amber' : 'text-[#6B6457] hover:bg-bindas-amber/40 hover:text-bindas-onyx'}`}
                                 >
                                     Newest Arrivals
                                 </button>
                                 <button 
                                     onClick={() => { setSortBy('price-asc'); setIsSortOpen(false); }}
-                                    className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === 'price-asc' ? 'font-bold text-[#111111] bg-[#FFD017]' : 'text-[#6B6457] hover:bg-[#FFD017]/40 hover:text-[#111111]'}`}
+                                    className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === 'price-asc' ? 'font-bold text-bindas-onyx bg-bindas-amber' : 'text-[#6B6457] hover:bg-bindas-amber/40 hover:text-bindas-onyx'}`}
                                 >
                                     Price: Low to High
                                 </button>
                                 <button 
                                     onClick={() => { setSortBy('price-desc'); setIsSortOpen(false); }}
-                                    className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === 'price-desc' ? 'font-bold text-[#111111] bg-[#FFD017]' : 'text-[#6B6457] hover:bg-[#FFD017]/40 hover:text-[#111111]'}`}
+                                    className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === 'price-desc' ? 'font-bold text-bindas-onyx bg-bindas-amber' : 'text-[#6B6457] hover:bg-bindas-amber/40 hover:text-bindas-onyx'}`}
                                 >
                                     Price: High to Low
                                 </button>
@@ -241,7 +241,7 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
                     
                     <button 
                         onClick={() => setIsFilterOpen(true)}
-                        className="text-xs uppercase tracking-widest font-medium text-[#111111] flex items-center gap-2 hover:text-[#D4AF37] transition-colors relative"
+                        className="text-xs uppercase tracking-widest font-medium text-bindas-onyx flex items-center gap-2 hover:text-bindas-gold transition-colors relative"
                     >
                         Filter
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
@@ -271,7 +271,7 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
             ) : processedProducts.length === 0 ? (
                 <div className="flex justify-center flex-col items-center h-64 gap-3">
                     <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#6B6457]">No Items Found</span>
-                    <button onClick={clearAllFilters} className="text-[10px] font-bold text-[#111111] border-b border-[#D4AF37] uppercase tracking-widest pb-0.5 hover:text-[#D4AF37] transition-colors">Clear Filters</button>
+                    <button onClick={clearAllFilters} className="text-[10px] font-bold text-bindas-onyx border-b border-bindas-gold uppercase tracking-widest pb-0.5 hover:text-bindas-gold transition-colors">Clear Filters</button>
                 </div>
             ) : (
                 <div className="px-2.5 sm:px-4 lg:px-6 py-6 max-w-[1800px] mx-auto">

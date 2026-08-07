@@ -82,13 +82,13 @@ function App() {
               <Route path="/faq" element={<FAQ />} />
               {/* 404 — Catch all unknown routes under Layout */}
               <Route path="*" element={
-                <div className="min-h-screen flex flex-col items-center justify-center bg-[#F5F2EB] px-6 font-sans text-center gap-6">
-                  <div className="w-16 h-16 bg-[#111111] rounded-2xl flex items-center justify-center">
-                    <span className="text-[#FFD017] text-3xl font-black">4</span>
-                    <span className="text-[#FFD017] text-3xl font-black">0</span>
-                    <span className="text-[#FFD017] text-3xl font-black">4</span>
+                <div className="min-h-screen flex flex-col items-center justify-center bg-bindas-parchment px-6 font-sans text-center gap-6">
+                  <div className="w-16 h-16 bg-bindas-onyx rounded-2xl flex items-center justify-center">
+                    <span className="text-bindas-amber text-3xl font-black">4</span>
+                    <span className="text-bindas-amber text-3xl font-black">0</span>
+                    <span className="text-bindas-amber text-3xl font-black">4</span>
                   </div>
-                  <h1 className="text-2xl font-extrabold text-[#111111] tracking-tight">Page Not Found</h1>
+                  <h1 className="text-2xl font-extrabold text-bindas-onyx tracking-tight">Page Not Found</h1>
                   <p className="text-sm text-[#6B6457] max-w-sm leading-relaxed">The page you're looking for doesn't exist or has been moved. Let's get you back on track.</p>
                   <a href="/" className="btn-primary rounded-xl px-8 py-3 text-sm">← Back to Home</a>
                 </div>

@@ -47,7 +47,7 @@ const AdFeatureShowcase = ({ adData = null }) => {
     const ctaText = ad?.ctaText || 'DISCOVER THE STORY';
 
     return (
-        <section className="bg-[#111111] text-white py-14 md:py-24 px-6 md:px-12 lg:px-20 relative overflow-hidden border-y border-[#222222] font-sans">
+        <section className="bg-bindas-onyx text-white py-14 md:py-24 px-6 md:px-12 lg:px-20 relative overflow-hidden border-y border-[#222222] font-sans">
             <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
                 
                 {/* Left Column: Text & CTA */}
@@ -63,7 +63,7 @@ const AdFeatureShowcase = ({ adData = null }) => {
                         strokeWidth={ad?.tagStrokeWidth}
                         fontSize={ad?.tagFontSize}
                         fontFamily={ad?.tagFontFamily}
-                        className="text-[#FFD017] font-extrabold uppercase tracking-[0.25em] text-xs mb-4 md:mb-6 block"
+                        className="text-bindas-amber font-extrabold uppercase tracking-[0.25em] text-xs mb-4 md:mb-6 block"
                         style={{ color: ad?.tagColor || '#FFD017' }}
                     />
 
@@ -98,7 +98,7 @@ const AdFeatureShowcase = ({ adData = null }) => {
 
                     <Link
                         to={ctaLink}
-                        className="inline-flex items-center justify-center px-8 py-4 rounded-full border border-white/30 text-white font-bold text-xs uppercase tracking-[0.2em] hover:bg-[#FFD017] hover:text-[#111111] hover:border-[#FFD017] transition-all duration-300 shadow-xl group"
+                        className="inline-flex items-center justify-center px-8 py-4 rounded-full border border-white/30 text-white font-bold text-xs uppercase tracking-[0.2em] hover:bg-bindas-amber hover:text-bindas-onyx hover:border-bindas-amber transition-all duration-300 shadow-xl group"
                     >
                         <span>{ctaText}</span>
                     </Link>
@@ -106,7 +106,7 @@ const AdFeatureShowcase = ({ adData = null }) => {
 
                 {/* Right Column: Media Frame */}
                 <div className="order-1 lg:order-2 relative w-full">
-                    <div className="relative aspect-[4/3] lg:aspect-[16/11] bg-white/5 rounded-2xl overflow-hidden border border-[#FFD017]/30 shadow-2xl group">
+                    <div className="relative aspect-[4/3] lg:aspect-[16/11] bg-white/5 rounded-2xl overflow-hidden border border-bindas-amber/30 shadow-2xl group">
                         {mediaType === 'video' ? (
                             <video
                                 src={mediaUrl}

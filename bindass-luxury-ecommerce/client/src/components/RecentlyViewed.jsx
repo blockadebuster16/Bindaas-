@@ -23,22 +23,22 @@ const RecentlyViewed = () => {
             <div className="max-w-[1440px] mx-auto">
                 <div className="flex justify-between items-end mb-8">
                     <div>
-                        <span className="text-[#D4AF37] font-bold uppercase tracking-[0.25em] text-[10px] mb-1.5 block">Your Digital Footprint</span>
-                        <h2 className="text-2xl md:text-3xl font-extrabold text-[#111111] tracking-tight uppercase font-['Playfair_Display',serif]">Recently Viewed</h2>
+                        <span className="text-bindas-gold font-bold uppercase tracking-[0.25em] text-[10px] mb-1.5 block">Your Digital Footprint</span>
+                        <h2 className="text-2xl md:text-3xl font-extrabold text-bindas-onyx tracking-tight uppercase font-['Playfair_Display',serif]">Recently Viewed</h2>
                     </div>
                     {history.length > 4 && (
                         <div className="flex gap-2">
                             <button
                                 onClick={() => scroll('left')}
-                                className="w-9 h-9 rounded-full border border-[#D4AF37] flex items-center justify-center hover:bg-[#FFD017] hover:border-[#FFD017] transition-all duration-200"
+                                className="w-9 h-9 rounded-full border border-bindas-gold flex items-center justify-center hover:bg-bindas-amber hover:border-bindas-amber transition-all duration-200"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-[#111111]"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-bindas-onyx"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
                             </button>
                             <button
                                 onClick={() => scroll('right')}
-                                className="w-9 h-9 rounded-full border border-[#D4AF37] flex items-center justify-center hover:bg-[#FFD017] hover:border-[#FFD017] transition-all duration-200"
+                                className="w-9 h-9 rounded-full border border-bindas-gold flex items-center justify-center hover:bg-bindas-amber hover:border-bindas-amber transition-all duration-200"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-[#111111]"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-bindas-onyx"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
                             </button>
                         </div>
                     )}
@@ -65,8 +65,8 @@ const RecentlyViewed = () => {
                                 <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                             </div>
                             <div className="text-center px-2">
-                                <h3 className="text-[10px] font-bold text-[#6B6457] uppercase tracking-widest leading-tight mb-1 truncate group-hover:text-[#111111] transition-colors">{product.name}</h3>
-                                <p className="text-xs font-semibold text-[#111111]">{formatPrice(product.price)}</p>
+                                <h3 className="text-[10px] font-bold text-[#6B6457] uppercase tracking-widest leading-tight mb-1 truncate group-hover:text-bindas-onyx transition-colors">{product.name}</h3>
+                                <p className="text-xs font-semibold text-bindas-onyx">{formatPrice(product.price)}</p>
                             </div>
                         </Link>
                     ))}

@@ -152,7 +152,7 @@ const PageLayoutManager = () => {
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={() => setIsAddModalOpen(true)}
-                                className="bg-[#111111] hover:bg-black text-white px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow-sm transition-all flex items-center gap-2"
+                                className="bg-bindas-onyx hover:bg-black text-white px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow-sm transition-all flex items-center gap-2"
                             >
                                 <span className="material-icons-outlined text-sm">add</span>
                                 Add Section / Ad
@@ -284,7 +284,7 @@ const PageLayoutManager = () => {
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
                     <div className="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full space-y-6 shadow-2xl">
                         <div className="flex justify-between items-center border-b pb-4">
-                            <h3 className="text-lg font-extrabold uppercase tracking-tight text-[#111111]">Add Section / Ad to Page</h3>
+                            <h3 className="text-lg font-extrabold uppercase tracking-tight text-bindas-onyx">Add Section / Ad to Page</h3>
                             <button onClick={() => setIsAddModalOpen(false)} className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 hover:text-black">
                                 âœ•
                             </button>

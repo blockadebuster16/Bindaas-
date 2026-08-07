@@ -27,10 +27,10 @@ const AuthCallback = () => {
     }, [searchParams, setSession, navigate]);
 
     return (
-        <div className="min-h-screen bg-[#F5F2EB] flex items-center justify-center">
+        <div className="min-h-screen bg-bindas-parchment flex items-center justify-center">
             <div className="flex flex-col items-center gap-4">
-                <div className="w-10 h-10 border-2 border-[#111111] border-t-[#FFD017] rounded-full animate-spin" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#111111]/50">
+                <div className="w-10 h-10 border-2 border-bindas-onyx border-t-bindas-amber rounded-full animate-spin" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-bindas-onyx/50">
                     Signing you in...
                 </span>
             </div>

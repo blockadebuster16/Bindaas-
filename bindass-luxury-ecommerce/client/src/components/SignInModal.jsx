@@ -133,13 +133,13 @@ const SignInModal = () => {
                 <div className="flex border-b border-gray-200 bg-white flex-shrink-0">
                     <button
                         onClick={() => setActiveTab("login")}
-                        className={`flex-1 py-4 text-sm font-bold tracking-wider uppercase transition-colors ${activeTab === "login" ? "bg-[#111111] text-[#FFD017]" : "text-gray-600 hover:bg-gray-50"}`}
+                        className={`flex-1 py-4 text-sm font-bold tracking-wider uppercase transition-colors ${activeTab === "login" ? "bg-bindas-onyx text-bindas-amber" : "text-gray-600 hover:bg-gray-50"}`}
                     >
                         Login
                     </button>
                     <button
                         onClick={() => setActiveTab("register")}
-                        className={`flex-1 py-4 text-sm font-bold tracking-wider uppercase transition-colors ${activeTab === "register" ? "bg-[#111111] text-[#FFD017]" : "text-gray-600 hover:bg-gray-50"}`}
+                        className={`flex-1 py-4 text-sm font-bold tracking-wider uppercase transition-colors ${activeTab === "register" ? "bg-bindas-onyx text-bindas-amber" : "text-gray-600 hover:bg-gray-50"}`}
                     >
                         Register
                     </button>
@@ -179,7 +179,7 @@ const SignInModal = () => {
                                 value={loginEmail}
                                 onChange={(e) => setLoginEmail(e.target.value)}
                                 required
-                                className="w-full border border-gray-300 rounded p-3 mb-4 text-sm focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#FFD017]/30"
+                                className="w-full border border-gray-300 rounded p-3 mb-4 text-sm focus:outline-none focus:border-bindas-gold focus:ring-2 focus:ring-bindas-amber/30"
                             />
                             <input
                                 type="password"
@@ -187,12 +187,12 @@ const SignInModal = () => {
                                 value={loginPassword}
                                 onChange={(e) => setLoginPassword(e.target.value)}
                                 required
-                                className="w-full border border-gray-300 rounded p-3 mb-6 text-sm focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#FFD017]/30"
+                                className="w-full border border-gray-300 rounded p-3 mb-6 text-sm focus:outline-none focus:border-bindas-gold focus:ring-2 focus:ring-bindas-amber/30"
                             />
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-[#111111] text-white py-3 rounded text-sm font-bold tracking-widest hover:bg-[#D4AF37] hover:text-[#111111] transition-colors disabled:opacity-60"
+                                className="w-full bg-bindas-onyx text-white py-3 rounded text-sm font-bold tracking-widest hover:bg-bindas-gold hover:text-bindas-onyx transition-colors disabled:opacity-60"
                             >
                                 {loading ? "Signing In..." : "PROCEED"}
                             </button>
@@ -254,7 +254,7 @@ const SignInModal = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-[#111111] text-white py-3 rounded text-sm font-bold tracking-widest hover:bg-[#D4AF37] hover:text-[#111111] transition-colors disabled:opacity-60"
+                                className="w-full bg-bindas-onyx text-white py-3 rounded text-sm font-bold tracking-widest hover:bg-bindas-gold hover:text-bindas-onyx transition-colors disabled:opacity-60"
                             >
                                 {loading ? "Creating Account..." : "REGISTER"}
                             </button>

@@ -43,7 +43,7 @@ const Home = () => {
 
     if (loading) return (
         <div className="h-screen flex flex-col items-center justify-center bg-white gap-4 font-[#Outfit]">
-            <div className="w-8 h-8 border-2 border-[#FFD017] border-t-[#111111] rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-bindas-amber border-t-bindas-onyx rounded-full animate-spin" />
             <span className="text-[10px] uppercase tracking-[0.3em] text-[#6B6457]">Curating Collection...</span>
         </div>
     );
@@ -101,32 +101,32 @@ const Home = () => {
                                 <div className="max-w-[1800px] mx-auto">
                                     <div className="flex justify-between items-end mb-5 md:mb-7 px-1">
                                         <div>
-                                            <span className="text-[#D4AF37] font-bold uppercase tracking-[0.25em] text-[10px] mb-1.5 block">
+                                            <span className="text-bindas-gold font-bold uppercase tracking-[0.25em] text-[10px] mb-1.5 block">
                                                 {isWomen ? 'Exclusively For Her' : 'Recently Added'}
                                             </span>
-                                            <h2 className="text-2xl md:text-4xl font-extrabold text-[#111111] tracking-tight font-['Playfair_Display',serif]">
+                                            <h2 className="text-2xl md:text-4xl font-extrabold text-bindas-onyx tracking-tight font-['Playfair_Display',serif]">
                                                 {sec.title || (isWomen ? "Women's Collection" : "New Arrivals")}
                                             </h2>
                                         </div>
                                         <div className="flex items-center gap-3">
                                             <Link 
                                                 to={sec.redirectUrl || (isWomen ? "/women" : "/shop")} 
-                                                className="rounded-full bg-white text-[#111111] px-5 py-2 text-xs font-semibold border border-slate-200/80 shadow-sm hover:bg-[#111111] hover:text-white hover:border-[#111111] transition-all duration-300 inline-flex items-center"
+                                                className="rounded-full bg-white text-bindas-onyx px-5 py-2 text-xs font-semibold border border-slate-200/80 shadow-sm hover:bg-bindas-onyx hover:text-white hover:border-bindas-onyx transition-all duration-300 inline-flex items-center"
                                             >
                                                 Discover more
                                             </Link>
                                             <div className="flex gap-1.5">
                                                 <button
                                                     onClick={() => scroll(scrollRef, 'left')}
-                                                    className="w-8 h-8 rounded-full border border-[#D4AF37] bg-transparent flex items-center justify-center hover:bg-[#FFD017] hover:border-[#FFD017] transition-all duration-200"
+                                                    className="w-8 h-8 rounded-full border border-bindas-gold bg-transparent flex items-center justify-center hover:bg-bindas-amber hover:border-bindas-amber transition-all duration-200"
                                                 >
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3.5 h-3.5 text-[#111111]"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3.5 h-3.5 text-bindas-onyx"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
                                                 </button>
                                                 <button
                                                     onClick={() => scroll(scrollRef, 'right')}
-                                                    className="w-8 h-8 rounded-full border border-[#D4AF37] bg-transparent flex items-center justify-center hover:bg-[#FFD017] hover:border-[#FFD017] transition-all duration-200"
+                                                    className="w-8 h-8 rounded-full border border-bindas-gold bg-transparent flex items-center justify-center hover:bg-bindas-amber hover:border-bindas-amber transition-all duration-200"
                                                 >
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-[#111111]"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-bindas-onyx"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
                                                 </button>
                                             </div>
                                         </div>

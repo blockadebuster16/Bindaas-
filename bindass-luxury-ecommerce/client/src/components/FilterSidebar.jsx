@@ -9,7 +9,7 @@ const FilterAccordion = ({ title, children, showArrow = true }) => {
                 className="flex justify-between items-center py-4 hover:bg-[#FAE7A8]/60 cursor-pointer px-1 transition-colors"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <span className="text-[10px] tracking-[0.2em] text-[#111111] font-bold uppercase font-sans">{title}</span>
+                <span className="text-[10px] tracking-[0.2em] text-bindas-onyx font-bold uppercase font-sans">{title}</span>
                 {showArrow ? (
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
@@ -34,14 +34,14 @@ const FilterAccordion = ({ title, children, showArrow = true }) => {
 
 const CheckboxOption = ({ label, count, checked, onChange }) => (
     <label className="flex items-center gap-3 py-1.5 cursor-pointer group">
-        <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${checked ? 'bg-[#111111] border-[#111111] text-white' : 'border-[#D4AF37] bg-[#FAE7A8] group-hover:border-[#111111]'}`}>
+        <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${checked ? 'bg-bindas-onyx border-bindas-onyx text-white' : 'border-bindas-gold bg-[#FAE7A8] group-hover:border-bindas-onyx'}`}>
             {checked && (
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
             )}
         </div>
-        <span className="text-xs text-[#111111] flex-1 font-medium">{label}</span>
+        <span className="text-xs text-bindas-onyx flex-1 font-medium">{label}</span>
         {count !== undefined && <span className="text-xs text-[#6B6457]">[{count}]</span>}
     </label>
 );
@@ -94,12 +94,12 @@ const FilterSidebar = ({
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-5 border-b border-[#E8E3D8]">
                     <span className="text-xs uppercase tracking-[0.2em] font-medium opacity-0">S</span> 
-                    <h2 className="text-[10px] uppercase tracking-[0.25em] font-bold text-[#111111] absolute left-1/2 -translate-x-1/2">
+                    <h2 className="text-[10px] uppercase tracking-[0.25em] font-bold text-bindas-onyx absolute left-1/2 -translate-x-1/2">
                         Filter
                     </h2>
                     <button 
                         onClick={onClose}
-                        className="text-[#111111] hover:text-[#D4AF37] transition-colors p-2"
+                        className="text-bindas-onyx hover:text-bindas-gold transition-colors p-2"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -113,7 +113,7 @@ const FilterSidebar = ({
                     {/* Price Range - Using simple text input for min/max to be fully robust without external slider libs */}
                     <div className="mb-10 block">
                         <div className="flex justify-between items-center mb-6">
-                            <span className="text-[10px] tracking-[0.2em] text-[#111111] font-bold uppercase">PRICE RANGE (₹)</span>
+                            <span className="text-[10px] tracking-[0.2em] text-bindas-onyx font-bold uppercase">PRICE RANGE (₹)</span>
                         </div>
                         <div className="flex items-center gap-4">
                             <input 
@@ -121,7 +121,7 @@ const FilterSidebar = ({
                                 placeholder="Min"
                                 value={filters.minPrice || ''}
                                 onChange={(e) => setFilters(prev => ({ ...prev, minPrice: Number(e.target.value) }))}
-                                className="w-full text-xs border-b border-[#D4AF37] py-1 bg-transparent focus:outline-none focus:border-[#111111] transition-colors text-[#111111] placeholder:text-[#6B6457]"
+                                className="w-full text-xs border-b border-bindas-gold py-1 bg-transparent focus:outline-none focus:border-bindas-onyx transition-colors text-bindas-onyx placeholder:text-[#6B6457]"
                             />
                             <span className="text-[#6B6457]">–</span>
                             <input 
@@ -129,7 +129,7 @@ const FilterSidebar = ({
                                 placeholder="Max"
                                 value={filters.maxPrice || ''}
                                 onChange={(e) => setFilters(prev => ({ ...prev, maxPrice: Number(e.target.value) }))}
-                                className="w-full text-xs border-b border-[#D4AF37] py-1 bg-transparent focus:outline-none focus:border-[#111111] transition-colors text-[#111111] placeholder:text-[#6B6457]"
+                                className="w-full text-xs border-b border-bindas-gold py-1 bg-transparent focus:outline-none focus:border-bindas-onyx transition-colors text-bindas-onyx placeholder:text-[#6B6457]"
                             />
                         </div>
                     </div>
@@ -199,13 +199,13 @@ const FilterSidebar = ({
                 <div className="p-6 border-t border-[#E8E3D8] bg-white grid grid-cols-2 gap-4">
                     <button 
                         onClick={clearAll}
-                        className="py-4 text-[10px] font-bold tracking-[0.15em] text-[#111111] bg-[#E8E3D8] hover:bg-[#D4AF37] transition-colors uppercase leading-none border border-[#D4AF37]"
+                        className="py-4 text-[10px] font-bold tracking-[0.15em] text-bindas-onyx bg-[#E8E3D8] hover:bg-bindas-gold transition-colors uppercase leading-none border border-bindas-gold"
                     >
                         Clear All
                     </button>
                     <button 
                         onClick={onClose}
-                        className="py-4 text-[10px] font-bold tracking-[0.15em] text-white bg-[#111111] hover:bg-[#FFD017] hover:text-[#111111] transition-all duration-300 uppercase leading-none"
+                        className="py-4 text-[10px] font-bold tracking-[0.15em] text-white bg-bindas-onyx hover:bg-bindas-amber hover:text-bindas-onyx transition-all duration-300 uppercase leading-none"
                     >
                         View [{totalResults}]
                     </button>

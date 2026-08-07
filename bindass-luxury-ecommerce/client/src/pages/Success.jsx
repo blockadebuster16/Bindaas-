@@ -26,7 +26,7 @@ const Success = () => {
             {/* Minimal brand header */}
             <div className="border-b border-slate-100 bg-white">
                 <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-                    <Link to="/" className="text-xl font-black tracking-tight text-[#111111]">BiNDAAS!</Link>
+                    <Link to="/" className="text-xl font-black tracking-tight text-bindas-onyx">BiNDAAS!</Link>
                     <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-emerald-600">
                         <span className="material-icons text-xs">check_circle</span>
                         Order Confirmed
@@ -45,7 +45,7 @@ const Success = () => {
                         <div className="absolute inset-0 rounded-full border-2 border-emerald-200 animate-ping opacity-30" />
                     </div>
 
-                    <h1 className="text-3xl md:text-4xl font-black text-[#111111] tracking-tight leading-tight mb-2">
+                    <h1 className="text-3xl md:text-4xl font-black text-bindas-onyx tracking-tight leading-tight mb-2">
                         Order Confirmed!
                     </h1>
                     <p className="text-slate-400 text-sm font-medium mb-1">
@@ -65,7 +65,7 @@ const Success = () => {
                         {/* Items */}
                         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
                             <div className="px-6 py-4 border-b border-slate-50 flex items-center justify-between">
-                                <h2 className="text-[10px] font-black uppercase tracking-[0.25em] text-[#111111]">Your Pieces</h2>
+                                <h2 className="text-[10px] font-black uppercase tracking-[0.25em] text-bindas-onyx">Your Pieces</h2>
                                 {items.length > 0 && (
                                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{items.length} item{items.length > 1 ? 's' : ''}</span>
                                 )}
@@ -83,10 +83,10 @@ const Success = () => {
                                             </div>
                                             <div className="flex-1 flex flex-col justify-between py-0.5 min-w-0">
                                                 <div>
-                                                    <h4 className="text-[11px] font-black uppercase tracking-tight text-[#111111] leading-tight truncate">{item.name}</h4>
+                                                    <h4 className="text-[11px] font-black uppercase tracking-tight text-bindas-onyx leading-tight truncate">{item.name}</h4>
                                                     <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">Size {item.size} · Qty {item.quantity}</p>
                                                 </div>
-                                                <p className="text-sm font-black text-[#111111]">₹{(item.price || 0).toLocaleString()}</p>
+                                                <p className="text-sm font-black text-bindas-onyx">₹{(item.price || 0).toLocaleString()}</p>
                                             </div>
                                         </div>
                                     ))
@@ -111,7 +111,7 @@ const Success = () => {
                                     </div>
                                     <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-slate-400">Shipping To</h3>
                                 </div>
-                                <p className="text-[11px] font-black text-[#111111] uppercase tracking-tight mb-1.5">
+                                <p className="text-[11px] font-black text-bindas-onyx uppercase tracking-tight mb-1.5">
                                     {orderData?.shippingInfo?.firstName} {orderData?.shippingInfo?.lastName}
                                 </p>
                                 <div className="text-[10px] text-slate-500 space-y-0.5 font-medium leading-relaxed">
@@ -132,7 +132,7 @@ const Success = () => {
                                     </div>
                                     <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-slate-400">Payment</h3>
                                 </div>
-                                <p className="text-[11px] font-black text-[#111111] uppercase tracking-tight mb-0.5">Razorpay Secure</p>
+                                <p className="text-[11px] font-black text-bindas-onyx uppercase tracking-tight mb-0.5">Razorpay Secure</p>
                                 <p className="text-[9px] text-emerald-600 font-black uppercase tracking-widest mb-3">Transaction Verified</p>
                                 <div className="flex gap-3 items-center opacity-60">
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" className="h-2 w-auto" />
@@ -143,7 +143,7 @@ const Success = () => {
 
                         {/* What's next */}
                         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.25em] text-[#111111] mb-4">What Happens Next?</h3>
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.25em] text-bindas-onyx mb-4">What Happens Next?</h3>
                             <div className="space-y-4">
                                 {[
                                     { icon: 'email', title: 'Confirmation Email', desc: 'An order receipt has been sent to your registered email.', color: 'bg-blue-100 text-blue-600' },
@@ -155,7 +155,7 @@ const Success = () => {
                                             <span className="material-icons text-sm">{step.icon}</span>
                                         </div>
                                         <div>
-                                            <p className="text-[11px] font-black text-[#111111] uppercase tracking-tight">{step.title}</p>
+                                            <p className="text-[11px] font-black text-bindas-onyx uppercase tracking-tight">{step.title}</p>
                                             <p className="text-[10px] text-slate-400 font-medium mt-0.5 leading-relaxed">{step.desc}</p>
                                         </div>
                                     </div>
@@ -166,7 +166,7 @@ const Success = () => {
 
                     {/* Right: Summary card */}
                     <div className="lg:col-span-5">
-                        <div className="bg-[#111111] text-white rounded-2xl p-8 sticky top-8 shadow-2xl shadow-black/20">
+                        <div className="bg-bindas-onyx text-white rounded-2xl p-8 sticky top-8 shadow-2xl shadow-black/20">
                             <div className="flex items-center gap-2 mb-8">
                                 <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
                                     <span className="material-icons text-white text-sm">receipt_long</span>
@@ -196,7 +196,7 @@ const Success = () => {
 
                             <div className="space-y-3 mb-8">
                                 <Link to="/profile" className="block">
-                                    <button className="w-full bg-white text-[#111111] py-3.5 rounded-xl text-[10px] font-black uppercase tracking-[0.25em] hover:bg-slate-100 transition-colors">
+                                    <button className="w-full bg-white text-bindas-onyx py-3.5 rounded-xl text-[10px] font-black uppercase tracking-[0.25em] hover:bg-slate-100 transition-colors">
                                         Track Your Order
                                     </button>
                                 </Link>

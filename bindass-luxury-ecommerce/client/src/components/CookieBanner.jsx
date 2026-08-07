@@ -69,7 +69,7 @@ const CookieBanner = () => {
                 <div className="flex gap-2 sm:flex-col sm:gap-2.5">
                     <button
                         onClick={handleAcceptAll}
-                        className="flex-1 sm:w-full bg-[#111111] text-white py-3 text-[11px] font-bold tracking-widest hover:bg-[#FFD017] hover:text-[#111111] transition-colors rounded-lg uppercase"
+                        className="flex-1 sm:w-full bg-bindas-onyx text-white py-3 text-[11px] font-bold tracking-widest hover:bg-bindas-amber hover:text-bindas-onyx transition-colors rounded-lg uppercase"
                     >
                         Accept All
                     </button>

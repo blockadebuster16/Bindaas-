@@ -30,7 +30,7 @@ const SearchResults = () => {
         <div className="max-w-[1440px] mx-auto px-4 md:px-6 py-12 font-sans min-h-screen">
             <header className="mb-8">
                 <h1 className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 mb-2">Search Results For</h1>
-                <h2 className="text-3xl md:text-5xl font-black text-[#111111] uppercase tracking-tighter italic">"{query}"</h2>
+                <h2 className="text-3xl md:text-5xl font-black text-bindas-onyx uppercase tracking-tighter italic">"{query}"</h2>
                 <p className="mt-4 text-xs font-bold text-slate-500 uppercase tracking-widest">{products.length} pieces found</p>
             </header>
 

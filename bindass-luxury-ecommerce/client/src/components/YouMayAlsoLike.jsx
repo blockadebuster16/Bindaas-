@@ -44,7 +44,7 @@ const YouMayAlsoLike = ({ currentProductId, category }) => {
         <section className="py-12 px-4 md:px-8 font-sans">
             <div className="max-w-[1440px] mx-auto">
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#111111]">
+                    <h2 className="text-xl md:text-2xl font-bold tracking-tight text-bindas-onyx">
                         You may also like
                     </h2>
 
@@ -95,7 +95,7 @@ const YouMayAlsoLike = ({ currentProductId, category }) => {
                                     {/* Bookmark Icon Button */}
                                     <button
                                         onClick={(e) => { e.preventDefault(); toggleWishlist(prod); }}
-                                        className="absolute top-3.5 right-3.5 z-10 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-[#111111] hover:bg-white shadow-sm transition-transform hover:scale-105"
+                                        className="absolute top-3.5 right-3.5 z-10 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-bindas-onyx hover:bg-white shadow-sm transition-transform hover:scale-105"
                                         title="Wishlist"
                                     >
                                         <svg
@@ -114,7 +114,7 @@ const YouMayAlsoLike = ({ currentProductId, category }) => {
                                 {/* Title & Price Row */}
                                 <div className="flex items-start justify-between px-1 gap-2">
                                     <Link to={`/product/${prod._id}`} className="block">
-                                        <h3 className="text-[11px] font-bold text-[#111111] uppercase tracking-wider truncate group-hover:text-[#D4AF37] transition-colors">
+                                        <h3 className="text-[11px] font-bold text-bindas-onyx uppercase tracking-wider truncate group-hover:text-bindas-gold transition-colors">
                                             {prod.name}
                                         </h3>
                                         <p className="text-[11px] font-medium text-slate-500 mt-0.5">

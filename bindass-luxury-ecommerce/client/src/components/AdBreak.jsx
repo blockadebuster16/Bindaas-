@@ -73,7 +73,7 @@ const AdBreak = ({ adData = null, fallbackTitle = 'WOMENSWEAR', fallbackImage = 
 
                     {/* CTA Button */}
                     <div className="mt-2">
-                        <span className="btn-pill px-8 py-3.5 text-xs font-bold uppercase tracking-[0.2em] bg-white text-black group-hover:bg-[#FFD017] group-hover:text-black transition-all shadow-2xl">
+                        <span className="btn-pill px-8 py-3.5 text-xs font-bold uppercase tracking-[0.2em] bg-white text-black group-hover:bg-bindas-amber group-hover:text-black transition-all shadow-2xl">
                             {ctaText}
                         </span>
                     </div>

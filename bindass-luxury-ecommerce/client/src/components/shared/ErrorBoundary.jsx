@@ -4,9 +4,9 @@ import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 const ErrorFallback = ({ error, resetErrorBoundary }) => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-[#f5f5f5] p-6 font-sans">
-            <div className="max-w-md w-full bg-white p-8 md:p-12 text-center border-t-4 border-[#111111] shadow-2xl">
+            <div className="max-w-md w-full bg-white p-8 md:p-12 text-center border-t-4 border-bindas-onyx shadow-2xl">
                 <span className="material-icons-outlined text-5xl text-red-500 mb-6 block">error_outline</span>
-                <h1 className="text-2xl font-extrabold uppercase tracking-tight mb-4 text-[#111111]">
+                <h1 className="text-2xl font-extrabold uppercase tracking-tight mb-4 text-bindas-onyx">
                     Oops, something went wrong
                 </h1>
                 <p className="text-sm text-gray-500 mb-8 leading-relaxed">
@@ -25,7 +25,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
                         resetErrorBoundary();
                         window.location.href = '/';
                     }}
-                    className="w-full bg-[#111111] text-white py-4 font-bold text-xs uppercase tracking-[0.2em] hover:bg-[#FFD017] hover:text-[#111111] transition-colors"
+                    className="w-full bg-bindas-onyx text-white py-4 font-bold text-xs uppercase tracking-[0.2em] hover:bg-bindas-amber hover:text-bindas-onyx transition-colors"
                 >
                     Return to Home
                 </button>

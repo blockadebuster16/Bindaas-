@@ -49,7 +49,7 @@ const GridProductCard = ({ product }) => {
 
                 {/* Bookmark / Wishlist Badge Button */}
                 <button 
-                    className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-10 w-7 h-8 sm:w-8 sm:h-9 bg-white text-[#111111] rounded-sm shadow-md flex items-center justify-center transition-transform hover:scale-105"
+                    className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-10 w-7 h-8 sm:w-8 sm:h-9 bg-white text-bindas-onyx rounded-sm shadow-md flex items-center justify-center transition-transform hover:scale-105"
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -72,7 +72,7 @@ const GridProductCard = ({ product }) => {
 
                 {/* Low Stock Badge */}
                 {product.stock_quantity > 0 && product.stock_quantity <= (product.low_stock_threshold || 5) && (
-                    <span className="absolute bottom-3.5 left-3.5 z-10 bg-[#111111] text-[#FFD017] text-[9px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest">
+                    <span className="absolute bottom-3.5 left-3.5 z-10 bg-bindas-onyx text-bindas-amber text-[9px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest">
                         Low Stock
                     </span>
                 )}
@@ -90,7 +90,7 @@ const GridProductCard = ({ product }) => {
             {/* Title, Price & Plus Button Row */}
             <div className="flex items-start justify-between px-1 gap-2">
                 <Link to={`/product/${product._id}`} className="block">
-                    <h3 className="text-[11px] font-bold text-[#111111] uppercase tracking-wider truncate group-hover:text-[#D4AF37] transition-colors">
+                    <h3 className="text-[11px] font-bold text-bindas-onyx uppercase tracking-wider truncate group-hover:text-bindas-gold transition-colors">
                         {product.name}
                     </h3>
                     <p className="text-[11px] font-medium text-slate-500 mt-0.5">

@@ -53,7 +53,7 @@ export const ToastProvider = ({ children }) => {
         success: 'bg-emerald-600 text-white',
         error: 'bg-red-600 text-white',
         warning: 'bg-amber-500 text-white',
-        info: 'bg-[#111111] text-white',
+        info: 'bg-bindas-onyx text-white',
     };
 
     return (

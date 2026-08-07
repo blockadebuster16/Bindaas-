@@ -179,10 +179,10 @@ const Navbar = () => {
     if (isTransparentOverlay) {
         headerClasses += "bg-transparent text-white border-transparent shadow-none py-2";
     } else {
-        headerClasses += "bg-white text-[#111111] shadow-md border-b border-slate-200 py-1";
+        headerClasses += "bg-white text-bindas-onyx shadow-md border-b border-slate-200 py-1";
     }
 
-    const navLinkClass = `transition-colors py-1 hover:text-[#D4AF37] ${isTransparentOverlay ? 'text-white' : 'text-[#111111]'}`;
+    const navLinkClass = `transition-colors py-1 hover:text-bindas-gold ${isTransparentOverlay ? 'text-white' : 'text-bindas-onyx'}`;
 
     return (
         <>
@@ -260,7 +260,7 @@ const Navbar = () => {
                                     <button
                                         type="button"
                                         onClick={() => setIsCollectionsOpen(p => !p)}
-                                        className={`transition-colors py-1.5 flex items-center gap-1 hover:text-[#D4AF37] cursor-pointer bg-transparent border-none ${isTransparentOverlay ? 'text-white' : 'text-[#111111]'}`}
+                                        className={`transition-colors py-1.5 flex items-center gap-1 hover:text-bindas-gold cursor-pointer bg-transparent border-none ${isTransparentOverlay ? 'text-white' : 'text-bindas-onyx'}`}
                                         aria-expanded={isCollectionsOpen}
                                         aria-haspopup="true"
                                     >
@@ -279,7 +279,7 @@ const Navbar = () => {
                                     >
                                         <div className="flex items-center justify-between mb-5">
                                             <span className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-slate-400">Featured Collections</span>
-                                            <Link to="/shop" onClick={() => setIsCollectionsOpen(false)} className="text-[11px] font-bold uppercase tracking-wider text-black hover:text-[#D4AF37] transition-colors">
+                                            <Link to="/shop" onClick={() => setIsCollectionsOpen(false)} className="text-[11px] font-bold uppercase tracking-wider text-black hover:text-bindas-gold transition-colors">
                                                 View All Drops →
                                             </Link>
                                         </div>
@@ -339,7 +339,7 @@ const Navbar = () => {
                         {user ? (
                             <div className="hidden md:flex items-center gap-3">
                                 <Link to="/profile" title="View Profile" className="flex items-center w-11 h-11 justify-center rounded-lg hover:bg-black/5 active:scale-95">
-                                    <img src={user.picture} className="w-7 h-7 rounded-full border-2 border-[#FFD017]" alt="Profile" onError={(e) => { e.target.src = ''; e.target.className = 'w-7 h-7 rounded-full bg-[#111111] flex items-center justify-center text-white text-xs font-bold'; }} />
+                                    <img src={user.picture} className="w-7 h-7 rounded-full border-2 border-bindas-amber" alt="Profile" onError={(e) => { e.target.src = ''; e.target.className = 'w-7 h-7 rounded-full bg-bindas-onyx flex items-center justify-center text-white text-xs font-bold'; }} />
                                 </Link>
                                 {/* Inline logout confirm */}
                                 {showLogoutConfirm ? (
@@ -374,7 +374,7 @@ const Navbar = () => {
                         <Link to="/cart" aria-label={`Cart (${cartCount} items)`} className="relative hover:opacity-80 transition-opacity flex items-center w-11 h-11 justify-center rounded-lg hover:bg-black/5 active:scale-95">
                             <span className="material-icons-outlined text-[24px]">shopping_bag</span>
                             {cartCount > 0 && (
-                                <span className="absolute top-1 right-1 bg-[#FFD017] text-[#111111] text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
+                                <span className="absolute top-1 right-1 bg-bindas-amber text-bindas-onyx text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
                                     {cartCount > 9 ? '9+' : cartCount}
                                 </span>
                             )}
@@ -398,12 +398,12 @@ const Navbar = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onFocus={() => searchQuery.length > 2 && setShowResults(true)}
                                 placeholder="Find a piece…"
-                                className={`w-full rounded-full py-3 pl-12 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFD017] font-medium transition-shadow ${
+                                className={`w-full rounded-full py-3 pl-12 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-bindas-amber font-medium transition-shadow ${
                                     isTransparentOverlay ? 'bg-white/10 text-white placeholder-slate-400' : 'bg-gray-100 text-black placeholder-gray-500'
                                 }`}
                             />
                             {searchLoading && (
-                                <div className="absolute right-4 top-1/2 -translate-y-1/2 animate-spin rounded-full h-4 w-4 border-b-2 border-[#FFD017]"></div>
+                                <div className="absolute right-4 top-1/2 -translate-y-1/2 animate-spin rounded-full h-4 w-4 border-b-2 border-bindas-amber"></div>
                             )}
                         </form>
 
@@ -422,9 +422,9 @@ const Navbar = () => {
                                                 >
                                                     <img src={product.images[0]} className="w-12 h-16 object-cover rounded-sm" alt={product.name} />
                                                     <div>
-                                                        <p className="text-xs font-bold text-[#111111] uppercase tracking-wider">{product.name}</p>
+                                                        <p className="text-xs font-bold text-bindas-onyx uppercase tracking-wider">{product.name}</p>
                                                         <p className="text-[10px] text-[#6B6457] font-medium">{product.category}</p>
-                                                        <p className="text-xs font-black text-[#D4AF37] mt-1">₹{product.price.toLocaleString()}</p>
+                                                        <p className="text-xs font-black text-bindas-gold mt-1">₹{product.price.toLocaleString()}</p>
                                                     </div>
                                                 </Link>
                                             ))}
@@ -492,7 +492,7 @@ const Navbar = () => {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Search pieces…"
-                                className="w-full bg-slate-100 rounded-full py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFD017] font-medium text-black placeholder-gray-500"
+                                className="w-full bg-slate-100 rounded-full py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-bindas-amber font-medium text-black placeholder-gray-500"
                             />
                         </form>
                     </div>
@@ -504,9 +504,9 @@ const Navbar = () => {
                                 <Link
                                     to="/men"
                                     onClick={closeMobileMenu}
-                                    className="flex items-center px-4 py-3.5 rounded-xl text-[13px] font-bold uppercase tracking-wider text-[#111111] hover:bg-[#FFD017]/10 hover:text-[#111111] transition-colors active:bg-[#FFD017]/20"
+                                    className="flex items-center px-4 py-3.5 rounded-xl text-[13px] font-bold uppercase tracking-wider text-bindas-onyx hover:bg-bindas-amber/10 hover:text-bindas-onyx transition-colors active:bg-bindas-amber/20"
                                 >
-                                    <span className="material-icons-outlined text-[18px] mr-3 text-[#D4AF37]">male</span>
+                                    <span className="material-icons-outlined text-[18px] mr-3 text-bindas-gold">male</span>
                                     Men
                                 </Link>
                             </li>
@@ -514,9 +514,9 @@ const Navbar = () => {
                                 <Link
                                     to="/women"
                                     onClick={closeMobileMenu}
-                                    className="flex items-center px-4 py-3.5 rounded-xl text-[13px] font-bold uppercase tracking-wider text-[#111111] hover:bg-[#FFD017]/10 transition-colors active:bg-[#FFD017]/20"
+                                    className="flex items-center px-4 py-3.5 rounded-xl text-[13px] font-bold uppercase tracking-wider text-bindas-onyx hover:bg-bindas-amber/10 transition-colors active:bg-bindas-amber/20"
                                 >
-                                    <span className="material-icons-outlined text-[18px] mr-3 text-[#D4AF37]">female</span>
+                                    <span className="material-icons-outlined text-[18px] mr-3 text-bindas-gold">female</span>
                                     Women
                                 </Link>
                             </li>
@@ -526,11 +526,11 @@ const Navbar = () => {
                                 <button
                                     type="button"
                                     onClick={() => setIsCollectionsOpen(p => !p)}
-                                    className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl text-[13px] font-bold uppercase tracking-wider text-[#111111] hover:bg-[#FFD017]/10 transition-colors active:bg-[#FFD017]/20"
+                                    className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl text-[13px] font-bold uppercase tracking-wider text-bindas-onyx hover:bg-bindas-amber/10 transition-colors active:bg-bindas-amber/20"
                                     aria-expanded={isCollectionsOpen}
                                 >
                                     <span className="flex items-center">
-                                        <span className="material-icons-outlined text-[18px] mr-3 text-[#D4AF37]">style</span>
+                                        <span className="material-icons-outlined text-[18px] mr-3 text-bindas-gold">style</span>
                                         Collections
                                     </span>
                                     <span className={`material-icons-outlined text-[18px] transition-transform duration-200 ${isCollectionsOpen ? 'rotate-180' : ''}`}>expand_more</span>
@@ -538,20 +538,20 @@ const Navbar = () => {
 
                                 {/* Collections sub-list */}
                                 {isCollectionsOpen && (
-                                    <ul className="mt-1 ml-10 space-y-1 border-l-2 border-[#FFD017]/40 pl-4">
+                                    <ul className="mt-1 ml-10 space-y-1 border-l-2 border-bindas-amber/40 pl-4">
                                         {featuredCollections.map((col, idx) => (
                                             <li key={idx}>
                                                 <Link
                                                     to={col.link}
                                                     onClick={closeMobileMenu}
-                                                    className="block py-2 text-[12px] font-semibold text-[#6B6457] hover:text-[#111111] transition-colors"
+                                                    className="block py-2 text-[12px] font-semibold text-[#6B6457] hover:text-bindas-onyx transition-colors"
                                                 >
                                                     {col.title}
                                                 </Link>
                                             </li>
                                         ))}
                                         <li>
-                                            <Link to="/shop" onClick={closeMobileMenu} className="block py-2 text-[11px] font-bold uppercase tracking-widest text-[#D4AF37] hover:text-[#111111] transition-colors">
+                                            <Link to="/shop" onClick={closeMobileMenu} className="block py-2 text-[11px] font-bold uppercase tracking-widest text-bindas-gold hover:text-bindas-onyx transition-colors">
                                                 View All Drops →
                                             </Link>
                                         </li>
@@ -563,9 +563,9 @@ const Navbar = () => {
                                 <Link
                                     to="/heritage"
                                     onClick={closeMobileMenu}
-                                    className="flex items-center px-4 py-3.5 rounded-xl text-[13px] font-bold uppercase tracking-wider text-[#111111] hover:bg-[#FFD017]/10 transition-colors active:bg-[#FFD017]/20"
+                                    className="flex items-center px-4 py-3.5 rounded-xl text-[13px] font-bold uppercase tracking-wider text-bindas-onyx hover:bg-bindas-amber/10 transition-colors active:bg-bindas-amber/20"
                                 >
-                                    <span className="material-icons-outlined text-[18px] mr-3 text-[#D4AF37]">history_edu</span>
+                                    <span className="material-icons-outlined text-[18px] mr-3 text-bindas-gold">history_edu</span>
                                     About Us
                                 </Link>
                             </li>
@@ -573,9 +573,9 @@ const Navbar = () => {
                                 <Link
                                     to="/membership"
                                     onClick={closeMobileMenu}
-                                    className="flex items-center px-4 py-3.5 rounded-xl text-[13px] font-bold uppercase tracking-wider text-[#111111] hover:bg-[#FFD017]/10 transition-colors active:bg-[#FFD017]/20"
+                                    className="flex items-center px-4 py-3.5 rounded-xl text-[13px] font-bold uppercase tracking-wider text-bindas-onyx hover:bg-bindas-amber/10 transition-colors active:bg-bindas-amber/20"
                                 >
-                                    <span className="material-icons-outlined text-[18px] mr-3 text-[#D4AF37]">workspace_premium</span>
+                                    <span className="material-icons-outlined text-[18px] mr-3 text-bindas-gold">workspace_premium</span>
                                     Membership
                                 </Link>
                             </li>
@@ -587,16 +587,16 @@ const Navbar = () => {
                         {/* Secondary Links */}
                         <ul className="space-y-1 px-3">
                             <li>
-                                <Link to="/cart" onClick={closeMobileMenu} className="flex items-center justify-between px-4 py-3 rounded-xl text-[12px] font-bold uppercase tracking-wider text-[#111111] hover:bg-slate-100 transition-colors">
+                                <Link to="/cart" onClick={closeMobileMenu} className="flex items-center justify-between px-4 py-3 rounded-xl text-[12px] font-bold uppercase tracking-wider text-bindas-onyx hover:bg-slate-100 transition-colors">
                                     <span className="flex items-center gap-3">
                                         <span className="material-icons-outlined text-[18px] text-slate-400">shopping_bag</span>
                                         My Bag
                                     </span>
-                                    {cartCount > 0 && <span className="bg-[#FFD017] text-[#111111] text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center">{cartCount}</span>}
+                                    {cartCount > 0 && <span className="bg-bindas-amber text-bindas-onyx text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center">{cartCount}</span>}
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/wishlist" onClick={closeMobileMenu} className="flex items-center justify-between px-4 py-3 rounded-xl text-[12px] font-bold uppercase tracking-wider text-[#111111] hover:bg-slate-100 transition-colors">
+                                <Link to="/wishlist" onClick={closeMobileMenu} className="flex items-center justify-between px-4 py-3 rounded-xl text-[12px] font-bold uppercase tracking-wider text-bindas-onyx hover:bg-slate-100 transition-colors">
                                     <span className="flex items-center gap-3">
                                         <span className="material-icons-outlined text-[18px] text-slate-400">favorite_border</span>
                                         Wishlist
@@ -606,7 +606,7 @@ const Navbar = () => {
                             </li>
                             {user && (
                                 <li>
-                                    <Link to="/profile" onClick={closeMobileMenu} className="flex items-center px-4 py-3 rounded-xl text-[12px] font-bold uppercase tracking-wider text-[#111111] hover:bg-slate-100 transition-colors gap-3">
+                                    <Link to="/profile" onClick={closeMobileMenu} className="flex items-center px-4 py-3 rounded-xl text-[12px] font-bold uppercase tracking-wider text-bindas-onyx hover:bg-slate-100 transition-colors gap-3">
                                         <span className="material-icons-outlined text-[18px] text-slate-400">person_outline</span>
                                         My Profile
                                     </Link>
@@ -621,9 +621,9 @@ const Navbar = () => {
                     {user ? (
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <img src={user.picture} className="w-9 h-9 rounded-full border-2 border-[#FFD017]" alt="Profile" onError={(e) => { e.target.style.display = 'none'; }} />
+                                <img src={user.picture} className="w-9 h-9 rounded-full border-2 border-bindas-amber" alt="Profile" onError={(e) => { e.target.style.display = 'none'; }} />
                                 <div>
-                                    <p className="text-[11px] font-bold text-[#111111] uppercase tracking-wider">{user.given_name || user.name || 'Member'}</p>
+                                    <p className="text-[11px] font-bold text-bindas-onyx uppercase tracking-wider">{user.given_name || user.name || 'Member'}</p>
                                     <p className="text-[10px] text-[#6B6457]">{user.email}</p>
                                 </div>
                             </div>
@@ -637,7 +637,7 @@ const Navbar = () => {
                     ) : (
                         <button
                             onClick={handleLogin}
-                            className="w-full bg-[#111111] text-white py-3.5 rounded-xl text-[12px] font-bold uppercase tracking-widest hover:bg-[#2a2a2a] transition-colors flex items-center justify-center gap-2"
+                            className="w-full bg-bindas-onyx text-white py-3.5 rounded-xl text-[12px] font-bold uppercase tracking-widest hover:bg-[#2a2a2a] transition-colors flex items-center justify-center gap-2"
                         >
                             <span className="material-icons-outlined text-[18px]">person_outline</span>
                             Sign In / Register
