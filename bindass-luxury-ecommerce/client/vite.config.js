@@ -8,7 +8,4 @@ export default defineConfig({
     port: 3000,
     // Add proxy if needed, though current app uses API_BASE_URL
   },
-  build: {
-    outDir: 'build', // CRA default output directory for backward compatibility
-  },
 });
