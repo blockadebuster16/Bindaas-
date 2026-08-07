@@ -1,0 +1,1 @@
+import{n as e,t}from"./jsx-runtime-OQpaS_Dv.js";import{t as n}from"./DynamicPage-CHI2YP8_.js";e();var r=t(),i=()=>(0,r.jsx)(n,{pageKey:`women`,title:`Womenswear`,description:`Explore our exclusive women's collection featuring the latest in high-fashion luxury.`});export{i as default};

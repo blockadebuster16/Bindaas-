@@ -1,18 +1,13 @@
 import React from 'react';
-import AdHero from '../components/AdHero';
-import AdStrip from '../components/AdStrip';
-import AdMiddle from '../components/AdMiddle';
-import UnifiedProductGrid from '../components/UnifiedProductGrid';
+import DynamicPage from '../components/DynamicPage';
 
 const Men = () => {
     return (
-        <div className="min-h-screen bg-white">
-            <AdHero page="men" />
-            <AdStrip page="men" />
-            <AdMiddle page="men" />
-            
-            <UnifiedProductGrid title="Men's Collection" pageTarget="mens_collection" />
-        </div>
+        <DynamicPage 
+            pageKey="men" 
+            title="Menswear" 
+            description="Explore our exclusive men's collection featuring the latest in high-fashion luxury."
+        />
     );
 };
 

@@ -1,18 +1,13 @@
 import React from 'react';
-import AdHero from '../components/AdHero';
-import AdStrip from '../components/AdStrip';
-import AdMiddle from '../components/AdMiddle';
-import UnifiedProductGrid from '../components/UnifiedProductGrid';
+import DynamicPage from '../components/DynamicPage';
 
 const Sports = () => {
     return (
-        <div className="min-h-screen bg-white">
-            <AdHero page="sports" />
-            <AdStrip page="sports" />
-            <AdMiddle page="sports" />
-            
-            <UnifiedProductGrid title="Sports" pageTarget="sports" />
-        </div>
+        <DynamicPage 
+            pageKey="sports" 
+            title="Sports Collection" 
+            description="Elevate your performance with our premium athletic and sports wear."
+        />
     );
 };
 

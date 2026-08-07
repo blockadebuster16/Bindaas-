@@ -1,0 +1,1 @@
+import{n as e,t}from"./jsx-runtime-OQpaS_Dv.js";import{t as n}from"./DynamicPage-CHI2YP8_.js";e();var r=t(),i=()=>(0,r.jsx)(n,{pageKey:`home`,title:`Home`,description:`Experience the intersection of high-fashion luxury and athletic energy. Shop the latest collections from BiNDAAS!`});export{i as default};

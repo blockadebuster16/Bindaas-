@@ -1,18 +1,13 @@
 import React from 'react';
-import AdHero from '../components/AdHero';
-import AdStrip from '../components/AdStrip';
-import AdMiddle from '../components/AdMiddle';
-import UnifiedProductGrid from '../components/UnifiedProductGrid';
+import DynamicPage from '../components/DynamicPage';
 
 const Apparel = () => {
     return (
-        <div className="min-h-screen bg-white">
-            <AdHero page="apparel" />
-            <AdStrip page="apparel" />
-            <AdMiddle page="apparel" />
-            
-            <UnifiedProductGrid title="Apparel" pageTarget="apparel" />
-        </div>
+        <DynamicPage 
+            pageKey="apparel" 
+            title="Apparel Collection" 
+            description="Discover the latest trends and timeless pieces in our Apparel collection."
+        />
     );
 };
 

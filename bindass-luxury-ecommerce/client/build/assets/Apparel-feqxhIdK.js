@@ -1,0 +1,1 @@
+import{n as e,t}from"./jsx-runtime-OQpaS_Dv.js";import{t as n}from"./DynamicPage-CHI2YP8_.js";e();var r=t(),i=()=>(0,r.jsx)(n,{pageKey:`apparel`,title:`Apparel Collection`,description:`Discover the latest trends and timeless pieces in our Apparel collection.`});export{i as default};
