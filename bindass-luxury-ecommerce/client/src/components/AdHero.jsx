@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
@@ -125,6 +125,7 @@ const AdHero = ({ page = 'home' }) => {
     const [heroIndex, setHeroIndex] = useState(0);
     const [isHeroPaused, setIsHeroPaused] = useState(false);
     const [loading, setLoading] = useState(true);
+    const touchStartX = useRef(null);
 
     useEffect(() => {
         const fetchAds = async () => {
@@ -151,14 +152,37 @@ const AdHero = ({ page = 'home' }) => {
         return () => clearInterval(timer);
     }, [isHeroPaused, heroAds.length]);
 
+    const goPrev = () => setHeroIndex(p => (p - 1 + heroAds.length) % heroAds.length);
+    const goNext = () => setHeroIndex(p => (p + 1) % heroAds.length);
+
+    // Touch swipe handlers
+    const handleTouchStart = (e) => {
+        touchStartX.current = e.changedTouches[0].clientX;
+        setIsHeroPaused(true);
+    };
+
+    const handleTouchEnd = (e) => {
+        if (touchStartX.current === null) return;
+        const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+        touchStartX.current = null;
+        setIsHeroPaused(false);
+        if (Math.abs(deltaX) < 40) return; // Ignore tiny swipes
+        if (deltaX < 0) goNext();
+        else goPrev();
+    };
+
     if (loading) return null;
     if (heroAds.length === 0) return null;
 
     return (
         <section
-            className="hero-banner-top relative h-screen w-full overflow-hidden group"
+            className="hero-banner-top relative h-[85vh] sm:h-screen w-full overflow-hidden group"
             onMouseEnter={() => setIsHeroPaused(true)}
             onMouseLeave={() => setIsHeroPaused(false)}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            aria-roledescription="carousel"
+            aria-label="Featured collections"
         >
             {heroAds.map((ad, i) => (
                 <HeroSlide key={ad._id} ad={ad} i={i} heroIndex={heroIndex} />
@@ -166,13 +190,34 @@ const AdHero = ({ page = 'home' }) => {
 
             {heroAds.length > 1 && (
                 <>
-                    <div className="absolute bottom-10 right-12 flex gap-4 z-20">
-                        <button onClick={() => setHeroIndex(p => (p - 1 + heroAds.length) % heroAds.length)} className="w-12 h-12 border border-white/30 text-white rounded-full flex items-center justify-center hover:bg-white/10 backdrop-blur-sm transition-all"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg></button>
-                        <button onClick={() => setHeroIndex(p => (p + 1) % heroAds.length)} className="w-12 h-12 border border-white/30 text-white rounded-full flex items-center justify-center hover:bg-white/10 backdrop-blur-sm transition-all"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg></button>
+                    {/* Prev / Next — hidden on mobile (swipe to navigate) */}
+                    <div className="absolute bottom-10 right-4 sm:right-12 flex gap-2 sm:gap-4 z-20">
+                        <button
+                            onClick={goPrev}
+                            aria-label="Previous slide"
+                            className="w-10 h-10 sm:w-12 sm:h-12 border border-white/30 text-white rounded-full flex items-center justify-center hover:bg-white/10 backdrop-blur-sm transition-all"
+                        >
+                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
+                        </button>
+                        <button
+                            onClick={goNext}
+                            aria-label="Next slide"
+                            className="w-10 h-10 sm:w-12 sm:h-12 border border-white/30 text-white rounded-full flex items-center justify-center hover:bg-white/10 backdrop-blur-sm transition-all"
+                        >
+                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
+                        </button>
                     </div>
-                    <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+                    {/* Dot indicators */}
+                    <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex gap-2 z-20" role="tablist" aria-label="Slide indicators">
                         {heroAds.map((_, i) => (
-                            <button key={i} onClick={() => setHeroIndex(i)} className={`w-2 h-2 rounded-full transition-all ${i === heroIndex ? 'bg-white w-6' : 'bg-white/30'}`} />
+                            <button
+                                key={i}
+                                role="tab"
+                                aria-selected={i === heroIndex}
+                                aria-label={`Go to slide ${i + 1}`}
+                                onClick={() => setHeroIndex(i)}
+                                className={`h-2 rounded-full transition-all duration-300 ${i === heroIndex ? 'bg-white w-6' : 'bg-white/40 w-2 hover:bg-white/70'}`}
+                            />
                         ))}
                     </div>
                 </>

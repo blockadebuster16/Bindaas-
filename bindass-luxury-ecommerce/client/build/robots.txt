@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Disallow admin and checkout routes from being indexed
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /success/
+Disallow: /cart/
+
+Sitemap: https://bindaas.in/sitemap.xml

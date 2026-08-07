@@ -125,12 +125,13 @@ const Footer = () => {
                                 href={social.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-8 h-8 rounded-full bg-[#222222] border border-[#333333] flex items-center justify-center text-white hover:bg-[#FFD017] hover:text-[#111111] hover:border-[#FFD017] transition-all duration-300 hover:-translate-y-1"
+                                aria-label={`Follow us on ${social.icon}`}
+                                className="group/social w-8 h-8 rounded-full bg-[#222222] border border-[#333333] flex items-center justify-center text-white hover:bg-[#FFD017] hover:border-[#FFD017] transition-all duration-300 hover:-translate-y-1"
                             >
                                 <img
-                                    src={`https://cdn.simpleicons.org/${social.icon}/fff`}
+                                    src={`https://cdn.simpleicons.org/${social.icon}/ffffff`}
                                     alt={social.icon}
-                                    className="w-3.5 h-3.5 opacity-85"
+                                    className="w-3.5 h-3.5 opacity-85 group-hover/social:brightness-0 transition-all"
                                 />
                             </a>
                         ))}
@@ -162,7 +163,7 @@ const Footer = () => {
                 <div className="flex gap-6 text-[9px] text-slate-400 uppercase tracking-[0.2em] font-bold">
                     <Link to="/privacy" className="hover:text-[#FFD017] transition-colors">Privacy Policy</Link>
                     <Link to="/terms" className="hover:text-[#FFD017] transition-colors">Terms of Service</Link>
-                    <Link to="/cookies" className="hover:text-[#FFD017] transition-colors">Cookie Settings</Link>
+                    <Link to="/privacy" className="hover:text-[#FFD017] transition-colors">Cookie Settings</Link>
                 </div>
             </div>
         </footer>

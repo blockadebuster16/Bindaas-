@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 import API_BASE_URL from "../config/api";
@@ -117,8 +117,8 @@ const SignInModal = () => {
     if (!isAuthModalOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm font-sans p-4">
-            <div className="bg-gray-100 w-full max-w-[450px] max-h-[90vh] relative shadow-2xl my-auto animate-fade-in-up flex flex-col rounded overflow-hidden">
+        <div className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm font-sans p-0 sm:p-4">
+            <div className="bg-gray-100 w-full max-w-[450px] max-h-[95vh] sm:max-h-[90vh] relative shadow-2xl my-auto animate-fade-in-up flex flex-col rounded-t-2xl sm:rounded-xl overflow-hidden">
 
                 {/* Close Button */}
                 <div className="absolute top-2 right-2 z-10">
@@ -133,20 +133,20 @@ const SignInModal = () => {
                 <div className="flex border-b border-gray-200 bg-white flex-shrink-0">
                     <button
                         onClick={() => setActiveTab("login")}
-                        className={`flex-1 py-4 text-sm font-bold tracking-wider uppercase transition-colors ${activeTab === "login" ? "bg-[#117b76] text-white" : "text-gray-600 hover:bg-gray-50"}`}
+                        className={`flex-1 py-4 text-sm font-bold tracking-wider uppercase transition-colors ${activeTab === "login" ? "bg-[#111111] text-[#FFD017]" : "text-gray-600 hover:bg-gray-50"}`}
                     >
                         Login
                     </button>
                     <button
                         onClick={() => setActiveTab("register")}
-                        className={`flex-1 py-4 text-sm font-bold tracking-wider uppercase transition-colors ${activeTab === "register" ? "bg-[#117b76] text-white" : "text-gray-600 hover:bg-gray-50"}`}
+                        className={`flex-1 py-4 text-sm font-bold tracking-wider uppercase transition-colors ${activeTab === "register" ? "bg-[#111111] text-[#FFD017]" : "text-gray-600 hover:bg-gray-50"}`}
                     >
                         Register
                     </button>
                 </div>
 
                 {/* Form Container */}
-                <div className="p-8 bg-[#f5f5f5] overflow-y-auto flex-1 custom-scrollbar">
+                <div className="p-6 sm:p-8 bg-[#f5f5f5] overflow-y-auto flex-1 custom-scrollbar" data-lenis-prevent>
                     {error && <div className="mb-4 text-red-600 text-sm text-center">{error}</div>}
 
                     {/* ── Google Button (shared between tabs) ── */}
@@ -179,7 +179,7 @@ const SignInModal = () => {
                                 value={loginEmail}
                                 onChange={(e) => setLoginEmail(e.target.value)}
                                 required
-                                className="w-full border border-gray-300 rounded p-3 mb-4 text-sm focus:outline-none focus:border-[#117b76]"
+                                className="w-full border border-gray-300 rounded p-3 mb-4 text-sm focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#FFD017]/30"
                             />
                             <input
                                 type="password"
@@ -187,12 +187,12 @@ const SignInModal = () => {
                                 value={loginPassword}
                                 onChange={(e) => setLoginPassword(e.target.value)}
                                 required
-                                className="w-full border border-gray-300 rounded p-3 mb-6 text-sm focus:outline-none focus:border-[#117b76]"
+                                className="w-full border border-gray-300 rounded p-3 mb-6 text-sm focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#FFD017]/30"
                             />
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-[#f05355] text-white py-3 rounded text-sm font-bold tracking-widest hover:bg-[#e04345] transition-colors disabled:opacity-60"
+                                className="w-full bg-[#111111] text-white py-3 rounded text-sm font-bold tracking-widest hover:bg-[#D4AF37] hover:text-[#111111] transition-colors disabled:opacity-60"
                             >
                                 {loading ? "Signing In..." : "PROCEED"}
                             </button>
@@ -254,7 +254,7 @@ const SignInModal = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-[#117b76] text-white py-3 rounded text-sm font-bold tracking-widest hover:bg-[#0e635f] transition-colors disabled:opacity-60"
+                                className="w-full bg-[#111111] text-white py-3 rounded text-sm font-bold tracking-widest hover:bg-[#D4AF37] hover:text-[#111111] transition-colors disabled:opacity-60"
                             >
                                 {loading ? "Creating Account..." : "REGISTER"}
                             </button>

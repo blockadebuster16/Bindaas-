@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
@@ -72,7 +72,7 @@ const ProductDetail = () => {
         };
 
         await addToCart(cartItem);
-        toast.success(`${product.name} (Size ${selectedSize}) added to your bag! ðŸ›ï¸`);
+        toast.success(`${product.name} (Size ${selectedSize}) added to your bag! 🛍️`);
     };
 
     const handleBuyNow = async () => {

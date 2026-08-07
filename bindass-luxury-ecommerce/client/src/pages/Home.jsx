@@ -140,13 +140,19 @@ const Home = () => {
                                     </div>
 
                                     {/* Scrollable Carousel Grid */}
-                                    <div ref={scrollRef} className="flex overflow-x-auto gap-2.5 md:gap-3 lg:gap-3.5 pb-2 snap-x snap-mandatory scroll-smooth" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                                    <div
+                                        ref={scrollRef}
+                                        className="flex overflow-x-auto gap-2.5 md:gap-3 lg:gap-3.5 pb-2 snap-x snap-mandatory scroll-smooth"
+                                        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                                        data-lenis-prevent
+                                    >
                                         {gridProducts.map((product) => (
                                             <div key={product._id} className="snap-start flex-shrink-0 w-[calc(75%-8px)] sm:w-[calc(45%-10px)] lg:w-[calc(25%-10px)]">
                                                 <GridProductCard product={product} />
                                             </div>
                                         ))}
                                     </div>
+
                                 </div>
                             </section>
                         );

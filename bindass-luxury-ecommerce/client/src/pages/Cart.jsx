@@ -41,7 +41,8 @@ const Cart = () => {
     };
 
     return (
-        <main className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12 font-['Manrope'] bg-white min-h-screen">
+        <>
+        <main className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12 font-['Manrope'] bg-white min-h-screen pb-24 md:pb-12">
             <h1 className="text-2xl md:text-3xl font-extrabold uppercase tracking-tighter mb-8 md:mb-12 text-[#10221c]">
                 Your Shopping Bag ({cartItems.length})
             </h1>
@@ -124,7 +125,24 @@ const Cart = () => {
                 </div>
             </div>
         </main>
-    )
+
+        {/* Mobile sticky bottom CTA — only shows when cart has items */}
+        {cartItems.length > 0 && (
+            <div className="fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 p-4 flex items-center justify-between gap-4 md:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+                <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total</p>
+                    <p className="text-xl font-extrabold text-[#10221c]">{formatPrice(totalAmount)}</p>
+                </div>
+                <button
+                    onClick={handleCheckout}
+                    className="btn-pill flex-1 max-w-[200px] py-3.5 text-[11px]"
+                >
+                    Proceed to Checkout
+                </button>
+            </div>
+        )}
+    </>
+    );
 };
 
 export default Cart;

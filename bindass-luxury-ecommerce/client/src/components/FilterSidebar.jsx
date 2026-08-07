@@ -79,8 +79,9 @@ const FilterSidebar = ({
             {/* Sidebar Drawer */}
             <div 
                 className={`fixed top-0 right-0 h-full w-[400px] max-w-[90vw] bg-white shadow-2xl z-50 transform transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col font-sans ${
-                    isOpen ? 'translate-x-0' : 'translate-x-full'
+                    isOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'
                 }`}
+                aria-hidden={!isOpen}
             >
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-5 border-b border-[#E8E3D8]">
@@ -99,7 +100,7 @@ const FilterSidebar = ({
                 </div>
 
                 {/* Body (Scrollable) */}
-                <div className="flex-1 overflow-y-auto px-6 py-6">
+                <div className="flex-1 overflow-y-auto px-6 py-6" data-lenis-prevent>
                     
                     {/* Price Range - Using simple text input for min/max to be fully robust without external slider libs */}
                     <div className="mb-10 block">

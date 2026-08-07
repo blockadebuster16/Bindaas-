@@ -1,7 +1,8 @@
-﻿import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import axios from 'axios';
 import GridProductCard from './GridProductCard';
 import FilterSidebar from './FilterSidebar';
+import API_BASE_URL from '../config/api';
 
 const UnifiedProductGrid = ({ title, pageTarget }) => {
     const [originalProducts, setOriginalProducts] = useState([]);
@@ -34,7 +35,7 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
             try {
                 setLoading(true);
                 // Optimized fetch: Filter by pageTarget on the server and request only needed fields
-                const { data } = await axios.get(`http://localhost:5001/api/products?pages=${pageTarget}&select=name,price,images,pages,stock_quantity,low_stock_threshold,colors,sizes,productType,fit,createdAt,category`);
+                const { data } = await axios.get(`${API_BASE_URL}/api/products?pages=${pageTarget}&select=name,price,images,pages,stock_quantity,low_stock_threshold,colors,sizes,productType,fit,createdAt,category`);
                 setOriginalProducts(data);
             } catch (err) {
                 console.error("Failed to fetch products for grid:", err);
@@ -239,7 +240,7 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
                     
                     <button 
                         onClick={() => setIsFilterOpen(true)}
-                        className="text-xs uppercase tracking-widest font-medium text-[#111111] flex items-center gap-2 hover:text-[#D4AF37] transition-colors position-relative"
+                        className="text-xs uppercase tracking-widest font-medium text-[#111111] flex items-center gap-2 hover:text-[#D4AF37] transition-colors relative"
                     >
                         Filter
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
