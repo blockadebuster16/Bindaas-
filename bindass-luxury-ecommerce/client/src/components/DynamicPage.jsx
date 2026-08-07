@@ -56,6 +56,16 @@ const DynamicPage = ({ pageKey, title, description }) => {
         { id: 'sec-3', type: 'ad_break' },
     ];
 
+    // Helper to find specific ad or fallback to first available
+    const getAdData = (bannerType, adId) => {
+        const ads = adsByBannerType[bannerType] || [];
+        if (adId) {
+            const match = ads.find(ad => ad._id === adId);
+            if (match) return match;
+        }
+        return ads[0] || null;
+    };
+
     return (
         <div className="font-sans">
             <SEO
@@ -72,10 +82,10 @@ const DynamicPage = ({ pageKey, title, description }) => {
                         return <AdHero key={sectionId} heroAdsData={adsByBannerType['hero'] || []} />;
 
                     case 'split_ad':
-                        return <AdSplitBanner key={sectionId} adData={adsByBannerType['split']?.[0] || null} />;
+                        return <AdSplitBanner key={sectionId} adData={getAdData('split', sec.adId)} />;
 
                     case 'ad_middle':
-                        return <AdMiddle key={sectionId} page={pageKey} adData={adsByBannerType['middle']?.[0] || null} />;
+                        return <AdMiddle key={sectionId} page={pageKey} adData={getAdData('middle', sec.adId)} />;
 
                     case 'ad_strip':
                         return <AdStrip key={sectionId} stripAdsData={adsByBannerType['strip'] || []} />;
@@ -85,7 +95,7 @@ const DynamicPage = ({ pageKey, title, description }) => {
                             <AdBreak 
                                 key={sectionId} 
                                 page={pageKey} 
-                                adData={sec.adId || null} 
+                                adData={getAdData('break', sec.adId)} 
                                 fallbackTitle={sec.title || title}
                             />
                         );
@@ -164,7 +174,7 @@ const DynamicPage = ({ pageKey, title, description }) => {
                             <AdFeatureShowcase 
                                 key={sectionId} 
                                 page={pageKey} 
-                                adData={sec.adId || null} 
+                                adData={getAdData(sec.type, sec.adId)} 
                             />
                         );
 
