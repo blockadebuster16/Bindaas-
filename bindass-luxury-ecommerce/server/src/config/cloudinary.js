@@ -14,7 +14,10 @@ const storage = new CloudinaryStorage({
   params: {
     folder: 'luxury-ecommerce-products',
     allowedFormats: ['jpg', 'png', 'jpeg', 'webp'],
-    transformation: [{ width: 1000, height: 1000, crop: 'limit' }]
+    transformation: [
+      { width: 1000, height: 1000, crop: 'limit' },
+      { fetch_format: 'auto', quality: 'auto' }
+    ]
   }
 });
 
@@ -24,6 +27,9 @@ const adStorage = new CloudinaryStorage({
     folder: 'luxury-ecommerce-ads',
     resource_type: 'auto', // This allows both images and videos
     allowedFormats: ['jpg', 'png', 'jpeg', 'webp', 'mp4', 'mov', 'webm'],
+    transformation: [
+      { fetch_format: 'auto', quality: 'auto' }
+    ]
   }
 });
 

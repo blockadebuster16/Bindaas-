@@ -23,10 +23,16 @@ export const getCroppedUrl = (url, crop) => {
  * @returns {string} - Optimized URL.
  */
 export const optimizeCloudinaryUrl = (url) => {
-    if (!url || typeof url !== 'string' || !url.includes('/upload/')) return url;
-    
-    // If it already has f_auto or q_auto, skip to avoid duplicate transformations
-    if (url.includes('f_auto') || url.includes('q_auto')) return url;
+    if (!url || typeof url !== 'string') return url;
 
-    return url.replace('/upload/', '/upload/f_auto,q_auto/');
+    // Enforce HTTPS
+    let secureUrl = url;
+    if (secureUrl.startsWith('http://')) {
+        secureUrl = secureUrl.replace('http://', 'https://');
+    }
+
+    // Do NOT inject dynamic transformations (f_auto, q_auto)
+    // as it triggers Cloudinary Strict Transformations policy errors.
+    // Optimization is now handled during backend upload.
+    return secureUrl;
 };

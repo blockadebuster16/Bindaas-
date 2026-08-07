@@ -36,7 +36,7 @@ app.use(cors({
     origin: (origin, callback) => {
         // Allow same-origin / server-to-server calls (no Origin header)
         if (!origin) return callback(null, true);
-        if (allowedOrigins.includes(origin)) return callback(null, true);
+        if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) return callback(null, true);
         callback(new Error(`CORS policy: origin ${origin} not allowed`));
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],

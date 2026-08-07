@@ -68,12 +68,24 @@ const MiddleAdContent = ({ ad }) => {
 
     return (
         <section className="relative w-full h-[300px] lg:h-[400px] overflow-hidden my-12">
-            <img
-                src={mediaUrl}
-                alt={ad.title}
-                className="w-full h-full object-cover"
-                key={mediaUrl}
-            />
+            {ad.mediaType === 'video' ? (
+                <video
+                    src={mediaUrl}
+                    className="w-full h-full object-cover"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    key={mediaUrl}
+                />
+            ) : (
+                <img
+                    src={mediaUrl}
+                    alt={ad.title}
+                    className="w-full h-full object-cover"
+                    key={mediaUrl}
+                />
+            )}
 
             <div className="absolute inset-0 bg-black/20 flex items-center px-12 lg:px-24">
                 <div className="max-w-xl text-white">
