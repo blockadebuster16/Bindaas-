@@ -10,6 +10,7 @@ import { CurrencyProvider } from './context/CurrencyContext';
 import { RecentlyViewedProvider } from './context/RecentlyViewedContext';
 import { GeoProvider, useGeo } from './context/GeoContext';
 import { MembershipProvider } from './context/MembershipContext';
+import { HelmetProvider } from 'react-helmet-async';
 import clarity from '@microsoft/clarity';
 import './styles/index.css';
 
@@ -41,9 +42,11 @@ root.render(
                             <WishlistProvider>
                                 <RecentlyViewedProvider>
                                     <MembershipProvider>
-                                        <BrowserRouter>
-                                            <App />
-                                        </BrowserRouter>
+                                        <HelmetProvider>
+                                            <BrowserRouter>
+                                                <App />
+                                            </BrowserRouter>
+                                        </HelmetProvider>
                                     </MembershipProvider>
                                 </RecentlyViewedProvider>
                             </WishlistProvider>

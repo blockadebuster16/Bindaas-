@@ -23,7 +23,10 @@ const GridProductCard = ({ product }) => {
         >
             {/* Image Card Container (Signature Bluorng Rounded Aspect 3:4) */}
             <div className="relative aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden bg-[#F5F5F5] border border-slate-200/50 shadow-sm mb-2.5">
-                <Link to={`/product/${product._id}`} className="block w-full h-full">
+                {/* Skeleton Loader Background */}
+                <div className="absolute inset-0 bg-slate-200 animate-pulse" />
+                
+                <Link to={`/product/${product._id}`} className="block w-full h-full relative z-10">
                     {/* Base image — always visible */}
                     <img 
                         src={dominantImage}
