@@ -1,28 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
-import API_BASE_URL from '../config/api';
+import { optimizeCloudinaryUrl } from '../utils/cloudinaryHelper';
 
-const AdSplitBanner = ({ page }) => {
-  const [ad, setAd] = useState(null);
-  const [loading, setLoading] = useState(true);
+const AdSplitBanner = ({ adData = null }) => {
+  const ad = adData;
 
-  useEffect(() => {
-    const fetchAd = async () => {
-      try {
-        const { data } = await axios.get(`${API_BASE_URL}/api/advertisements?bannerType=split&page=${page}`);
-        const splitAd = Array.isArray(data) ? data[0] : null;
-        setAd(splitAd);
-      } catch (err) {
-        console.error("Failed to fetch split ad", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAd();
-  }, [page]);
-
-  if (loading || !ad) return null;
+  if (!ad) return null;
 
   return (
     <div className="w-full">
@@ -45,9 +28,11 @@ const AdSplitBanner = ({ page }) => {
                    />
                  ) : (
                    <img 
-                     src={item.mediaUrl} 
+                     src={optimizeCloudinaryUrl(item.mediaUrl)} 
                      alt={item.title || 'Ad'} 
                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                     loading="lazy"
+                     decoding="async"
                    />
                  )}
                </div>

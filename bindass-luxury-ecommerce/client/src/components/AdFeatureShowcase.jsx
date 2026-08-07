@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import API_BASE_URL from '../config/api';
+import { optimizeCloudinaryUrl } from '../utils/cloudinaryHelper';
 
 const loadGoogleFont = (family) => {
     if (!family || document.querySelector(`link[data-gfont="${family}"]`)) return;
@@ -28,51 +27,21 @@ const RenderText = ({ value, svgUrl, bold, italic, stroke, strokeColor, strokeWi
     return <Tag className={className} style={computedStyle}>{value}</Tag>;
 };
 
-const AdFeatureShowcase = ({ page = 'home', adId = null }) => {
-    const [ad, setAd] = useState(null);
-    const [loading, setLoading] = useState(true);
+const AdFeatureShowcase = ({ adData = null }) => {
+    const ad = adData;
 
     useEffect(() => {
-        const fetchAd = async () => {
-            try {
-                if (adId) {
-                    const { data } = await axios.get(`${API_BASE_URL}/api/advertisements/${adId}`);
-                    if (data && data.isActive) {
-                        setAd(data);
-                        if (data.titleFontFamily) loadGoogleFont(data.titleFontFamily);
-                        if (data.tagFontFamily) loadGoogleFont(data.tagFontFamily);
-                        setLoading(false);
-                        return;
-                    }
-                }
-
-                // Fetch active showcase or heritage ads
-                const { data } = await axios.get(`${API_BASE_URL}/api/advertisements?page=${page}`);
-                if (data && Array.isArray(data)) {
-                    const showcaseAd = data.find(a => a.bannerType === 'feature_showcase' || a.bannerType === 'heritage');
-                    if (showcaseAd) {
-                        setAd(showcaseAd);
-                        if (showcaseAd.titleFontFamily) loadGoogleFont(showcaseAd.titleFontFamily);
-                        if (showcaseAd.tagFontFamily) loadGoogleFont(showcaseAd.tagFontFamily);
-                    }
-                }
-            } catch (err) {
-                console.error("Error fetching Feature Showcase ad:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchAd();
-    }, [page, adId]);
-
-    if (loading) return null;
+        if (ad) {
+            if (ad.titleFontFamily) loadGoogleFont(ad.titleFontFamily);
+            if (ad.tagFontFamily) loadGoogleFont(ad.tagFontFamily);
+        }
+    }, [ad]);
 
     // Fallback default values if no ad is created in admin yet
     const tag = ad?.tag || 'THE HERITAGE';
     const title = ad?.title || "RENÉ'S LEGACY: THE CROCODILE";
     const subtitle = ad?.subtitle || "From the tennis courts of 1920s Paris to the streets of today, our crocodile symbol represents tenacity, elegance, and fair play.";
-    const mediaUrl = ad?.mediaUrl || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1000&auto=format&fit=crop";
+    const mediaUrl = ad?.mediaUrl ? optimizeCloudinaryUrl(ad.mediaUrl) : "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1000&auto=format&fit=crop";
     const mediaType = ad?.mediaType || 'image';
     const ctaLink = ad?.ctaLink || '/heritage';
     const ctaText = ad?.ctaText || 'DISCOVER THE STORY';
@@ -152,6 +121,8 @@ const AdFeatureShowcase = ({ page = 'home', adId = null }) => {
                                 src={mediaUrl}
                                 alt={title}
                                 className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-105"
+                                loading="lazy"
+                                decoding="async"
                             />
                         )}
                     </div>

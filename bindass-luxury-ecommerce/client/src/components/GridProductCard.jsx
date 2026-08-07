@@ -30,6 +30,7 @@ const GridProductCard = ({ product }) => {
                         alt={product.name} 
                         className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                         loading="lazy"
+                        decoding="async"
                     />
                     {/* Hover image — crossfades in on hover (CSS opacity transition, no src swap flash) */}
                     {hasHoverImage && (
@@ -38,6 +39,7 @@ const GridProductCard = ({ product }) => {
                             alt={`${product.name} alternate view`}
                             className="absolute inset-0 w-full h-full object-cover object-top transition-all duration-700 group-hover:scale-105 opacity-0 group-hover:opacity-100"
                             loading="lazy"
+                            decoding="async"
                         />
                     )}
                 </Link>

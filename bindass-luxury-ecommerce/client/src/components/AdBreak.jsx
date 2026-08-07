@@ -1,37 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import API_BASE_URL from '../config/api';
+import { optimizeCloudinaryUrl } from '../utils/cloudinaryHelper';
 
-const AdBreak = ({ page = 'home', adId = null, fallbackTitle = 'WOMENSWEAR', fallbackImage = 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop', fallbackLink = '/women' }) => {
-    const [ad, setAd] = useState(null);
-
-    useEffect(() => {
-        const fetchAd = async () => {
-            try {
-                if (adId) {
-                    const { data } = await axios.get(`${API_BASE_URL}/api/advertisements/${adId}`);
-                    if (data && data.isActive) {
-                        setAd(data);
-                        return;
-                    }
-                }
-
-                // Fallback: fetch active break ads for page
-                const { data } = await axios.get(`${API_BASE_URL}/api/advertisements?bannerType=break&page=${page}`);
-                if (data && data.length > 0) {
-                    setAd(data[0]);
-                }
-            } catch (err) {
-                console.error("Error fetching break ad:", err);
-            }
-        };
-
-        fetchAd();
-    }, [page, adId]);
+const AdBreak = ({ adData = null, fallbackTitle = 'WOMENSWEAR', fallbackImage = 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop', fallbackLink = '/women' }) => {
+    const ad = adData;
 
     const title = ad?.title || fallbackTitle;
-    const mediaUrl = ad?.mediaUrl || fallbackImage;
+    const mediaUrl = ad?.mediaUrl ? optimizeCloudinaryUrl(ad.mediaUrl) : fallbackImage;
     const mediaType = ad?.mediaType || 'image';
     const ctaLink = ad?.ctaLink || fallbackLink;
     const ctaText = ad?.ctaText || 'EXPLORE COLLECTION';
@@ -55,6 +30,8 @@ const AdBreak = ({ page = 'home', adId = null, fallbackTitle = 'WOMENSWEAR', fal
                         src={mediaUrl} 
                         alt={title} 
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 opacity-90"
+                        loading="lazy"
+                        decoding="async"
                     />
                 )}
 

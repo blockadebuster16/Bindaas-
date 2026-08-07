@@ -15,22 +15,34 @@ const Home = () => {
     // State
     const [products, setProducts] = useState([]);
     const [pageLayout, setPageLayout] = useState(null);
+    const [adsByBannerType, setAdsByBannerType] = useState({});
     const [loading, setLoading] = useState(true);
     const scrollRef1 = React.useRef(null);
     const scrollRef2 = React.useRef(null);
 
-    // Fetch Products & Page Layout
+    // Fetch Products, Page Layout, & Advertisements concurrently
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [prodRes, layoutRes] = await Promise.all([
+                const [prodRes, layoutRes, adsRes] = await Promise.all([
                     axios.get(`${API_BASE_URL}/api/products?limit=24&select=name,price,images,pages,stock_quantity,low_stock_threshold,category`),
-                    axios.get(`${API_BASE_URL}/api/page-layouts/home`)
+                    axios.get(`${API_BASE_URL}/api/page-layouts/home`),
+                    axios.get(`${API_BASE_URL}/api/advertisements?page=home`)
                 ]);
                 setProducts(prodRes.data);
                 if (layoutRes.data && layoutRes.data.sections) {
                     setPageLayout(layoutRes.data);
                 }
+                
+                // Group ads by bannerType
+                const allAds = adsRes.data || [];
+                const groupedAds = allAds.reduce((acc, ad) => {
+                    acc[ad.bannerType] = acc[ad.bannerType] || [];
+                    acc[ad.bannerType].push(ad);
+                    return acc;
+                }, {});
+                setAdsByBannerType(groupedAds);
+                
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -78,20 +90,20 @@ const Home = () => {
             {activeSections.map((sec, idx) => {
                 switch (sec.type) {
                     case 'hero_ad':
-                        return <AdHero key={sec.id || idx} page="home" />;
+                        return <AdHero key={sec.id || idx} heroAdsData={adsByBannerType['hero'] || []} />;
 
                     case 'split_ad':
-                        return <AdSplitBanner key={sec.id || idx} page="home" />;
+                        return <AdSplitBanner key={sec.id || idx} adData={adsByBannerType['split']?.[0] || null} />;
 
                     case 'ad_strip':
-                        return <AdStrip key={sec.id || idx} page="home" />;
+                        return <AdStrip key={sec.id || idx} stripAdsData={adsByBannerType['strip'] || []} />;
 
                     case 'ad_break':
                         return (
                             <AdBreak 
                                 key={sec.id || idx} 
                                 page="home" 
-                                adId={sec.adId?._id || sec.adId} 
+                                adData={sec.adId || null} 
                                 fallbackTitle={sec.title || "WOMENSWEAR"}
                             />
                         );
@@ -163,7 +175,7 @@ const Home = () => {
                             <AdFeatureShowcase 
                                 key={sec.id || idx} 
                                 page="home" 
-                                adId={sec.adId?._id || sec.adId} 
+                                adData={sec.adId || null} 
                             />
                         );
 

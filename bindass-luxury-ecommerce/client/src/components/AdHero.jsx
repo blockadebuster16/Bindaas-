@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import API_BASE_URL from '../config/api';
+import { optimizeCloudinaryUrl } from '../utils/cloudinaryHelper';
 
 const loadGoogleFont = (family) => {
     if (!family || document.querySelector(`link[data-gfont="${family}"]`)) return;
@@ -32,10 +31,10 @@ const HeroSlide = ({ ad, i, heroIndex }) => {
     const getResponsiveMedia = useCallback(() => {
         if (!ad) return '';
         const w = window.innerWidth;
-        if (w < 768 && ad.mediaUrlMobile) return ad.mediaUrlMobile;
-        if (w >= 768 && w < 1024 && ad.mediaUrlTablet) return ad.mediaUrlTablet;
-        if (w >= 1024 && ad.mediaUrlDesktop) return ad.mediaUrlDesktop;
-        return ad.mediaUrl;
+        if (w < 768 && ad.mediaUrlMobile) return optimizeCloudinaryUrl(ad.mediaUrlMobile);
+        if (w >= 768 && w < 1024 && ad.mediaUrlTablet) return optimizeCloudinaryUrl(ad.mediaUrlTablet);
+        if (w >= 1024 && ad.mediaUrlDesktop) return optimizeCloudinaryUrl(ad.mediaUrlDesktop);
+        return optimizeCloudinaryUrl(ad.mediaUrl);
     }, [ad]);
 
     const [mediaUrl, setMediaUrl] = useState(getResponsiveMedia());
@@ -51,7 +50,7 @@ const HeroSlide = ({ ad, i, heroIndex }) => {
             {ad.mediaType === 'video' ? (
                 <video src={mediaUrl} className="w-full h-full object-cover" autoPlay muted loop playsInline key={mediaUrl} />
             ) : (
-                <img src={mediaUrl} alt={ad.title} className="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105" />
+                <img src={mediaUrl} alt={ad.title} className="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105" fetchpriority="high" decoding="async" />
             )}
 
             <div className="absolute inset-0 bg-black/10 flex flex-col justify-end p-12 lg:p-24 text-white pb-32">
@@ -120,29 +119,18 @@ const HeroSlide = ({ ad, i, heroIndex }) => {
     );
 };
 
-const AdHero = ({ page = 'home' }) => {
+const AdHero = ({ heroAdsData = [] }) => {
     const [heroAds, setHeroAds] = useState([]);
     const [heroIndex, setHeroIndex] = useState(0);
     const [isHeroPaused, setIsHeroPaused] = useState(false);
-    const [loading, setLoading] = useState(true);
     const touchStartX = useRef(null);
 
     useEffect(() => {
-        const fetchAds = async () => {
-            try {
-                const { data } = await axios.get(`${API_BASE_URL}/api/advertisements?bannerType=hero&page=${page}`);
-                setHeroAds(data);
-                data.forEach(ad => {
-                    [ad.titleFontFamily, ad.tagFontFamily, ad.subtitleFontFamily].forEach(f => f && loadGoogleFont(f));
-                });
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching hero ads:", error);
-                setLoading(false);
-            }
-        };
-        fetchAds();
-    }, [page]);
+        setHeroAds(heroAdsData);
+        heroAdsData.forEach(ad => {
+            [ad.titleFontFamily, ad.tagFontFamily, ad.subtitleFontFamily].forEach(f => f && loadGoogleFont(f));
+        });
+    }, [heroAdsData]);
 
     useEffect(() => {
         if (isHeroPaused || heroAds.length <= 1) return;
@@ -171,7 +159,6 @@ const AdHero = ({ page = 'home' }) => {
         else goPrev();
     };
 
-    if (loading) return null;
     if (heroAds.length === 0) return null;
 
     return (

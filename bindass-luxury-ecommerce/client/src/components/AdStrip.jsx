@@ -1,32 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import API_BASE_URL from '../config/api';
 import loadGoogleFont from '../utils/loadGoogleFont';
 import RenderText from './shared/RenderText';
 
-const AdStrip = ({ page = 'home' }) => {
+const AdStrip = ({ stripAdsData = [] }) => {
     const [stripAds, setStripAds] = useState([]);
     const [stripIndex, setStripIndex] = useState(0);
     const [isStripPaused, setIsStripPaused] = useState(false);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchAds = async () => {
-            try {
-                const { data } = await axios.get(`${API_BASE_URL}/api/advertisements?bannerType=strip&page=${page}`);
-                setStripAds(data);
-                data.forEach(ad => {
-                    [ad.tagFontFamily, ad.taglineFontFamily].forEach(f => f && loadGoogleFont(f));
-                });
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching strip ads:", error);
-                setLoading(false);
-            }
-        };
-        fetchAds();
-    }, [page]);
+        setStripAds(stripAdsData);
+        stripAdsData.forEach(ad => {
+            [ad.tagFontFamily, ad.taglineFontFamily].forEach(f => f && loadGoogleFont(f));
+        });
+    }, [stripAdsData]);
 
     useEffect(() => {
         if (isStripPaused || stripAds.length <= 1) return;
@@ -36,7 +23,6 @@ const AdStrip = ({ page = 'home' }) => {
         return () => clearInterval(timer);
     }, [isStripPaused, stripAds.length]);
 
-    if (loading) return null;
     if (stripAds.length === 0) return null;
 
     return (

@@ -218,7 +218,7 @@ const Navbar = () => {
                     {/* Mobile: Hamburger & Logo */}
                     <div className="flex items-center gap-4 lg:hidden">
                         <button
-                            className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-black/5 transition-colors flex-shrink-0 active:scale-95"
+                            className="flex items-center justify-center w-11 h-11 rounded-lg hover:bg-black/5 transition-colors flex-shrink-0 active:scale-95"
                             onClick={() => setMobileMenuOpen(true)}
                             aria-label="Open menu"
                             aria-expanded={mobileMenuOpen}
@@ -320,13 +320,13 @@ const Navbar = () => {
                         <button
                             onClick={handleSearchIconClick}
                             aria-label={searchOpen ? 'Close search' : 'Open search'}
-                            className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-black/5 transition-colors active:scale-95"
+                            className="flex items-center justify-center w-11 h-11 rounded-lg hover:bg-black/5 transition-colors active:scale-95"
                         >
                             <span className="material-icons-outlined text-[24px]">{searchOpen ? 'close' : 'search'}</span>
                         </button>
 
                         {/* Wishlist */}
-                        <Link to="/wishlist" aria-label={`Wishlist (${wishlistCount} items)`} className="relative hover:text-[#ff3f6c] transition-colors flex items-center w-10 h-10 justify-center rounded-lg hover:bg-black/5 active:scale-95">
+                        <Link to="/wishlist" aria-label={`Wishlist (${wishlistCount} items)`} className="relative hover:text-[#ff3f6c] transition-colors flex items-center w-11 h-11 justify-center rounded-lg hover:bg-black/5 active:scale-95">
                             <span className="material-icons-outlined text-[24px]">favorite_border</span>
                             {wishlistCount > 0 && (
                                 <span className="absolute top-1 right-1 bg-[#ff3f6c] text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
@@ -338,7 +338,7 @@ const Navbar = () => {
                         {/* User — desktop only */}
                         {user ? (
                             <div className="hidden md:flex items-center gap-3">
-                                <Link to="/profile" title="View Profile" className="flex items-center w-10 h-10 justify-center rounded-lg hover:bg-black/5 active:scale-95">
+                                <Link to="/profile" title="View Profile" className="flex items-center w-11 h-11 justify-center rounded-lg hover:bg-black/5 active:scale-95">
                                     <img src={user.picture} className="w-7 h-7 rounded-full border-2 border-[#FFD017]" alt="Profile" onError={(e) => { e.target.src = ''; e.target.className = 'w-7 h-7 rounded-full bg-[#111111] flex items-center justify-center text-white text-xs font-bold'; }} />
                                 </Link>
                                 {/* Inline logout confirm */}
@@ -357,7 +357,7 @@ const Navbar = () => {
                                 ) : (
                                     <button
                                         onClick={() => setShowLogoutConfirm(true)}
-                                        className="material-icons-outlined hover:text-red-400 text-[22px] transition-colors flex items-center w-10 h-10 justify-center rounded-lg hover:bg-black/5"
+                                        className="material-icons-outlined hover:text-red-400 text-[22px] transition-colors flex items-center w-11 h-11 justify-center rounded-lg hover:bg-black/5"
                                         aria-label="Logout"
                                     >logout</button>
                                 )}
@@ -366,12 +366,12 @@ const Navbar = () => {
                             <button
                                 onClick={handleLogin}
                                 aria-label="Sign in"
-                                className="material-icons-outlined text-[24px] hover:opacity-80 hidden md:flex items-center w-10 h-10 justify-center rounded-lg hover:bg-black/5 active:scale-95"
+                                className="material-icons-outlined text-[24px] hover:opacity-80 hidden md:flex items-center w-11 h-11 justify-center rounded-lg hover:bg-black/5 active:scale-95"
                             >person_outline</button>
                         )}
 
                         {/* Cart */}
-                        <Link to="/cart" aria-label={`Cart (${cartCount} items)`} className="relative hover:opacity-80 transition-opacity flex items-center w-10 h-10 justify-center rounded-lg hover:bg-black/5 active:scale-95">
+                        <Link to="/cart" aria-label={`Cart (${cartCount} items)`} className="relative hover:opacity-80 transition-opacity flex items-center w-11 h-11 justify-center rounded-lg hover:bg-black/5 active:scale-95">
                             <span className="material-icons-outlined text-[24px]">shopping_bag</span>
                             {cartCount > 0 && (
                                 <span className="absolute top-1 right-1 bg-[#FFD017] text-[#111111] text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
@@ -473,7 +473,7 @@ const Navbar = () => {
                     </Link>
                     <button
                         onClick={closeMobileMenu}
-                        className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors"
+                        className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors"
                         aria-label="Close menu"
                     >
                         <span className="material-icons-outlined text-[24px]">close</span>
