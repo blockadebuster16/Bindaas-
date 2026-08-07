@@ -4,6 +4,7 @@ import AdHero from './AdHero';
 import AdSplitBanner from './AdSplitBanner';
 import AdStrip from './AdStrip';
 import AdBreak from './AdBreak';
+import AdMiddle from './AdMiddle';
 import AdFeatureShowcase from './AdFeatureShowcase';
 import GridProductCard from './GridProductCard';
 import RecentlyViewed from './RecentlyViewed';
@@ -72,6 +73,9 @@ const DynamicPage = ({ pageKey, title, description }) => {
 
                     case 'split_ad':
                         return <AdSplitBanner key={sectionId} adData={adsByBannerType['split']?.[0] || null} />;
+
+                    case 'ad_middle':
+                        return <AdMiddle key={sectionId} page={pageKey} adData={adsByBannerType['middle']?.[0] || null} />;
 
                     case 'ad_strip':
                         return <AdStrip key={sectionId} stripAdsData={adsByBannerType['strip'] || []} />;

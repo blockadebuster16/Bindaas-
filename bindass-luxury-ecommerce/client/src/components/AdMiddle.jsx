@@ -153,11 +153,18 @@ const MiddleAdContent = ({ ad }) => {
     );
 };
 
-const AdMiddle = ({ page = 'home' }) => {
+const AdMiddle = ({ page = 'home', adData = null }) => {
     const [middleAds, setMiddleAds] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(!adData);
 
     useEffect(() => {
+        if (adData) {
+            setMiddleAds([adData]);
+            [adData.titleFontFamily, adData.tagFontFamily, adData.subtitleFontFamily].forEach(f => f && loadGoogleFont(f));
+            setLoading(false);
+            return;
+        }
+
         const fetchAds = async () => {
             try {
                 const { data } = await axios.get(`${API_BASE_URL}/api/advertisements?bannerType=middle&page=${page}`);
@@ -172,7 +179,7 @@ const AdMiddle = ({ page = 'home' }) => {
             }
         };
         fetchAds();
-    }, [page]);
+    }, [page, adData]);
 
     if (loading || middleAds.length === 0) return null;
 
