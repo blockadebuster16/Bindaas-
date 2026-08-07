@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import AdHero from '../components/AdHero';
 import AdSplitBanner from '../components/AdSplitBanner';
 import AdStrip from '../components/AdStrip';
@@ -9,48 +8,30 @@ import AdFeatureShowcase from '../components/AdFeatureShowcase';
 import GridProductCard from '../components/GridProductCard';
 import RecentlyViewed from '../components/RecentlyViewed';
 import SEO from '../components/SEO';
-import API_BASE_URL from '../config/api';
+import { useProducts } from '../hooks/useProducts';
+import { usePageLayout } from '../hooks/usePageLayouts';
+import { useAdvertisements } from '../hooks/useAdvertisements';
 
 const Home = () => {
-    // State
-    const [products, setProducts] = useState([]);
-    const [pageLayout, setPageLayout] = useState(null);
-    const [adsByBannerType, setAdsByBannerType] = useState({});
-    const [loading, setLoading] = useState(true);
     const scrollRef1 = React.useRef(null);
     const scrollRef2 = React.useRef(null);
 
-    // Fetch Products, Page Layout, & Advertisements concurrently
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [prodRes, layoutRes, adsRes] = await Promise.all([
-                    axios.get(`${API_BASE_URL}/api/products?limit=24&select=name,price,images,pages,stock_quantity,low_stock_threshold,category`),
-                    axios.get(`${API_BASE_URL}/api/page-layouts/home`),
-                    axios.get(`${API_BASE_URL}/api/advertisements?page=home`)
-                ]);
-                setProducts(prodRes.data);
-                if (layoutRes.data && layoutRes.data.sections) {
-                    setPageLayout(layoutRes.data);
-                }
-                
-                // Group ads by bannerType
-                const allAds = adsRes.data || [];
-                const groupedAds = allAds.reduce((acc, ad) => {
-                    acc[ad.bannerType] = acc[ad.bannerType] || [];
-                    acc[ad.bannerType].push(ad);
-                    return acc;
-                }, {});
-                setAdsByBannerType(groupedAds);
-                
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
+    const { 
+        data: products = [], 
+        isLoading: isProductsLoading 
+    } = useProducts({ limit: 24, select: 'name,price,images,pages,stock_quantity,low_stock_threshold,category' });
+    
+    const { 
+        data: pageLayout, 
+        isLoading: isLayoutLoading 
+    } = usePageLayout('home');
+    
+    const { 
+        data: adsByBannerType = {}, 
+        isLoading: isAdsLoading 
+    } = useAdvertisements('home');
+
+    const loading = isProductsLoading || isLayoutLoading || isAdsLoading;
 
     const scroll = (ref, direction) => {
         const el = ref.current;
