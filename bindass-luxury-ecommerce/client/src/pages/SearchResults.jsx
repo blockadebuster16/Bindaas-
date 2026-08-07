@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
 import GridProductCard from '../components/GridProductCard';
@@ -15,7 +15,8 @@ const SearchResults = () => {
             if (!query) return;
             setLoading(true);
             try {
-                const { data } = await axios.get(`http://localhost:5001/api/products/search?q=${query}`);
+                const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+                const { data } = await axios.get(`${API_URL}/api/products/search?q=${query}`);
                 setProducts(data);
             } catch (err) {
                 console.error("Search failed", err);
