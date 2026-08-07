@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cropper from 'react-easy-crop';
 import AdminSidebar from '../components/AdminSidebar';
@@ -869,11 +869,11 @@ const AdvertisementManager = () => {
               )}
 
               {/* Hero Banner Specific Fields */}
-              {formData.bannerType === 'hero' && (
+              {(formData.bannerType === 'hero' || formData.bannerType === 'break') && (
                 <div className="bg-gray-900/5 rounded-2xl p-6 space-y-5 animate-fadeIn">
                    <h5 className="text-[11px] font-black text-gray-700 uppercase tracking-widest flex items-center gap-2">
                      <div className="w-1.5 h-1.5 bg-gray-700 rounded-full" />
-                     Hero Banner Details
+                     Hero / Break Banner Details
                    </h5>
                    <StyledTextField label="Eyebrow Tag (e.g. NEW COLLECTION)" fieldKey="tag" formData={formData} setFormData={setFormData} handleInputChange={handleInputChange} showToast={showToast} getAuthHeaders={getAuthHeaders} placeholder="NEW SEASON" inputClass="font-bold" />
                    <ColorSwatch label="Eyebrow Tag" name="tagColor" currentColor={formData.tagColor} setFormData={setFormData} />
