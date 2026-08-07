@@ -154,7 +154,7 @@ const MiddleAdContent = ({ ad }) => {
 };
 
 const AdMiddle = ({ page = 'home', adData = null }) => {
-    const [middleAds, setMiddleAds] = useState([]);
+    const [middleAds, setMiddleAds] = useState(adData ? [adData] : []);
     const [loading, setLoading] = useState(!adData);
 
     useEffect(() => {
