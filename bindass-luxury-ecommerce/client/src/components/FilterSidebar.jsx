@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import useFocusTrap from '../hooks/useFocusTrap';
 
 const FilterAccordion = ({ title, children, showArrow = true }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -54,6 +55,8 @@ const FilterSidebar = ({
     availableOptions,
     clearAll
 }) => {
+    const sidebarRef = useRef(null);
+    useFocusTrap(sidebarRef, isOpen);
     
     const handleCheckboxChange = (category, value) => {
         setFilters(prev => {
@@ -73,11 +76,16 @@ const FilterSidebar = ({
                 <div 
                     className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity"
                     onClick={onClose}
+                    aria-hidden="true"
                 />
             )}
 
             {/* Sidebar Drawer */}
             <div 
+                ref={sidebarRef}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Filter Options"
                 className={`fixed top-0 right-0 h-full w-[400px] max-w-[90vw] bg-white shadow-2xl z-50 transform transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col font-sans ${
                     isOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'
                 }`}

@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkclient=self.webpackChunkclient||[]).push([[191],{4572(s,e,t){t.r(e),t.d(e,{default:()=>l});t(5043);var p=t(9332),a=t(7600),r=t(5862),c=t(1307),i=t(579);const l=()=>(0,i.jsxs)("div",{className:"min-h-screen bg-white",children:[(0,i.jsx)(p.A,{page:"sports"}),(0,i.jsx)(a.A,{page:"sports"}),(0,i.jsx)(r.A,{page:"sports"}),(0,i.jsx)(c.A,{title:"Sports",pageTarget:"sports"})]})}}]);
+//# sourceMappingURL=191.2daed45c.chunk.js.map

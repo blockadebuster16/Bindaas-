@@ -15,3 +15,18 @@ export const getCroppedUrl = (url, crop) => {
     // Inject transformation after /upload/
     return url.replace('/upload/', `/upload/${transform}/`);
 };
+
+/**
+ * Automatically applies f_auto (format auto) and q_auto (quality auto) 
+ * to a Cloudinary URL to serve next-gen formats like WebP/AVIF automatically.
+ * @param {string} url - The original Cloudinary URL.
+ * @returns {string} - Optimized URL.
+ */
+export const optimizeCloudinaryUrl = (url) => {
+    if (!url || typeof url !== 'string' || !url.includes('/upload/')) return url;
+    
+    // If it already has f_auto or q_auto, skip to avoid duplicate transformations
+    if (url.includes('f_auto') || url.includes('q_auto')) return url;
+
+    return url.replace('/upload/', '/upload/f_auto,q_auto/');
+};

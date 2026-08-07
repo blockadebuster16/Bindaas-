@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
+import { useToast } from './ToastContext';
 
 const CartContext = createContext();
 
@@ -9,6 +10,7 @@ const BASE_URL = `${API_BASE}/api/cart`;
 
 export const CartProvider = ({ children }) => {
     const { user } = useAuth();
+    const toast = useToast();
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -76,7 +78,7 @@ export const CartProvider = ({ children }) => {
         }
     }, [cartItems, user]);
 
-    const syncWithServer = async (items) => {
+    const syncWithServer = useCallback(async (items, previousItems) => {
         if (user) {
             try {
                 const token = localStorage.getItem("bindass_user_token");
@@ -87,11 +89,17 @@ export const CartProvider = ({ children }) => {
                 );
             } catch (err) {
                 console.error("Failed to sync cart to server:", err);
+                // Rollback optimistic update
+                if (previousItems) {
+                    setCartItems(previousItems);
+                    toast.error("Failed to update cart. Please try again.");
+                }
             }
         }
-    };
+    }, [user, toast]);
 
-    const addToCart = async (product) => {
+    const addToCart = useCallback(async (product) => {
+        const previousItems = [...cartItems];
         const exists = cartItems.find(item => item.productId === (product._id || product.productId) && item.size === product.size);
         let updatedCart;
 
@@ -111,36 +119,47 @@ export const CartProvider = ({ children }) => {
         }
 
         setCartItems(updatedCart);
-        syncWithServer(updatedCart);
-    };
+        syncWithServer(updatedCart, previousItems);
+    }, [cartItems, syncWithServer]);
 
-    const addMultipleToCart = (products) => {
+    const addMultipleToCart = useCallback((products) => {
+        const previousItems = [...cartItems];
         const updatedCart = [...cartItems, ...products.map((p) => ({
             ...p,
             cartId: crypto.randomUUID()
         }))];
         setCartItems(updatedCart);
-        syncWithServer(updatedCart);
-    };
+        syncWithServer(updatedCart, previousItems);
+    }, [cartItems, syncWithServer]);
 
-    const removeFromCart = async (cartId) => {
+    const removeFromCart = useCallback(async (cartId) => {
+        const previousItems = [...cartItems];
         const updatedCart = cartItems.filter(item => item.cartId !== cartId);
         setCartItems(updatedCart);
-        syncWithServer(updatedCart);
-    };
+        syncWithServer(updatedCart, previousItems);
+    }, [cartItems, syncWithServer]);
 
-    const clearCart = async () => {
+    const clearCart = useCallback(async () => {
+        const previousItems = [...cartItems];
         setCartItems([]);
-        syncWithServer([]);
-    };
+        syncWithServer([], previousItems);
+    }, [cartItems, syncWithServer]);
+
+    const value = useMemo(() => ({
+        cartItems,
+        addToCart,
+        addMultipleToCart,
+        removeFromCart,
+        clearCart,
+        setCartItems,
+        cartCount: cartItems.length
+    }), [cartItems, addToCart, addMultipleToCart, removeFromCart, clearCart]);
 
     return (
-        <CartContext.Provider value={{ cartItems, addToCart, addMultipleToCart, removeFromCart, clearCart, setCartItems, cartCount: cartItems.length }}>
+        <CartContext.Provider value={value}>
             {!loading && children}
         </CartContext.Provider>
     );
 };
 
 export const useCart = () => useContext(CartContext);
-
-

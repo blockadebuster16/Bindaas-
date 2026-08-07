@@ -10,6 +10,7 @@ import RenderText from './shared/RenderText';
 import { lenisStop, lenisStart } from './SmoothScroll';
 
 import logoBlack from '../assets/text-logo-black-transparent.png';
+import useFocusTrap from '../hooks/useFocusTrap';
 
 const Navbar = () => {
     const { user, setIsAuthModalOpen, logOut } = useAuth();
@@ -19,6 +20,8 @@ const Navbar = () => {
     const location = useLocation();
 
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const drawerRef = useRef(null);
+    useFocusTrap(drawerRef, mobileMenuOpen);
     const [promoAd, setPromoAd] = useState('loading');
     const [searchOpen, setSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -454,6 +457,7 @@ const Navbar = () => {
 
             {/* Drawer Panel */}
             <div
+                ref={drawerRef}
                 id="mobile-menu"
                 role="dialog"
                 aria-modal="true"

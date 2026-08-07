@@ -1,4 +1,4 @@
-﻿import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
 
 const AuthContext = createContext();
@@ -56,13 +56,13 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     // ── Google Sign-In: redirect browser to server OAuth route ────────────────
-    const googleSignIn = () => {
+    const googleSignIn = useCallback(() => {
         setAuthError(null);
         window.location.href = `${API_BASE}/api/auth/google`;
-    };
+    }, []);
 
     // ── Email/Password: Register ───────────────────────────────────────────────
-    const signUpWithEmail = async ({ email, password, firstName, lastName, mobile, birthdate, gender }) => {
+    const signUpWithEmail = useCallback(async ({ email, password, firstName, lastName, mobile, birthdate, gender }) => {
         setAuthError(null);
         const { data } = await axios.post(`${API_BASE}/api/auth/register`, {
             email, password, firstName, lastName, mobile, birthdate, gender,
@@ -71,33 +71,47 @@ export const AuthProvider = ({ children }) => {
             setSession(data.token);
         }
         return data;
-    };
+    }, [setSession]);
 
     // ── Email/Password: Login ──────────────────────────────────────────────────
-    const signInWithEmail = async (email, password) => {
+    const signInWithEmail = useCallback(async (email, password) => {
         setAuthError(null);
         const { data } = await axios.post(`${API_BASE}/api/auth/login`, { email, password });
         if (data.success && data.token) {
             setSession(data.token);
         }
         return data;
-    };
+    }, [setSession]);
 
     // ── Log out ────────────────────────────────────────────────────────────────
-    const logOut = () => {
+    const logOut = useCallback(() => {
         localStorage.removeItem(TOKEN_KEY);
         setUser(null);
         setIsAuthModalOpen(false);
-    };
+    }, []);
 
     // ── (Unused — kept for API compatibility with SignInModal) ─────────────────
-    const updateUserProfile = async (profileData) => {
+    const updateUserProfile = useCallback(async (profileData) => {
         const token = localStorage.getItem(TOKEN_KEY);
         if (!token) return;
         await axios.put(`${API_BASE}/api/users/profile`, profileData, {
             headers: { Authorization: `Bearer ${token}` },
         });
-    };
+    }, []);
+
+    const value = useMemo(() => ({
+        user,
+        setSession,       // used by AuthCallback page to store token after Google redirect
+        googleSignIn,
+        signInWithEmail,
+        signUpWithEmail,
+        updateUserProfile,
+        logOut,
+        isAuthModalOpen,
+        setIsAuthModalOpen,
+        authError,
+        setAuthError,
+    }), [user, isAuthModalOpen, authError, setSession, googleSignIn, signInWithEmail, signUpWithEmail, updateUserProfile, logOut]);
 
     // Branded loading screen while restoring session
     if (loading) {
@@ -114,19 +128,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{
-            user,
-            setSession,       // used by AuthCallback page to store token after Google redirect
-            googleSignIn,
-            signInWithEmail,
-            signUpWithEmail,
-            updateUserProfile,
-            logOut,
-            isAuthModalOpen,
-            setIsAuthModalOpen,
-            authError,
-            setAuthError,
-        }}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );

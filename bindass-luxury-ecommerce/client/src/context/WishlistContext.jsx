@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
+import { useToast } from './ToastContext';
 
 const WishlistContext = createContext();
 
@@ -9,6 +10,7 @@ const BASE_URL = `${API_BASE}/api/wishlist`;
 
 export const WishlistProvider = ({ children }) => {
     const { user } = useAuth();
+    const toast = useToast();
     const [wishlistItems, setWishlistItems] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -58,7 +60,7 @@ export const WishlistProvider = ({ children }) => {
         }
     }, [wishlistItems, user, loading]);
 
-    const syncWithServer = async (items) => {
+    const syncWithServer = useCallback(async (items, previousItems) => {
         if (user) {
             try {
                 const token = localStorage.getItem("bindass_user_token");
@@ -69,54 +71,62 @@ export const WishlistProvider = ({ children }) => {
                 );
             } catch (err) {
                 console.error("Failed to sync wishlist to server:", err);
+                // Rollback optimistic update
+                setWishlistItems(previousItems);
+                toast.error("Failed to update wishlist. Please try again.");
             }
         }
-    };
+    }, [user, toast]);
 
-    const addToWishlist = (product) => {
+    const addToWishlist = useCallback((product) => {
         if (wishlistItems.some(item => (item._id || item) === (product._id || product))) return;
+        const previousItems = [...wishlistItems];
         const updated = [...wishlistItems, product];
         setWishlistItems(updated);
-        syncWithServer(updated);
-    };
+        syncWithServer(updated, previousItems);
+    }, [wishlistItems, syncWithServer]);
 
-    const removeFromWishlist = (productId) => {
+    const removeFromWishlist = useCallback((productId) => {
+        const previousItems = [...wishlistItems];
         const updated = wishlistItems.filter(item => (item._id || item) !== productId);
         setWishlistItems(updated);
-        syncWithServer(updated);
-    };
+        syncWithServer(updated, previousItems);
+    }, [wishlistItems, syncWithServer]);
 
-    const toggleWishlist = (product) => {
+    const toggleWishlist = useCallback((product) => {
         const productId = product._id || product;
         const exists = wishlistItems.some(item => (item._id || item) === productId);
+        const previousItems = [...wishlistItems];
         let updated;
+        
         if (exists) {
             updated = wishlistItems.filter(item => (item._id || item) !== productId);
         } else {
             updated = [...wishlistItems, product];
         }
+        
         setWishlistItems(updated);
-        syncWithServer(updated);
-    };
+        syncWithServer(updated, previousItems);
+    }, [wishlistItems, syncWithServer]);
 
-    const isInWishlist = (productId) => {
+    const isInWishlist = useCallback((productId) => {
         return wishlistItems.some(item => (item._id || item) === productId);
-    };
+    }, [wishlistItems]);
+
+    const value = useMemo(() => ({
+        wishlistItems,
+        wishlistCount: wishlistItems.length,
+        addToWishlist,
+        removeFromWishlist,
+        toggleWishlist,
+        isInWishlist
+    }), [wishlistItems, addToWishlist, removeFromWishlist, toggleWishlist, isInWishlist]);
 
     return (
-        <WishlistContext.Provider value={{
-            wishlistItems,
-            wishlistCount: wishlistItems.length,
-            addToWishlist,
-            removeFromWishlist,
-            toggleWishlist,
-            isInWishlist
-        }}>
+        <WishlistContext.Provider value={value}>
             {!loading && children}
         </WishlistContext.Provider>
     );
 };
 
 export const useWishlist = () => useContext(WishlistContext);
-
-

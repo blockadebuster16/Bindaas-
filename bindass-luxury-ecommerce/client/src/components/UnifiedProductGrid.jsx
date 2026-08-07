@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import axios from 'axios';
 import GridProductCard from './GridProductCard';
+import ProductSkeleton from './shared/ProductSkeleton';
 import FilterSidebar from './FilterSidebar';
 import API_BASE_URL from '../config/api';
 
@@ -260,9 +261,12 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
 
             {/* Grid Area */}
             {loading ? (
-                <div className="flex justify-center flex-col items-center h-64 gap-4">
-                    <div className="w-7 h-7 border-2 border-[#FFD017] border-t-[#111111] rounded-full animate-spin"></div>
-                    <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#6B6457]">Loading Collection...</span>
+                <div className="px-2.5 sm:px-4 lg:px-6 py-6 max-w-[1800px] mx-auto">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3 lg:gap-3.5">
+                        {Array.from({ length: 8 }).map((_, idx) => (
+                            <ProductSkeleton key={`skeleton-${idx}`} />
+                        ))}
+                    </div>
                 </div>
             ) : processedProducts.length === 0 ? (
                 <div className="flex justify-center flex-col items-center h-64 gap-3">

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useWishlist } from '../context/WishlistContext';
 import { useCurrency } from '../context/CurrencyContext';
+import { optimizeCloudinaryUrl } from '../utils/cloudinaryHelper';
 
 const GridProductCard = ({ product }) => {
     const { toggleWishlist, isInWishlist } = useWishlist();
@@ -9,8 +10,8 @@ const GridProductCard = ({ product }) => {
     const isWished = isInWishlist(product._id);
     
     // Images
-    const dominantImage = product.images?.[0] || '/images/product-placeholder.svg';
-    const hoverImage = product.images?.[1] || dominantImage;
+    const dominantImage = optimizeCloudinaryUrl(product.images?.[0]) || '/images/product-placeholder.svg';
+    const hoverImage = optimizeCloudinaryUrl(product.images?.[1]) || dominantImage;
     const imagesCount = product.images?.length || 1;
     const hasHoverImage = product.images?.length > 1;
 
