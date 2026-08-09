@@ -9,9 +9,9 @@ const fetchAdvertisements = async ({ queryKey }) => {
         : `${API_BASE_URL}/api/advertisements`;
     
     const { data } = await axios.get(url);
-    
     // Group ads by bannerType
-    const groupedAds = (data || []).reduce((acc, ad) => {
+    const adsArray = Array.isArray(data) ? data : [];
+    const groupedAds = adsArray.reduce((acc, ad) => {
         acc[ad.bannerType] = acc[ad.bannerType] || [];
         acc[ad.bannerType].push(ad);
         return acc;

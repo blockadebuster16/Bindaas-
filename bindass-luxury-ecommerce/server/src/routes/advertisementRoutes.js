@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { getAds, getAllAds, createAd, updateAd, toggleAd, deleteAd } = require('../controllers/advertisementController');
 const { adminProtect } = require('../middleware/adminAuth');
+const { cacheControl } = require('../middleware/cache');
 
 // Public routes
-router.get('/', getAds);
+router.get('/', cacheControl, getAds);
 
 // Admin routes
 router.get('/admin', adminProtect, getAllAds);

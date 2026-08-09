@@ -11,7 +11,6 @@ const getSettings = async () => {
     const { data, error } = await supabase.from('store_settings').select('*').eq('id', 1).single();
     
     if (error || !data) {
-        console.warn("⚠️ store_settings row not found. Returning hardcoded defaults.");
         return {
             cgst: 9, sgst: 9, shippingGst: 18,
             airRate: 54, surfaceRate: 42, codFee: 34,

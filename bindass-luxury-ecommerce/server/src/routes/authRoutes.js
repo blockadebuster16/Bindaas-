@@ -7,7 +7,12 @@ const User = require('../models/User');
 const oauth2Client = require('../config/google-auth');
 
 // Utilities
-const getAdminJWTSecret = () => process.env.ADMIN_JWT_SECRET || 'fallback_secret_for_dev';
+const getAdminJWTSecret = () => {
+    if (!process.env.ADMIN_JWT_SECRET) {
+        throw new Error('ADMIN_JWT_SECRET is not configured');
+    }
+    return process.env.ADMIN_JWT_SECRET;
+};
 const getCustomerJWTSecret = () => process.env.CUSTOMER_JWT_SECRET;
 
 // ── GOOGLE OAUTH Step 1: Redirect to Google consent ──────────────────────────
@@ -221,8 +226,10 @@ router.post('/admin-reset', async (req, res) => {
             return res.status(403).json({ success: false, message: `Unauthorized: Predefined verification email is incorrect. Expected: ${ADMIN_EMAIL}` });
         }
 
-        await Admin.deleteMany({});
+        // Create the new admin first to ensure it succeeds (no schema validation errors)
         const admin = await Admin.create({ email: newEmail.toLowerCase().trim(), password: newPassword });
+        // Then delete all other admins, keeping only the newly created one
+        await Admin.deleteMany({ _id: { $ne: admin._id } });
 
         res.json({ success: true, message: 'Admin credentials successfully updated.', admin: { email: admin.email, role: 'admin' } });
     } catch (error) {

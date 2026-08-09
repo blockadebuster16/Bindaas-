@@ -6,11 +6,12 @@
  */
 export const getCroppedUrl = (url, crop) => {
     if (!url || !crop || typeof url !== 'string' || !url.includes('/upload/')) return url;
+    if (crop.width == null || crop.height == null) return url;
 
     // Cloudinary transformation string
     // c_crop: defines the cropping area
     // x, y, w, h are coordinates from react-easy-crop (typically pixels)
-    const transform = `c_crop,w_${Math.round(crop.width)},h_${Math.round(crop.height)},x_${Math.round(crop.x)},y_${Math.round(crop.y)}`;
+    const transform = `c_crop,w_${Math.round(crop.width)},h_${Math.round(crop.height)},x_${Math.round(crop.x || 0)},y_${Math.round(crop.y || 0)}`;
     
     // Inject transformation after /upload/
     return url.replace('/upload/', `/upload/${transform}/`);

@@ -174,8 +174,16 @@ const Navbar = () => {
 
     // Header transparent overlay ONLY applies if a Hero Banner is active at top of page, unscrolled
     const isTransparentOverlay = hasHeroAtTop && !isScrolled && !mobileMenuOpen;
+    const hasPromo = promoAd && promoAd !== 'loading';
 
-    let headerClasses = "fixed top-0 left-0 right-0 z-[100] transition-all duration-500 font-sans ";
+    let headerClasses = "fixed left-0 right-0 z-[100] transition-all duration-500 font-sans w-full ";
+    
+    if (hasPromo && !isScrolled && !mobileMenuOpen) {
+        headerClasses += " top-[28px] md:top-[32px] ";
+    } else {
+        headerClasses += " top-0 ";
+    }
+
     if (isTransparentOverlay) {
         headerClasses += "bg-transparent text-white border-transparent shadow-none py-2";
     } else {
@@ -192,7 +200,7 @@ const Navbar = () => {
             {/* Promo Bar */}
             {promoAd && promoAd !== 'loading' ? (
                 <div
-                    className="w-full tracking-[0.2em] py-1.5 text-center border-b border-[#E8E3D8] font-sans px-4 flex items-center justify-center overflow-hidden z-[101] relative"
+                    className="w-full tracking-[0.2em] py-1.5 text-center border-b border-[#E8E3D8] font-sans px-4 flex items-center justify-center overflow-hidden z-[40] relative"
                     style={{ backgroundColor: promoAd.tagColor || '#FFD017' }}
                 >
                     <RenderText

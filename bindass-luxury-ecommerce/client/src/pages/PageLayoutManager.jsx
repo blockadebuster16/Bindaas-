@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AdminSidebar from '../components/AdminSidebar';
 
@@ -36,9 +36,11 @@ const PageLayoutManager = () => {
         { type: 'split_ad', label: 'Split Banner Ad', desc: 'Dual left/right split promotional banner' },
         { type: 'ad_strip', label: 'Carousel Ad Strip', desc: 'Horizontal scrolling promotion strip' },
         { type: 'ad_break', label: 'Content Break Ad / Editorial Banner', desc: 'Full-bleed image/video break banner between grids' },
+        { type: 'ad_middle', label: 'Middle Advertisement Banner', desc: 'Category or middle promotional banner' },
         { type: 'product_grid', label: 'Product Collection Grid', desc: 'Dynamic product grid section' },
         { type: 'recently_viewed', label: 'Recently Viewed Footprint', desc: 'User recent items section' },
-        { type: 'feature_showcase', label: 'Feature Showcase / Heritage Ad', desc: 'Dual-column editorial story & media showcase banner' }
+        { type: 'feature_showcase', label: 'Feature Showcase Ad', desc: 'Dual-column editorial story & media showcase banner' },
+        { type: 'heritage', label: 'Brand Heritage Story', desc: 'Heritage story layout' }
     ];
 
     const fetchLayout = async (pageKey) => {

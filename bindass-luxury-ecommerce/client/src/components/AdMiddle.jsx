@@ -154,36 +154,15 @@ const MiddleAdContent = ({ ad }) => {
 };
 
 const AdMiddle = ({ page = 'home', adData = null }) => {
-    const [middleAds, setMiddleAds] = useState(adData ? [adData] : []);
-    const [loading, setLoading] = useState(!adData);
-
     useEffect(() => {
         if (adData) {
-            setMiddleAds([adData]);
             [adData.titleFontFamily, adData.tagFontFamily, adData.subtitleFontFamily].forEach(f => f && loadGoogleFont(f));
-            setLoading(false);
-            return;
         }
+    }, [adData]);
 
-        const fetchAds = async () => {
-            try {
-                const { data } = await axios.get(`${API_BASE_URL}/api/advertisements?bannerType=middle&page=${page}`);
-                setMiddleAds(data);
-                data.forEach(ad => {
-                    [ad.titleFontFamily, ad.tagFontFamily, ad.subtitleFontFamily].forEach(f => f && loadGoogleFont(f));
-                });
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching middle ads:", error);
-                setLoading(false);
-            }
-        };
-        fetchAds();
-    }, [page, adData]);
+    if (!adData) return null;
 
-    if (loading || middleAds.length === 0) return null;
-
-    return <MiddleAdContent ad={middleAds[0]} />;
+    return <MiddleAdContent ad={adData} />;
 };
 
 export default AdMiddle;

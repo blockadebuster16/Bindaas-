@@ -60,8 +60,16 @@ const DynamicPage = ({ pageKey, title, description }) => {
     const getAdData = (bannerType, adId) => {
         const ads = adsByBannerType[bannerType] || [];
         if (adId) {
-            const match = ads.find(ad => ad._id === adId);
+            // adId might be a populated object from the PageLayout API
+            const idToMatch = typeof adId === 'object' && adId !== null ? adId._id : adId;
+            const match = ads.find(ad => ad._id === idToMatch);
             if (match) return match;
+            
+            // If not found in the ads array (maybe filtered out by page restrictions),
+            // but we have a populated object, just use it directly.
+            if (typeof adId === 'object' && adId !== null) {
+                return adId;
+            }
         }
         return ads[0] || null;
     };

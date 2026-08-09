@@ -4,7 +4,7 @@ const sectionSchema = new mongoose.Schema({
     id: { type: String, required: true },
     type: { 
         type: String, 
-        enum: ['hero_ad', 'split_ad', 'ad_strip', 'ad_break', 'product_grid', 'recently_viewed', 'heritage', 'feature_showcase'],
+        enum: ['hero_ad', 'split_ad', 'ad_strip', 'ad_break', 'ad_middle', 'product_grid', 'recently_viewed', 'heritage', 'feature_showcase'],
         required: true 
     },
     title: { type: String, default: '' },
