@@ -17,8 +17,25 @@ const PageLayoutManager = () => {
         title: 'New Editorial Break',
         categoryFilter: '',
         redirectUrl: '',
+        adId: '',
         enabled: true
     });
+    const [ads, setAds] = useState([]);
+
+    useEffect(() => {
+        const fetchAds = async () => {
+            try {
+                const token = localStorage.getItem('adminToken');
+                const res = await axios.get(`${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/advertisements/admin`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setAds(res.data);
+            } catch (err) {
+                console.error("Failed to load ads", err);
+            }
+        };
+        fetchAds();
+    }, []);
 
     const API_BASE = `${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/page-layouts`;
 
@@ -123,9 +140,13 @@ const PageLayoutManager = () => {
             enabled: newSection.enabled
         };
 
+        if (newSection.adId) {
+            added.adId = newSection.adId;
+        }
+
         setLayout({ ...layout, sections: [...layout.sections, added] });
         setIsAddModalOpen(false);
-        setNewSection({ type: 'ad_break', title: 'New Editorial Break', categoryFilter: '', redirectUrl: '', enabled: true });
+        setNewSection({ type: 'ad_break', title: 'New Editorial Break', categoryFilter: '', redirectUrl: '', adId: '', enabled: true });
         showToast("Section added to layout!");
     };
 
@@ -340,6 +361,33 @@ const PageLayoutManager = () => {
                                         />
                                     </div>
                                 </>
+                            )}
+
+                            {newSection.type !== 'product_grid' && newSection.type !== 'recently_viewed' && (
+                                <div>
+                                    <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Select Advertisement (Optional)</label>
+                                    <select
+                                        value={newSection.adId}
+                                        onChange={(e) => setNewSection({ ...newSection, adId: e.target.value })}
+                                        className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-xs font-bold outline-none"
+                                    >
+                                        <option value="">-- Auto-select first available --</option>
+                                        {ads.filter(ad => {
+                                            const typeMap = {
+                                                'hero_ad': 'hero',
+                                                'split_ad': 'split',
+                                                'ad_strip': 'strip',
+                                                'ad_break': 'break',
+                                                'ad_middle': 'middle',
+                                                'feature_showcase': 'feature_showcase',
+                                                'heritage': 'heritage'
+                                            };
+                                            return ad.bannerType === typeMap[newSection.type];
+                                        }).map(ad => (
+                                            <option key={ad._id} value={ad._id}>{ad.title} ({ad.bannerType})</option>
+                                        ))}
+                                    </select>
+                                </div>
                             )}
                         </div>
 
