@@ -9,7 +9,8 @@ import loadGoogleFont from '../utils/loadGoogleFont';
 import RenderText from './shared/RenderText';
 import { lenisStop, lenisStart } from './SmoothScroll';
 
-import logoBlack from '../assets/text-logo-black-transparent.png';
+import logoBlack from '../assets/logo-black.svg';
+import logoWhite from '../assets/logo-white.svg';
 import useFocusTrap from '../hooks/useFocusTrap';
 
 const Navbar = () => {
@@ -236,9 +237,9 @@ const Navbar = () => {
                         </button>
                         <Link to="/" className="flex items-center flex-shrink-0 my-auto" onClick={closeMobileMenu}>
                             <img
-                                src={logoBlack}
+                                src={isTransparentOverlay ? logoWhite : logoBlack}
                                 alt="BiNDAAS!"
-                                className={`h-8 md:h-9 object-contain transition-all duration-300 ${isTransparentOverlay ? 'brightness-0 invert' : ''}`}
+                                className="h-8 md:h-9 object-contain transition-all duration-300"
                             />
                         </Link>
                     </div>
@@ -247,9 +248,9 @@ const Navbar = () => {
                     <div className="hidden lg:flex items-center gap-7 lg:gap-9 flex-1">
                         <Link to="/" className="flex items-center flex-shrink-0 my-auto">
                             <img
-                                src={logoBlack}
+                                src={isTransparentOverlay ? logoWhite : logoBlack}
                                 alt="BiNDAAS!"
-                                className={`h-10 md:h-[42px] lg:h-12 object-contain transition-all duration-300 ${isTransparentOverlay ? 'brightness-0 invert' : ''}`}
+                                className="h-10 md:h-[42px] lg:h-12 object-contain transition-all duration-300"
                             />
                         </Link>
 

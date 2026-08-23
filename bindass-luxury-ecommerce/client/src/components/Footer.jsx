@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
-import logoBlack from '../assets/text-logo-black-transparent.png';
+import logoWhite from '../assets/logo-white.svg';
 
 const Footer = () => {
     const [email, setEmail] = useState('');
@@ -141,10 +141,9 @@ const Footer = () => {
                 {/* 4. Enlarged White BiNDAAS! Logo (Right Blank Space) */}
                 <div className="flex items-center justify-start md:justify-end h-full pt-4 md:pt-0">
                     <img
-                        src={logoBlack}
+                        src={logoWhite}
                         alt="BiNDAAS!"
                         className="h-28 md:h-36 lg:h-44 object-contain opacity-95 hover:opacity-100 transition-opacity"
-                        style={{ filter: 'invert(1) brightness(2)' }}
                     />
                 </div>
             </div>
