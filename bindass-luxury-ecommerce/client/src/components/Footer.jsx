@@ -143,7 +143,7 @@ const Footer = () => {
                     <img
                         src={logoWhite}
                         alt="BiNDAAS!"
-                        className="h-28 md:h-36 lg:h-44 object-contain opacity-95 hover:opacity-100 transition-opacity"
+                        className="h-14 md:h-16 lg:h-20 w-auto object-contain opacity-95 hover:opacity-100 transition-opacity"
                     />
                 </div>
             </div>

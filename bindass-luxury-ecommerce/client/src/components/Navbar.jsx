@@ -177,7 +177,7 @@ const Navbar = () => {
     const isTransparentOverlay = hasHeroAtTop && !isScrolled && !mobileMenuOpen;
     const hasPromo = promoAd && promoAd !== 'loading';
 
-    let headerClasses = "fixed left-0 right-0 z-[100] transition-all duration-500 font-sans w-full ";
+    let headerClasses = "fixed left-0 right-0 z-[100] transition-all duration-300 font-sans w-full ";
     
     if (hasPromo && !isScrolled && !mobileMenuOpen) {
         headerClasses += " top-[28px] md:top-[32px] ";
@@ -191,7 +191,7 @@ const Navbar = () => {
         headerClasses += "bg-white text-bindas-onyx shadow-sm border-b border-gray-100 py-1";
     }
 
-    const navLinkClass = `transition-colors py-1 hover:text-bindas-gold ${isTransparentOverlay ? 'text-white hover:text-white/80' : 'text-bindas-onyx'}`;
+    const navLinkClass = `transition-colors duration-300 flex items-center py-1.5 hover:text-bindas-gold ${isTransparentOverlay ? 'text-white hover:text-white/80' : 'text-bindas-onyx'}`;
 
     return (
         <>
@@ -227,7 +227,7 @@ const Navbar = () => {
                     {/* Mobile: Hamburger & Logo */}
                     <div className="flex items-center gap-4 lg:hidden">
                         <button
-                            className="flex items-center justify-center w-11 h-11 rounded-lg hover:bg-black/5 transition-colors flex-shrink-0 active:scale-95"
+                            className={`flex items-center justify-center w-10 h-10 rounded-lg hover:bg-black/5 transition-colors duration-300 flex-shrink-0 active:scale-95 ${isTransparentOverlay ? 'text-white' : 'text-bindas-onyx'}`}
                             onClick={() => setMobileMenuOpen(true)}
                             aria-label="Open menu"
                             aria-expanded={mobileMenuOpen}
@@ -235,22 +235,22 @@ const Navbar = () => {
                         >
                             <span className="material-icons-outlined text-[24px]">menu</span>
                         </button>
-                        <Link to="/" className="flex items-center flex-shrink-0 my-auto" onClick={closeMobileMenu}>
+                        <Link to="/" className="flex items-center flex-shrink-0" onClick={closeMobileMenu}>
                             <img
                                 src={isTransparentOverlay ? logoWhite : logoBlack}
                                 alt="BiNDAAS!"
-                                className="h-8 md:h-9 object-contain transition-all duration-300"
+                                className="h-6 md:h-7 w-auto object-contain transition-all duration-300"
                             />
                         </Link>
                     </div>
 
                     {/* Desktop Left Group: Logo + Navigation Links */}
                     <div className="hidden lg:flex items-center gap-7 lg:gap-9 flex-1">
-                        <Link to="/" className="flex items-center flex-shrink-0 my-auto">
+                        <Link to="/" className="flex items-center flex-shrink-0">
                             <img
                                 src={isTransparentOverlay ? logoWhite : logoBlack}
                                 alt="BiNDAAS!"
-                                className="h-10 md:h-[42px] lg:h-12 object-contain transition-all duration-300"
+                                className="h-6 md:h-7 lg:h-[26px] w-auto object-contain transition-all duration-300"
                             />
                         </Link>
 
@@ -265,11 +265,11 @@ const Navbar = () => {
                                 </li>
 
                                 {/* ── COLLECTIONS MEGA DROPDOWN ── */}
-                                <li className="" ref={collectionsRef}>
+                                <li className="flex items-center" ref={collectionsRef}>
                                     <button
                                         type="button"
                                         onClick={() => setIsCollectionsOpen(p => !p)}
-                                        className={`transition-colors py-1.5 flex items-center gap-1 hover:text-bindas-gold cursor-pointer bg-transparent border-none ${isTransparentOverlay ? 'text-white' : 'text-bindas-onyx'}`}
+                                        className={`transition-colors duration-300 py-1.5 flex items-center gap-1 hover:text-bindas-gold cursor-pointer bg-transparent border-none ${isTransparentOverlay ? 'text-white hover:text-white/80' : 'text-bindas-onyx'}`}
                                         aria-expanded={isCollectionsOpen}
                                         aria-haspopup="true"
                                     >
@@ -298,9 +298,9 @@ const Navbar = () => {
                                                 <Link key={idx} to={col.link} onClick={() => setIsCollectionsOpen(false)} className="group/col block text-center space-y-2">
                                                     <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/60 shadow-sm">
                                                         <img
-                                                            src={col.image}
-                                                            alt={col.title}
-                                                            className="w-full h-full object-cover group-hover/col:scale-105 transition-transform duration-500"
+                                                             src={col.image}
+                                                             alt={col.title}
+                                                             className="w-full h-full object-cover group-hover/col:scale-105 transition-transform duration-500"
                                                         />
                                                     </div>
                                                     <p className="text-[11px] font-bold text-slate-800 uppercase tracking-wider group-hover/col:text-black transition-colors">
@@ -323,19 +323,23 @@ const Navbar = () => {
                     </div>
 
                     {/* Right Group: Action Icons */}
-                    <div className="flex items-center gap-3 md:gap-4 flex-shrink-0">
+                    <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
 
                         {/* Search Icon */}
                         <button
                             onClick={handleSearchIconClick}
                             aria-label={searchOpen ? 'Close search' : 'Open search'}
-                            className="flex items-center justify-center w-11 h-11 rounded-lg hover:bg-black/5 transition-colors active:scale-95"
+                            className={`flex items-center justify-center w-10 h-10 rounded-lg hover:bg-black/5 transition-colors duration-300 active:scale-95 ${isTransparentOverlay ? 'text-white' : 'text-bindas-onyx'}`}
                         >
                             <span className="material-icons-outlined text-[24px]">{searchOpen ? 'close' : 'search'}</span>
                         </button>
 
                         {/* Wishlist */}
-                        <Link to="/wishlist" aria-label={`Wishlist (${wishlistCount} items)`} className="relative hover:text-[#ff3f6c] transition-colors flex items-center w-11 h-11 justify-center rounded-lg hover:bg-black/5 active:scale-95">
+                        <Link
+                            to="/wishlist"
+                            aria-label={`Wishlist (${wishlistCount} items)`}
+                            className={`relative hover:text-[#ff3f6c] transition-colors duration-300 flex items-center w-10 h-10 justify-center rounded-lg hover:bg-black/5 active:scale-95 ${isTransparentOverlay ? 'text-white' : 'text-bindas-onyx'}`}
+                        >
                             <span className="material-icons-outlined text-[24px]">favorite_border</span>
                             {wishlistCount > 0 && (
                                 <span className="absolute top-1 right-1 bg-[#ff3f6c] text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
@@ -346,8 +350,8 @@ const Navbar = () => {
 
                         {/* User — desktop only */}
                         {user ? (
-                            <div className="hidden md:flex items-center gap-3">
-                                <Link to="/profile" title="View Profile" className="flex items-center w-11 h-11 justify-center rounded-lg hover:bg-black/5 active:scale-95">
+                            <div className="hidden md:flex items-center gap-2">
+                                <Link to="/profile" title="View Profile" className="flex items-center w-10 h-10 justify-center rounded-lg hover:bg-black/5 active:scale-95 transition-colors duration-300">
                                     <img src={user.picture} className="w-7 h-7 rounded-full border-2 border-bindas-amber" alt="Profile" onError={(e) => { e.target.src = ''; e.target.className = 'w-7 h-7 rounded-full bg-bindas-onyx flex items-center justify-center text-white text-xs font-bold'; }} />
                                 </Link>
                                 {/* Inline logout confirm */}
@@ -356,17 +360,17 @@ const Navbar = () => {
                                         <span className="text-[10px] text-red-600 font-bold uppercase tracking-wider">Logout?</span>
                                         <button
                                             onClick={() => { logOut(); navigate('/'); setShowLogoutConfirm(false); }}
-                                            className="text-[9px] bg-red-500 text-white font-bold uppercase px-2 py-0.5 rounded hover:bg-red-600 transition-colors"
+                                            className="text-[9px] bg-red-500 text-white font-bold uppercase px-2 py-0.5 rounded hover:bg-red-600 transition-colors duration-300"
                                         >Yes</button>
                                         <button
                                             onClick={() => setShowLogoutConfirm(false)}
-                                            className="text-[9px] text-red-400 font-bold uppercase px-1 hover:text-red-600 transition-colors"
+                                            className="text-[9px] text-red-400 font-bold uppercase px-1 hover:text-red-600 transition-colors duration-300"
                                         >No</button>
                                     </div>
                                 ) : (
                                     <button
                                         onClick={() => setShowLogoutConfirm(true)}
-                                        className="material-icons-outlined hover:text-red-400 text-[22px] transition-colors flex items-center w-11 h-11 justify-center rounded-lg hover:bg-black/5"
+                                        className={`material-icons-outlined hover:text-red-400 text-[22px] transition-colors duration-300 flex items-center w-10 h-10 justify-center rounded-lg hover:bg-black/5 ${isTransparentOverlay ? 'text-white' : 'text-bindas-onyx'}`}
                                         aria-label="Logout"
                                     >logout</button>
                                 )}
@@ -375,12 +379,16 @@ const Navbar = () => {
                             <button
                                 onClick={handleLogin}
                                 aria-label="Sign in"
-                                className="material-icons-outlined text-[24px] hover:opacity-80 hidden md:flex items-center w-11 h-11 justify-center rounded-lg hover:bg-black/5 active:scale-95"
+                                className={`material-icons-outlined text-[24px] hover:opacity-80 hidden md:flex items-center w-10 h-10 justify-center rounded-lg hover:bg-black/5 active:scale-95 transition-colors duration-300 ${isTransparentOverlay ? 'text-white' : 'text-bindas-onyx'}`}
                             >person_outline</button>
                         )}
 
                         {/* Cart */}
-                        <Link to="/cart" aria-label={`Cart (${cartCount} items)`} className="relative hover:opacity-80 transition-opacity flex items-center w-11 h-11 justify-center rounded-lg hover:bg-black/5 active:scale-95">
+                        <Link
+                            to="/cart"
+                            aria-label={`Cart (${cartCount} items)`}
+                            className={`relative hover:opacity-80 transition-colors duration-300 flex items-center w-10 h-10 justify-center rounded-lg hover:bg-black/5 active:scale-95 ${isTransparentOverlay ? 'text-white' : 'text-bindas-onyx'}`}
+                        >
                             <span className="material-icons-outlined text-[24px]">shopping_bag</span>
                             {cartCount > 0 && (
                                 <span className="absolute top-1 right-1 bg-bindas-amber text-bindas-onyx text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
@@ -478,7 +486,7 @@ const Navbar = () => {
                 {/* Drawer Header */}
                 <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8E3D8] flex-shrink-0">
                     <Link to="/" onClick={closeMobileMenu}>
-                        <img src={logoBlack} alt="BiNDAAS!" className="h-8 object-contain" />
+                        <img src={logoBlack} alt="BiNDAAS!" className="h-6 w-auto object-contain" />
                     </Link>
                     <button
                         onClick={closeMobileMenu}
