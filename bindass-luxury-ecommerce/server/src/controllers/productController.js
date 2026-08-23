@@ -4,7 +4,7 @@ const Product = require('../models/Product');
 // @route   GET /api/products
 exports.getProducts = async (req, res) => {
     try {
-        const { limit, page, category, pages, sort, select } = req.query;
+        const { limit, page, category, pages, sort, select, paginated } = req.query;
         
         const filter = {};
         if (category) filter.category = category;
@@ -26,16 +26,33 @@ exports.getProducts = async (req, res) => {
             query = query.sort('-createdAt');
         }
 
-        // Pagination/Limiting (Only apply if limit is provided)
-        if (limit) {
-            const limitNum = parseInt(limit);
-            const pageNum = parseInt(page) || 1;
-            const skip = (pageNum - 1) * limitNum;
+        const isPaginated = paginated === 'true';
+        let totalItems = 0;
+        let totalPages = 1;
+        let currentPage = 1;
+
+        if (isPaginated || limit) {
+            totalItems = await Product.countDocuments(filter);
+            const limitNum = limit ? parseInt(limit) : 20; // Default limit for paginated queries
+            currentPage = page ? parseInt(page) : 1;
+            totalPages = Math.ceil(totalItems / limitNum);
+            
+            const skip = (currentPage - 1) * limitNum;
             query = query.skip(skip).limit(limitNum);
         }
 
         const products = await query;
-        res.status(200).json(products);
+        
+        if (isPaginated) {
+            res.status(200).json({
+                products,
+                totalItems,
+                totalPages,
+                currentPage
+            });
+        } else {
+            res.status(200).json(products);
+        }
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch products", error: error.message });
     }

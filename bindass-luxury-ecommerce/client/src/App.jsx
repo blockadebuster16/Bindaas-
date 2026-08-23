@@ -1,10 +1,11 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { CheckoutProvider } from './context/CheckoutContext';
 import ErrorBoundary from './components/ErrorBoundary';
 import SmoothScroll from './components/SmoothScroll';
 import PageLoader from './components/shared/PageLoader';
 import ScrollToTop from './components/ScrollToTop';
+import axios from 'axios';
 
 const Home = React.lazy(() => import('./pages/Home'));
 const Cart = React.lazy(() => import('./pages/Cart'));
@@ -46,9 +47,28 @@ const NexaChat = React.lazy(() => import('./pages/Nexa/NexaChat'));
 const NexaEmbed = React.lazy(() => import('./pages/Nexa/NexaEmbed'));
 const FormSubmissions = React.lazy(() => import('./pages/FormSubmissions'));
 const AuthCallback = React.lazy(() => import('./pages/AuthCallback'));
-
+const AuthGuard = React.lazy(() => import('./components/AuthGuard')); // ROUTE-001
+const Shop = React.lazy(() => import('./pages/Shop')); // ROUTE-002
+const OutreachDashboard = React.lazy(() => import('./pages/OutreachDashboard'));
 
 function App() {
+  // ROUTE-004 FIX: Intercept 401s on admin routes and redirect to login
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (
+          error.response?.status === 401 &&
+          window.location.pathname.startsWith('/admin')
+        ) {
+          localStorage.removeItem('adminToken');
+          window.location.href = '/admin-login';
+        }
+        return Promise.reject(error);
+      }
+    );
+    return () => axios.interceptors.response.eject(interceptor);
+  }, []);
   return (
     <ErrorBoundary>
       <CheckoutProvider>
@@ -66,14 +86,15 @@ function App() {
               <Route path="/search" element={<SearchResults />} />
               <Route path="/product/:id" element={<ProductDetail />} />
               <Route path="/membership" element={<Membership />} />
-              <Route path="/shop" element={<div className="min-h-screen flex items-center justify-center font-display text-xs uppercase tracking-widest text-slate-500 mt-16">Shop page coming soon...</div>} />
+              <Route path="/shop" element={<Shop />} />
               <Route path="/apparel" element={<Apparel />} />
               <Route path="/men" element={<Men />} />
               <Route path="/women" element={<Women />} />
               <Route path="/classics" element={<Classics />} />
               <Route path="/sports" element={<Sports />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/checkout/payment" element={<CheckoutPayment />} />
+              {/* ROUTE-001 FIX: Auth-guarded checkout routes */}
+              <Route path="/checkout" element={<AuthGuard><Checkout /></AuthGuard>} />
+              <Route path="/checkout/payment" element={<AuthGuard><CheckoutPayment /></AuthGuard>} />
               <Route path="/success" element={<Success />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/terms" element={<Terms />} />
@@ -116,6 +137,7 @@ function App() {
               <Route path="/admin/nexa-chat" element={<NexaChat />} />
               <Route path="/admin/nexa-embed" element={<NexaEmbed />} />
               <Route path="/admin/forms" element={<FormSubmissions />} />
+              <Route path="/admin/outreach" element={<OutreachDashboard />} />
             </Route>
           </Routes>
           </Suspense>

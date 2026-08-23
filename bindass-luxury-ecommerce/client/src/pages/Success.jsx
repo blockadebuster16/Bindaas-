@@ -7,6 +7,7 @@ const Success = () => {
     const location = useLocation();
     const [orderData, setOrderData] = useState(null);
     const [confettiDone, setConfettiDone] = useState(false);
+    const [copied, setCopied] = useState(false);
 
     useEffect(() => {
         if (location.state?.order) {
@@ -16,10 +17,21 @@ const Success = () => {
         return () => clearTimeout(timer);
     }, [location]);
 
-    const orderId = orderData?.id || orderData?._id || `BD-${Math.floor(Math.random() * 900000) + 100000}`;
+    // Prefer Supabase order_id, fallback to Razorpay order id
+    const orderId = orderData?.order_id || orderData?.id || orderData?._id || `BD-${Math.floor(Math.random() * 900000) + 100000}`;
+    // The digital ticket token — UUID from our pipeline
+    const ticketId = orderData?.ticket_id || null;
     const paidAmount = orderData?.amount || orderData?.totalAmount || 0;
     const items = orderData?.items || [];
     const firstName = user?.displayName?.split(' ')?.[0] || 'there';
+
+    const handleCopyTicket = () => {
+        if (!ticketId) return;
+        navigator.clipboard.writeText(ticketId).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2500);
+        });
+    };
 
     return (
         <div className="bg-[#FAFAF9] min-h-screen font-sans">
@@ -54,6 +66,29 @@ const Success = () => {
                     <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-300">
                         Order #{orderId.toString().toUpperCase()}
                     </p>
+
+                    {/* Ticket Token Badge — only shown if backend returned ticket_id */}
+                    {ticketId && (
+                        <div className="inline-flex flex-col items-center mt-5">
+                            <p className="text-[8px] font-black uppercase tracking-[0.4em] text-slate-400 mb-2">Digital Ticket Token</p>
+                            <button
+                                onClick={handleCopyTicket}
+                                title="Click to copy your ticket ID"
+                                className="group relative flex items-center gap-2 bg-bindas-onyx text-white px-5 py-2.5 rounded-xl font-mono text-[11px] tracking-widest shadow-lg hover:bg-slate-800 transition-all duration-200 active:scale-95"
+                            >
+                                <span className="material-icons text-[#d4af37] text-sm">confirmation_number</span>
+                                <span className="truncate max-w-[200px] sm:max-w-xs">{ticketId}</span>
+                                <span className="material-icons text-white/40 group-hover:text-white/70 text-sm transition-colors">
+                                    {copied ? 'check' : 'content_copy'}
+                                </span>
+                                {/* Tooltip */}
+                                <span className={`absolute -top-8 left-1/2 -translate-x-1/2 text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-md bg-slate-800 text-white/80 whitespace-nowrap transition-all duration-200 ${copied ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                                    {copied ? '✓ Copied!' : 'Copy token'}
+                                </span>
+                            </button>
+                            <p className="text-[8px] text-slate-400 mt-1.5 font-medium">Use this ID to track or reference your order</p>
+                        </div>
+                    )}
                 </div>
 
                 {/* Main Content Grid */}
@@ -120,7 +155,7 @@ const Success = () => {
                                 </div>
                                 <div className="mt-3 pt-3 border-t border-slate-50 flex items-center gap-1.5">
                                     <span className="material-icons text-emerald-500 text-xs">verified</span>
-                                    <p className="text-[9px] text-emerald-600 font-black uppercase tracking-widest">Express & Insured</p>
+                                    <p className="text-[9px] text-emerald-600 font-black uppercase tracking-widest">Express &amp; Insured</p>
                                 </div>
                             </div>
 
@@ -174,13 +209,21 @@ const Success = () => {
                                 <h3 className="text-[9px] font-black uppercase tracking-[0.35em] text-white/60">Order Receipt</h3>
                             </div>
 
+                            {/* Ticket ID in receipt (compact) */}
+                            {ticketId && (
+                                <div className="mb-6 p-3 rounded-xl bg-white/5 border border-white/10">
+                                    <p className="text-[7px] font-black uppercase tracking-[0.4em] text-[#d4af37] mb-1.5">Ticket ID</p>
+                                    <p className="font-mono text-[9px] text-white/70 break-all leading-relaxed">{ticketId}</p>
+                                </div>
+                            )}
+
                             <div className="space-y-4 mb-8">
                                 <div className="flex justify-between items-center text-[11px] font-bold text-white/60 uppercase tracking-widest">
                                     <span>Subtotal</span>
                                     <span>₹{(paidAmount || 0).toLocaleString()}</span>
                                 </div>
                                 <div className="flex justify-between items-center text-[11px] font-bold text-emerald-400 uppercase tracking-widest">
-                                    <span>Shipping & Insurance</span>
+                                    <span>Shipping &amp; Insurance</span>
                                     <span>Complimentary</span>
                                 </div>
                                 <div className="pt-5 border-t border-white/10 flex justify-between items-end">

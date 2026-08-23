@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useWishlist } from '../context/WishlistContext';
@@ -81,34 +81,36 @@ const YouMayAlsoLike = ({ currentProductId, category }) => {
                                 key={prod._id}
                                 className="snap-start flex-shrink-0 w-[calc(65%-12px)] sm:w-[calc(40%-12px)] lg:w-[calc(25%-16px)] group"
                             >
-                                {/* Card Container */}
-                                <div className="relative aspect-[3/4] rounded-3xl overflow-hidden bg-[#F5F5F5] border border-slate-100/80 shadow-sm mb-3">
-                                    <Link to={`/product/${prod._id}`} className="block w-full h-full">
-                                        <img
-                                            src={prod.images?.[0] || 'https://via.placeholder.com/400'}
-                                            alt={prod.name}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                                            loading="lazy"
-                                        />
-                                    </Link>
+                                {/* Card Container with Grey Background Frame */}
+                                <div className="p-2 sm:p-2.5 bg-[#EAEAEA] rounded-3xl mb-3 shadow-sm">
+                                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-[#F5F5F5]">
+                                        <Link to={`/product/${prod._id}`} className="block w-full h-full">
+                                            <img
+                                                src={prod.images?.[0] || 'https://via.placeholder.com/400'}
+                                                alt={prod.name}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                                loading="lazy"
+                                            />
+                                        </Link>
 
-                                    {/* Bookmark Icon Button */}
-                                    <button
-                                        onClick={(e) => { e.preventDefault(); toggleWishlist(prod); }}
-                                        className="absolute top-3.5 right-3.5 z-10 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-bindas-onyx hover:bg-white shadow-sm transition-transform hover:scale-105"
-                                        title="Wishlist"
-                                    >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill={isWished ? "#111111" : "none"}
-                                            viewBox="0 0 24 24"
-                                            strokeWidth={1.8}
-                                            stroke="#111111"
-                                            className="w-4 h-4"
+                                        {/* Bookmark Icon Button */}
+                                        <button
+                                            onClick={(e) => { e.preventDefault(); toggleWishlist(prod); }}
+                                            className="absolute top-3.5 right-3.5 z-10 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-bindas-onyx hover:bg-white shadow-sm transition-transform hover:scale-105"
+                                            title="Wishlist"
                                         >
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1 0 2 .89 2 2v15.448l-7.593-4.34-7.593 4.34V5.322c0-1.1.9-2 2-2h11.186z" />
-                                        </svg>
-                                    </button>
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill={isWished ? "#111111" : "none"}
+                                                viewBox="0 0 24 24"
+                                                strokeWidth={1.8}
+                                                stroke="#111111"
+                                                className="w-4 h-4"
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1 0 2 .89 2 2v15.448l-7.593-4.34-7.593 4.34V5.322c0-1.1.9-2 2-2h11.186z" />
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {/* Title & Price Row */}

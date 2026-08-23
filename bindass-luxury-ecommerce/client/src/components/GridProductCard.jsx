@@ -8,7 +8,7 @@ const GridProductCard = ({ product }) => {
     const { toggleWishlist, isInWishlist } = useWishlist();
     const { formatPrice } = useCurrency();
     const isWished = isInWishlist(product._id);
-    
+
     // Images
     const dominantImage = optimizeCloudinaryUrl(product.images?.[0]) || '/images/product-placeholder.svg';
     const hoverImage = optimizeCloudinaryUrl(product.images?.[1]) || dominantImage;
@@ -18,75 +18,78 @@ const GridProductCard = ({ product }) => {
     const formattedPrice = formatPrice(product.price);
 
     return (
-        <div 
-            className="group block relative cursor-pointer font-sans" 
+        <div
+            className="group block relative cursor-pointer font-sans"
         >
-            {/* Image Card Container (Signature Bluorng Rounded Aspect 3:4) */}
-            <div className="relative aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden bg-[#F5F5F5] border border-slate-200/50 shadow-sm mb-2.5">
-                {/* Skeleton Loader Background */}
-                <div className="absolute inset-0 bg-slate-200 animate-pulse" />
-                
-                <Link to={`/product/${product._id}`} className="block w-full h-full relative z-10">
-                    {/* Base image — always visible */}
-                    <img 
-                        src={dominantImage}
-                        alt={product.name} 
-                        className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                        loading="lazy"
-                        decoding="async"
-                    />
-                    {/* Hover image — crossfades in on hover (CSS opacity transition, no src swap flash) */}
-                    {hasHoverImage && (
+            {/* Grey Background Frame Container (Signature Bluorng Border Frame) */}
+            <div className="p-2 sm:p-2.5 bg-[#EAEAEA] rounded-2xl sm:rounded-3xl mb-2.5 shadow-sm">
+                {/* Image Card Container (Aspect 3:4) */}
+                <div className="relative aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden bg-[#F5F5F5]">
+                    {/* Skeleton Loader Background */}
+                    <div className="absolute inset-0 bg-slate-200 animate-pulse" />
+                    
+                    <Link to={`/product/${product._id}`} className="block w-full h-full relative z-10">
+                        {/* Base image — always visible */}
                         <img 
-                            src={hoverImage}
-                            alt={`${product.name} alternate view`}
-                            className="absolute inset-0 w-full h-full object-cover object-top transition-all duration-700 group-hover:scale-105 opacity-0 group-hover:opacity-100"
+                            src={dominantImage}
+                            alt={product.name} 
+                            className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                             loading="lazy"
                             decoding="async"
                         />
-                    )}
-                </Link>
+                        {/* Hover image — crossfades in on hover (CSS opacity transition, no src swap flash) */}
+                        {hasHoverImage && (
+                            <img 
+                                src={hoverImage}
+                                alt={`${product.name} alternate view`}
+                                className="absolute inset-0 w-full h-full object-cover object-top transition-all duration-700 group-hover:scale-105 opacity-0 group-hover:opacity-100"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                        )}
+                    </Link>
 
-                {/* Bookmark / Wishlist Badge Button */}
-                <button 
-                    className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-10 w-7 h-8 sm:w-8 sm:h-9 bg-white text-bindas-onyx rounded-sm shadow-md flex items-center justify-center transition-transform hover:scale-105"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        toggleWishlist(product);
-                    }}
-                    aria-label={isWished ? 'Remove from wishlist' : 'Add to wishlist'}
-                    title={isWished ? 'Remove from wishlist' : 'Add to wishlist'}
-                >
-                    <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        fill={isWished ? "#111111" : "none"} 
-                        viewBox="0 0 24 24" 
-                        strokeWidth={2} 
-                        stroke="#111111" 
-                        className="w-4 h-4"
+                    {/* Bookmark / Wishlist Badge Button */}
+                    <button 
+                        className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-10 w-7 h-8 sm:w-8 sm:h-9 bg-white text-bindas-onyx rounded-sm shadow-md flex items-center justify-center transition-transform hover:scale-105"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleWishlist(product);
+                        }}
+                        aria-label={isWished ? 'Remove from wishlist' : 'Add to wishlist'}
+                        title={isWished ? 'Remove from wishlist' : 'Add to wishlist'}
                     >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1 0 2 .89 2 2v15.448l-7.593-4.34-7.593 4.34V5.322c0-1.1.9-2 2-2h11.186z" />
-                    </svg>
-                </button>
+                        <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            fill={isWished ? "#111111" : "none"} 
+                            viewBox="0 0 24 24" 
+                            strokeWidth={2} 
+                            stroke="#111111" 
+                            className="w-4 h-4"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1 0 2 .89 2 2v15.448l-7.593-4.34-7.593 4.34V5.322c0-1.1.9-2 2-2h11.186z" />
+                        </svg>
+                    </button>
 
-                {/* Low Stock Badge */}
-                {product.stock_quantity > 0 && product.stock_quantity <= (product.low_stock_threshold || 5) && (
-                    <span className="absolute bottom-3.5 left-3.5 z-10 bg-bindas-onyx text-bindas-amber text-[9px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest">
-                        Low Stock
-                    </span>
-                )}
+                    {/* Low Stock Badge */}
+                    {product.stock_quantity > 0 && product.stock_quantity <= (product.low_stock_threshold || 5) && (
+                        <span className="absolute bottom-3.5 left-3.5 z-10 bg-bindas-onyx text-bindas-amber text-[9px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest">
+                            Low Stock
+                        </span>
+                    )}
 
-                {/* Image Dots Indicator */}
-                {imagesCount > 1 && (
-                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10 pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
-                        <span className="w-1.5 h-1.5 rounded-full transition-all bg-white group-hover:w-3" />
-                        <span className="w-1.5 h-1.5 rounded-full transition-all bg-white/60 group-hover:bg-white" />
-                        {imagesCount > 2 && <span className="w-1.5 h-1.5 rounded-full bg-white/60" />}
-                    </div>
-                )}
+                    {/* Image Dots Indicator */}
+                    {imagesCount > 1 && (
+                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10 pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
+                            <span className="w-1.5 h-1.5 rounded-full transition-all bg-white group-hover:w-3" />
+                            <span className="w-1.5 h-1.5 rounded-full transition-all bg-white/60 group-hover:bg-white" />
+                            {imagesCount > 2 && <span className="w-1.5 h-1.5 rounded-full bg-white/60" />}
+                        </div>
+                    )}
+                </div>
             </div>
-            
+
             {/* Title, Price & Plus Button Row */}
             <div className="flex items-start justify-between px-1 gap-2">
                 <Link to={`/product/${product._id}`} className="block">
@@ -94,11 +97,11 @@ const GridProductCard = ({ product }) => {
                         {product.name}
                     </h3>
                     <p className="text-[11px] font-medium text-slate-500 mt-0.5">
-                        {formattedPrice}
+                        From {formattedPrice}
                     </p>
                 </Link>
 
-                <Link 
+                <Link
                     to={`/product/${product._id}`}
                     className="text-slate-400 hover:text-black font-light text-base leading-none transition-colors"
                 >

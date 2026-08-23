@@ -10,7 +10,7 @@ const CheckoutReviewPay = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
     const { clearCart, cartItems } = useCart();
-    const { shippingData, checkoutTotals, clearCheckout, shippingMethod, isCOD, isClimateSelected, setIsClimateSelected, storeConfig } = useCheckout();
+    const { shippingData, checkoutTotals, clearCheckout, shippingMethod, isCOD, isClimateSelected, setIsClimateSelected, storeConfig, appliedCoupon } = useCheckout();
     const [processing, setProcessing] = useState(false);
     const { geoData } = useGeo();
 
@@ -49,7 +49,13 @@ const CheckoutReviewPay = () => {
             const token = localStorage.getItem("bindass_user_token");
             const API_BASE = `${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/payments`;
             const { data: order } = await axios.post(`${API_BASE}/create-order`,
-                { amount: checkoutTotals.totalAmount },
+                { 
+                    amount: checkoutTotals.totalAmount,
+                    couponCode: appliedCoupon ? appliedCoupon.code : null,
+                    shippingMethod: shippingMethod,
+                    isCOD: isCOD,
+                    isClimateSelected: isClimateSelected
+                },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             const options = {
@@ -75,7 +81,8 @@ const CheckoutReviewPay = () => {
                                     })),
                                     amount: checkoutTotals.totalAmount,
                                     climateContribution: checkoutTotals.climateFee || 0,
-                                    shippingInfo: shippingData
+                                    shippingInfo: shippingData,
+                                    couponId: appliedCoupon ? appliedCoupon.id : null
                                 }
                             },
                             { headers: { Authorization: `Bearer ${token}` } }

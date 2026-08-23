@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getCoupons, createCoupon, toggleCoupon, deleteCoupon, validateCoupon } = require('../services/supabaseService');
-const { protectAdmin } = require('../middleware/authMiddleware');
+const { protectAdmin, protect } = require('../middleware/authMiddleware');
 
 // --- ADMIN ROUTES ---
 
@@ -62,7 +62,8 @@ router.delete('/:id', protectAdmin, async (req, res) => {
 
 // @route   POST /api/coupons/validate
 // @desc    Validate a coupon code and return discount info
-router.post('/validate', async (req, res) => {
+// API-003 FIX: Requires auth — prevents unauthenticated coupon enumeration
+router.post('/validate', protect, async (req, res) => {
   try {
     const { code, subtotal } = req.body;
     const validated = await validateCoupon(code, subtotal);

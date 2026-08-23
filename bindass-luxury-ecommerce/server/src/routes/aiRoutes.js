@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const { protect } = require('../middleware/authMiddleware');
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
@@ -19,7 +20,7 @@ Keep responses concise, friendly, and premium in tone. Never break character.
 If you don't know something specific about an order or product, direct the customer to contact support or browse the relevant collection page.
 Always end with a helpful follow-up or offer further assistance.`;
 
-router.post('/chat', async (req, res) => {
+router.post('/chat', protect, async (req, res) => {
     const { message, history } = req.body;
 
     if (!message) {

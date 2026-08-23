@@ -4,7 +4,7 @@
 --
 -- Purpose:
 --   Stores a record for every paid Climate Action donation.
---   n8n refund automation can query this by razorpay_order_id
+--   Refund processing & reconciliation engine can query this by razorpay_order_id
 --   to check whether the donation is non-refundable.
 -- ============================================================
 
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS climate_donations (
     -- Links back to the main orders table
     order_id            UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
 
-    -- Razorpay identifiers (what n8n will use to look up)
+    -- Razorpay identifiers (used for payment gateway lookup)
     razorpay_order_id   TEXT NOT NULL,
     razorpay_payment_id TEXT NOT NULL,
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS climate_donations (
     donated_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Index for fast n8n lookups by Razorpay order ID
+-- Index for fast lookups by Razorpay order ID
 CREATE INDEX IF NOT EXISTS idx_climate_donations_razorpay_order_id
     ON climate_donations (razorpay_order_id);
 

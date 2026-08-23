@@ -33,6 +33,7 @@ const ProductDetail = () => {
     const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
     const [reviewSubmitting, setReviewSubmitting] = useState(false);
     const [reviewError, setReviewError] = useState('');
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -143,62 +144,48 @@ const ProductDetail = () => {
                     <span className="text-black font-bold truncate">{product.name}</span>
                 </nav>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
+                {/* Top Section: Images & Details Grid (3-Column Layout) */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start relative">
 
-                    {/* ── Left Column: Exact Bluorng 2-Column Asymmetrical Image Grid & Smooth Scroll ── */}
-                    <div className="lg:col-span-7">
-                        {imagesList.length === 1 && (
-                            <div className="w-full aspect-[3/4] bg-[#f5f5f5] rounded-3xl overflow-hidden border border-slate-100/80 shadow-sm">
-                                <img src={imagesList[0]} alt={product.name} className="w-full h-full object-cover" />
-                            </div>
-                        )}
-
-                        {imagesList.length === 2 && (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-                                {imagesList.map((img, idx) => (
-                                    <div key={idx} className="w-full aspect-[3/4] bg-[#f5f5f5] rounded-3xl overflow-hidden border border-slate-100/80 shadow-sm">
-                                        <img src={img} alt={`${product.name}-${idx}`} className="w-full h-full object-cover" />
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-
-                        {imagesList.length >= 3 && (
-                            <div className="space-y-3.5">
-                                {/* Top feature grid: 1 Tall left image + 2 Stacked right images (Exact Bluorng visual layout) */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-                                    {/* Left Image (Tall) */}
-                                    <div className="w-full h-[450px] md:h-[580px] bg-[#f5f5f5] rounded-3xl overflow-hidden border border-slate-100/80 shadow-sm">
-                                        <img src={imagesList[0]} alt={`${product.name}-1`} className="w-full h-full object-cover" />
-                                    </div>
-
-                                    {/* Right Stacked Images (2 images) */}
-                                    <div className="flex flex-col gap-3.5 h-[450px] md:h-[580px]">
-                                        <div className="w-full h-1/2 bg-[#f5f5f5] rounded-3xl overflow-hidden border border-slate-100/80 shadow-sm">
-                                            <img src={imagesList[1]} alt={`${product.name}-2`} className="w-full h-full object-cover" />
-                                        </div>
-                                        <div className="w-full h-1/2 bg-[#f5f5f5] rounded-3xl overflow-hidden border border-slate-100/80 shadow-sm">
-                                            <img src={imagesList[2]} alt={`${product.name}-3`} className="w-full h-full object-cover" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Additional images (if > 3): 2-column grid */}
-                                {imagesList.length > 3 && (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-                                        {imagesList.slice(3).map((img, idx) => (
-                                            <div key={idx} className="w-full aspect-[3/4] bg-[#f5f5f5] rounded-3xl overflow-hidden border border-slate-100/80 shadow-sm">
-                                                <img src={img} alt={`${product.name}-${idx + 4}`} className="w-full h-full object-cover" />
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
+                    {/* ── BOX COLUMN-1: Sticky Main Featured Image ── */}
+                    <div className="hidden lg:block lg:col-span-4">
+                        {imagesList.length > 0 && (
+                            <div className="sticky top-24 w-full h-[calc(100vh-7rem)] bg-[#f5f5f5] rounded-3xl overflow-hidden border border-slate-100/80 shadow-sm">
+                                <img 
+                                    src={imagesList[selectedImageIndex] || imagesList[0]} 
+                                    alt={`${product.name}-main`} 
+                                    className="w-full h-full object-cover transition-all duration-300" 
+                                />
                             </div>
                         )}
                     </div>
 
-                    {/* ── Right Column: Sticky Product Info Panel ── */}
-                    <div className="lg:col-span-5 sticky top-24 h-fit bg-[#F9F9F9] p-6 md:p-8 rounded-3xl border border-slate-100 space-y-6">
+                    {/* ── BOX COLUMN-2: Independently Scrollable Image Stack ── */}
+                    <div 
+                        className="lg:col-span-4 lg:h-[calc(100vh-7rem)] lg:overflow-y-auto flex flex-col gap-4 pr-1 rounded-3xl scrollbar-none"
+                        data-lenis-prevent="true"
+                    >
+                        {imagesList.map((img, idx) => (
+                            <div 
+                                key={idx} 
+                                onClick={() => setSelectedImageIndex(idx)}
+                                className={`w-full aspect-[3/4] bg-[#f5f5f5] rounded-3xl overflow-hidden border transition-all cursor-pointer flex-shrink-0 ${
+                                    selectedImageIndex === idx 
+                                        ? 'ring-2 ring-black border-transparent shadow-md' 
+                                        : 'border-slate-100/80 hover:opacity-90'
+                                }`}
+                            >
+                                <img src={img} alt={`${product.name}-${idx + 1}`} className="w-full h-full object-cover" />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* ── BOX COLUMN-3: Sticky Product Info Panel ── */}
+                    <div className="lg:col-span-4">
+                        <div 
+                            className="sticky top-24 bg-[#F9F9F9] p-5 md:p-6 lg:p-7 rounded-3xl border border-slate-100 space-y-6 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto scrollbar-none"
+                            data-lenis-prevent="true"
+                        >
 
                         {/* Title & Bookmark/Wishlist */}
                         <div className="flex justify-between items-start gap-4">
@@ -437,8 +424,8 @@ const ProductDetail = () => {
                                 )}
                             </div>
                         </div>
-
                     </div>
+                </div>
                 </div>
 
                 {/* You May Also Like Carousel (Bluorng style) */}
@@ -459,7 +446,7 @@ const ProductDetail = () => {
                         <div className="flex justify-between items-center border-b pb-4">
                             <h3 className="text-lg font-extrabold uppercase tracking-tight text-bindas-onyx">Size Guide</h3>
                             <button onClick={() => setIsSizeGuideOpen(false)} className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 hover:text-black">
-                                âœ•
+                                ✕
                             </button>
                         </div>
                         <p className="text-xs text-slate-500 font-normal">All measurements are in inches. Designed with an oversized fit.</p>
@@ -474,12 +461,12 @@ const ProductDetail = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr className="border-b"><td className="p-3 font-bold">XS</td><td className="p-3">42"</td><td className="p-3">28"</td><td className="p-3">21"</td></tr>
-                                    <tr className="border-b"><td className="p-3 font-bold">S</td><td className="p-3">44"</td><td className="p-3">29"</td><td className="p-3">22"</td></tr>
-                                    <tr className="border-b"><td className="p-3 font-bold">M</td><td className="p-3">46"</td><td className="p-3">30"</td><td className="p-3">23"</td></tr>
-                                    <tr className="border-b"><td className="p-3 font-bold">L</td><td className="p-3">48"</td><td className="p-3">31"</td><td className="p-3">24"</td></tr>
-                                    <tr className="border-b"><td className="p-3 font-bold">XL</td><td className="p-3">50"</td><td className="p-3">32"</td><td className="p-3">25"</td></tr>
-                                    <tr className="border-b"><td className="p-3 font-bold">XXL</td><td className="p-3">52"</td><td className="p-3">33"</td><td className="p-3">26"</td></tr>
+                                    <tr className="border-b"><td className="p-3 font-bold">XS</td><td className="p-3">42″</td><td className="p-3">28″</td><td className="p-3">21″</td></tr>
+                                    <tr className="border-b"><td className="p-3 font-bold">S</td><td className="p-3">44″</td><td className="p-3">29″</td><td className="p-3">22″</td></tr>
+                                    <tr className="border-b"><td className="p-3 font-bold">M</td><td className="p-3">46″</td><td className="p-3">30″</td><td className="p-3">23″</td></tr>
+                                    <tr className="border-b"><td className="p-3 font-bold">L</td><td className="p-3">48″</td><td className="p-3">31″</td><td className="p-3">24″</td></tr>
+                                    <tr className="border-b"><td className="p-3 font-bold">XL</td><td className="p-3">50″</td><td className="p-3">32″</td><td className="p-3">25″</td></tr>
+                                    <tr className="border-b"><td className="p-3 font-bold">XXL</td><td className="p-3">52″</td><td className="p-3">33″</td><td className="p-3">26″</td></tr>
                                 </tbody>
                             </table>
                         </div>

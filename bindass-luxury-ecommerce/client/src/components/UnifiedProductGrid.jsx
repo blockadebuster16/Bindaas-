@@ -9,7 +9,7 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
     const [originalProducts, setOriginalProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    
+
     // Sort Dropdown State
     const [isSortOpen, setIsSortOpen] = useState(false);
     const sortDropdownRef = useRef();
@@ -118,8 +118,8 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
         // 1. Apply Pill (Quick Category/Type filter)
         if (activePill !== '') {
             // we'll assume the pill corresponds to productType usually, or maybe category string included check
-            result = result.filter(p => 
-                (p.productType && p.productType.toLowerCase() === activePill.toLowerCase()) || 
+            result = result.filter(p =>
+                (p.productType && p.productType.toLowerCase() === activePill.toLowerCase()) ||
                 (p.category && p.category.toLowerCase().includes(activePill.toLowerCase()))
             );
         }
@@ -137,12 +137,12 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
         if (filters.fits.length > 0) {
             result = result.filter(p => p.fit && filters.fits.includes(p.fit));
         }
-        
+
         // 3. Price Filter manually handled by min/max
         const minP = filters.minPrice ? Number(filters.minPrice) : 0;
         const maxP = filters.maxPrice ? Number(filters.maxPrice) : Number.MAX_SAFE_INTEGER;
         if (minP > 0 || maxP < Number.MAX_SAFE_INTEGER) {
-             result = result.filter(p => p.price >= minP && p.price <= maxP);
+            result = result.filter(p => p.price >= minP && p.price <= maxP);
         }
 
         // 4. Apply Sorting
@@ -163,130 +163,145 @@ const UnifiedProductGrid = ({ title, pageTarget }) => {
     };
 
     return (
-        <div className="bg-white min-h-screen relative font-sans">
-            {/* Pill Navigation */}
-            <div className="pt-2 pb-4 px-2.5 sm:px-4 lg:px-6 max-w-[1800px] mx-auto">
-                <div className="flex flex-wrap gap-2 mb-8">
-                    <button 
-                        onClick={() => setActivePill('')}
-                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 ${activePill === '' ? 'bg-bindas-onyx text-white border-bindas-onyx' : 'bg-transparent text-bindas-onyx border-bindas-gold hover:border-bindas-onyx hover:bg-bindas-onyx/5'}`}
-                    >
-                        View All
-                    </button>
-                    <button 
-                        onClick={() => handlePillClick('Accessories')}
-                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 ${activePill === 'Accessories' ? 'bg-bindas-onyx text-white border-bindas-onyx' : 'bg-transparent text-bindas-onyx border-bindas-gold hover:border-bindas-onyx hover:bg-bindas-onyx/5'}`}
-                    >
-                        Accessories
-                    </button>
-                    <button 
-                        onClick={() => handlePillClick('Shoes')}
-                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 ${activePill === 'Shoes' ? 'bg-bindas-onyx text-white border-bindas-onyx' : 'bg-transparent text-bindas-onyx border-bindas-gold hover:border-bindas-onyx hover:bg-bindas-onyx/5'}`}
-                    >
-                        Shoes
-                    </button>
-                    <button 
-                        onClick={() => handlePillClick('Clothes')}
-                        className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 ${activePill === 'Clothes' ? 'bg-bindas-onyx text-white border-bindas-onyx' : 'bg-transparent text-bindas-onyx border-bindas-gold hover:border-bindas-onyx hover:bg-bindas-onyx/5'}`}
-                    >
-                        Clothes
-                    </button>
+        <div className="bg-[#F5F2EB] min-h-screen py-4 sm:py-6 px-2.5 sm:px-5 lg:px-8 relative font-sans">
+            {/* White Rounded Container Block (Bluorng aesthetic) */}
+            <div className="bg-white rounded-[24px] sm:rounded-[36px] p-4 sm:p-6 lg:p-8 max-w-[1800px] mx-auto shadow-sm border border-slate-200/40">
+                {/* Section Title Header if title is present */}
+                {title && (
+                    <div className="flex justify-between items-center mb-4 sm:mb-6">
+                        <h2 className="text-lg sm:text-xl font-bold tracking-tight text-bindas-onyx uppercase">
+                            {title}
+                        </h2>
+                        <button className="text-[10px] sm:text-xs font-bold uppercase tracking-widest px-4 py-2 bg-black text-white rounded-full hover:bg-slate-800 transition-colors">
+                            Discover more
+                        </button>
+                    </div>
+                )}
+
+                {/* Pill Navigation */}
+                <div className="pt-1 pb-2">
+                    <div className="flex flex-wrap gap-2 mb-6">
+                        <button
+                            onClick={() => setActivePill('')}
+                            className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 rounded-full ${activePill === '' ? 'bg-bindas-onyx text-white border-bindas-onyx' : 'bg-transparent text-bindas-onyx border-slate-200 hover:border-bindas-onyx'}`}
+                        >
+                            View All
+                        </button>
+                        <button
+                            onClick={() => handlePillClick('Accessories')}
+                            className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 rounded-full ${activePill === 'Accessories' ? 'bg-bindas-onyx text-white border-bindas-onyx' : 'bg-transparent text-bindas-onyx border-slate-200 hover:border-bindas-onyx'}`}
+                        >
+                            Accessories
+                        </button>
+                        <button
+                            onClick={() => handlePillClick('Shoes')}
+                            className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 rounded-full ${activePill === 'Shoes' ? 'bg-bindas-onyx text-white border-bindas-onyx' : 'bg-transparent text-bindas-onyx border-slate-200 hover:border-bindas-onyx'}`}
+                        >
+                            Shoes
+                        </button>
+                        <button
+                            onClick={() => handlePillClick('Clothes')}
+                            className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-all duration-200 rounded-full ${activePill === 'Clothes' ? 'bg-bindas-onyx text-white border-bindas-onyx' : 'bg-transparent text-bindas-onyx border-slate-200 hover:border-bindas-onyx'}`}
+                        >
+                            Clothes
+                        </button>
+                    </div>
+
+                    {/* Toolbar */}
+                    <div className="flex justify-between items-center border-t border-slate-100 pt-4 pb-2 relative">
+
+                        {/* Sort By Container */}
+                        <div className="relative" ref={sortDropdownRef}>
+                            <button
+                                onClick={() => setIsSortOpen(!isSortOpen)}
+                                className="text-xs uppercase tracking-widest font-medium text-bindas-onyx flex items-center gap-1 hover:text-bindas-gold transition-colors focus:outline-none"
+                            >
+                                Sort By
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-4 h-4 ml-0.5 transition-transform ${isSortOpen ? '-rotate-180' : ''}`}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                </svg>
+                            </button>
+
+                            {/* Sort Dropdown Panel */}
+                            {isSortOpen && (
+                                <div className="absolute top-full left-0 mt-3 w-52 bg-white shadow-xl border border-[#E8E3D8] z-30 py-2 rounded-xl">
+                                    <button
+                                        onClick={() => { setSortBy(''); setIsSortOpen(false); }}
+                                        className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === '' ? 'font-bold text-bindas-onyx bg-slate-100' : 'text-[#6B6457] hover:bg-slate-50'}`}
+                                    >
+                                        Recommended
+                                    </button>
+                                    <button
+                                        onClick={() => { setSortBy('newest'); setIsSortOpen(false); }}
+                                        className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === 'newest' ? 'font-bold text-bindas-onyx bg-slate-100' : 'text-[#6B6457] hover:bg-slate-50'}`}
+                                    >
+                                        Newest Arrivals
+                                    </button>
+                                    <button
+                                        onClick={() => { setSortBy('price-asc'); setIsSortOpen(false); }}
+                                        className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === 'price-asc' ? 'font-bold text-bindas-onyx bg-slate-100' : 'text-[#6B6457] hover:bg-slate-50'}`}
+                                    >
+                                        Price: Low to High
+                                    </button>
+                                    <button
+                                        onClick={() => { setSortBy('price-desc'); setIsSortOpen(false); }}
+                                        className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === 'price-desc' ? 'font-bold text-bindas-onyx bg-slate-100' : 'text-[#6B6457] hover:bg-slate-50'}`}
+                                    >
+                                        Price: High to Low
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
+                        <button
+                            onClick={() => setIsFilterOpen(true)}
+                            className="text-xs uppercase tracking-widest font-medium text-bindas-onyx flex items-center gap-2 hover:text-bindas-gold transition-colors relative"
+                        >
+                            Filter
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                            </svg>
+
+                            {/* Notify Indicator if filters are active */}
+                            {(filters.colors.length > 0 || filters.sizes.length > 0 || filters.productTypes.length > 0 || filters.fits.length > 0 || filters.minPrice !== '' || filters.maxPrice !== '') && (
+                                <span className="absolute -top-1 -right-2 flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-black opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-black"></span>
+                                </span>
+                            )}
+                        </button>
+                    </div>
                 </div>
 
-                {/* Toolbar */}
-                <div className="flex justify-between items-center border-t border-[#E8E3D8] pt-6 pr-2 relative">
-                    
-                    {/* Sort By Container */}
-                    <div className="relative" ref={sortDropdownRef}>
-                        <button 
-                            onClick={() => setIsSortOpen(!isSortOpen)}
-                            className="text-xs uppercase tracking-widest font-medium text-bindas-onyx flex items-center gap-1 hover:text-bindas-gold transition-colors focus:outline-none"
-                        >
-                            Sort By 
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-4 h-4 ml-0.5 transition-transform ${isSortOpen ? '-rotate-180' : ''}`}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                            </svg>
-                        </button>
-                        
-                        {/* Sort Dropdown Panel */}
-                        {isSortOpen && (
-                            <div className="absolute top-full left-0 mt-3 w-52 bg-white shadow-xl border border-[#E8E3D8] z-30 py-2">
-                                <button 
-                                    onClick={() => { setSortBy(''); setIsSortOpen(false); }}
-                                    className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === '' ? 'font-bold text-bindas-onyx bg-bindas-amber' : 'text-[#6B6457] hover:bg-bindas-amber/40 hover:text-bindas-onyx'}`}
-                                >
-                                    Recommended
-                                </button>
-                                <button 
-                                    onClick={() => { setSortBy('newest'); setIsSortOpen(false); }}
-                                    className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === 'newest' ? 'font-bold text-bindas-onyx bg-bindas-amber' : 'text-[#6B6457] hover:bg-bindas-amber/40 hover:text-bindas-onyx'}`}
-                                >
-                                    Newest Arrivals
-                                </button>
-                                <button 
-                                    onClick={() => { setSortBy('price-asc'); setIsSortOpen(false); }}
-                                    className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === 'price-asc' ? 'font-bold text-bindas-onyx bg-bindas-amber' : 'text-[#6B6457] hover:bg-bindas-amber/40 hover:text-bindas-onyx'}`}
-                                >
-                                    Price: Low to High
-                                </button>
-                                <button 
-                                    onClick={() => { setSortBy('price-desc'); setIsSortOpen(false); }}
-                                    className={`w-full text-left px-4 py-2.5 text-[10px] tracking-widest uppercase transition-colors ${sortBy === 'price-desc' ? 'font-bold text-bindas-onyx bg-bindas-amber' : 'text-[#6B6457] hover:bg-bindas-amber/40 hover:text-bindas-onyx'}`}
-                                >
-                                    Price: High to Low
-                                </button>
-                            </div>
-                        )}
+                {/* Grid Area */}
+                {loading ? (
+                    <div className="py-4">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
+                            {Array.from({ length: 8 }).map((_, idx) => (
+                                <ProductSkeleton key={`skeleton-${idx}`} />
+                            ))}
+                        </div>
                     </div>
-                    
-                    <button 
-                        onClick={() => setIsFilterOpen(true)}
-                        className="text-xs uppercase tracking-widest font-medium text-bindas-onyx flex items-center gap-2 hover:text-bindas-gold transition-colors relative"
-                    >
-                        Filter
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
-                        </svg>
-                        
-                        {/* Notify Indicator if filters are active */}
-                        {(filters.colors.length > 0 || filters.sizes.length > 0 || filters.productTypes.length > 0 || filters.fits.length > 0 || filters.minPrice !== '' || filters.maxPrice !== '') && (
-                            <span className="absolute -top-1 -right-2 flex h-2 w-2">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-black opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-2 w-2 bg-black"></span>
-                            </span>
-                        )}
-                    </button>
-                </div>
+                ) : processedProducts.length === 0 ? (
+                    <div className="flex justify-center flex-col items-center h-64 gap-3">
+                        <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#6B6457]">No Items Found</span>
+                        <button onClick={clearAllFilters} className="text-[10px] font-bold text-bindas-onyx border-b border-bindas-gold uppercase tracking-widest pb-0.5 hover:text-bindas-gold transition-colors">Clear Filters</button>
+                    </div>
+                ) : (
+                    <div className="py-4">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
+                            {processedProducts.map(product => (
+                                <GridProductCard key={product._id} product={product} />
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
 
-            {/* Grid Area */}
-            {loading ? (
-                <div className="px-2.5 sm:px-4 lg:px-6 py-6 max-w-[1800px] mx-auto">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3 lg:gap-3.5">
-                        {Array.from({ length: 8 }).map((_, idx) => (
-                            <ProductSkeleton key={`skeleton-${idx}`} />
-                        ))}
-                    </div>
-                </div>
-            ) : processedProducts.length === 0 ? (
-                <div className="flex justify-center flex-col items-center h-64 gap-3">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#6B6457]">No Items Found</span>
-                    <button onClick={clearAllFilters} className="text-[10px] font-bold text-bindas-onyx border-b border-bindas-gold uppercase tracking-widest pb-0.5 hover:text-bindas-gold transition-colors">Clear Filters</button>
-                </div>
-            ) : (
-                <div className="px-2.5 sm:px-4 lg:px-6 py-6 max-w-[1800px] mx-auto">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3 lg:gap-3.5">
-                        {processedProducts.map(product => (
-                            <GridProductCard key={product._id} product={product} />
-                        ))}
-                    </div>
-                </div>
-            )}
-
             {/* Filter Sidebar overlay */}
-            <FilterSidebar 
-                isOpen={isFilterOpen} 
-                onClose={() => setIsFilterOpen(false)} 
+            <FilterSidebar
+                isOpen={isFilterOpen}
+                onClose={() => setIsFilterOpen(false)}
                 totalResults={processedProducts.length}
                 filters={filters}
                 setFilters={setFilters}

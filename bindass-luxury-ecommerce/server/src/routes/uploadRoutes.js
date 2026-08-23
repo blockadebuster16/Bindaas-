@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { upload, adUpload } = require('../config/cloudinary');
-const { adminProtect } = require('../middleware/adminAuth');
+const { protectAdmin } = require('../middleware/authMiddleware'); // ARCH-003: unified middleware
 
 // @route   POST /api/upload
 // @desc    Upload multiple images to Cloudinary (for products)
 // @access  Admin
-router.post('/', adminProtect, upload.array('images', 5), (req, res) => {
+router.post('/', protectAdmin, upload.array('images', 5), (req, res) => {
     try {
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({ success: false, message: 'No images uploaded' });
@@ -28,7 +28,7 @@ router.post('/', adminProtect, upload.array('images', 5), (req, res) => {
 // @route   POST /api/upload/ad
 // @desc    Upload single image or video for advertisement
 // @access  Admin
-router.post('/ad', adminProtect, adUpload.single('media'), (req, res) => {
+router.post('/ad', protectAdmin, adUpload.single('media'), (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ success: false, message: 'No media uploaded' });

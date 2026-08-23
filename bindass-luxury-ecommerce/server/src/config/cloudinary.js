@@ -33,7 +33,9 @@ const adStorage = new CloudinaryStorage({
   }
 });
 
-const upload = multer({ storage: storage });
-const adUpload = multer({ storage: adStorage });
+// API-004 FIX: 5MB limit for product images — prevents memory/bandwidth DoS
+const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } });
+// API-004 FIX: 50MB limit for ad media (videos need more room)
+const adUpload = multer({ storage: adStorage, limits: { fileSize: 50 * 1024 * 1024 } });
 
 module.exports = { cloudinary, upload, adUpload };

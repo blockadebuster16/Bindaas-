@@ -1,4 +1,4 @@
-﻿const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
     // Google OAuth sub (unique Google user ID)
@@ -22,6 +22,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
+        lowercase: true, // DB-001 FIX: enforce case-insensitive uniqueness at DB level
+        trim: true,
     },
     displayName: String,
     picture: String,    // Google profile picture URL
@@ -42,7 +44,7 @@ const userSchema = new mongoose.Schema({
     recentlyViewed: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
-    }]
+    }]  // DB-002: size enforced at 20 in userController via $slice
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

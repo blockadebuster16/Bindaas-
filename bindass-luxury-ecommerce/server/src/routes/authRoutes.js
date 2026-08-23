@@ -5,6 +5,9 @@ const bcrypt = require('bcryptjs');
 const Admin = require('../models/Admin');
 const User = require('../models/User');
 const oauth2Client = require('../config/google-auth');
+const { protectAdmin } = require('../middleware/authMiddleware');
+const validate = require('../middleware/validate');
+const { registerSchema, loginSchema } = require('../validators/schemas');
 
 // Utilities
 const getAdminJWTSecret = () => {
@@ -80,7 +83,7 @@ router.get('/google/callback', async (req, res) => {
 });
 
 // ── CUSTOMER REGISTER (email/password) ────────────────────────────────────────
-router.post('/register', async (req, res) => {
+router.post('/register', validate(registerSchema), async (req, res) => {
     try {
         const { email, password, firstName, lastName, mobile, birthdate, gender } = req.body;
 
@@ -121,7 +124,7 @@ router.post('/register', async (req, res) => {
 });
 
 // ── CUSTOMER LOGIN (email/password) ───────────────────────────────────────────
-router.post('/login', async (req, res) => {
+router.post('/login', validate(loginSchema), async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -210,7 +213,8 @@ router.post('/admin-login', async (req, res) => {
 });
 
 // ── ADMIN RESET ────────────────────────────────────────────────────────────────
-router.post('/admin-reset', async (req, res) => {
+// VULN-003 FIX: Requires valid admin JWT — not publicly accessible
+router.post('/admin-reset', protectAdmin, async (req, res) => {
     try {
         const { predefinedEmail, newEmail, newPassword } = req.body;
 
@@ -223,7 +227,8 @@ router.post('/admin-reset', async (req, res) => {
 
         const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@bindaas.com';
         if (predefinedEmail.toLowerCase().trim() !== ADMIN_EMAIL.toLowerCase().trim()) {
-            return res.status(403).json({ success: false, message: `Unauthorized: Predefined verification email is incorrect. Expected: ${ADMIN_EMAIL}` });
+            // VULN-003 FIX: Never reveal the expected email in error messages
+            return res.status(403).json({ success: false, message: 'Verification failed' });
         }
 
         // Create the new admin first to ensure it succeeds (no schema validation errors)

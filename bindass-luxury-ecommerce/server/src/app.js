@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const Sentry = require('@sentry/node');
 
 dotenv.config();
 
@@ -15,28 +16,48 @@ validateEnv();
 
 const app = express();
 
+// Initialize Sentry
+if (process.env.SENTRY_DSN) {
+    Sentry.init({ dsn: process.env.SENTRY_DSN });
+    app.use(Sentry.Handlers.requestHandler());
+}
+
 // 1. Security Headers (helmet)
 app.use(helmet({
-    // Allow inline scripts for Google Fonts & Razorpay checkout
-    contentSecurityPolicy: false
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://checkout.razorpay.com"],
+      frameSrc: ["'self'", "https://checkout.razorpay.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      connectSrc: ["'self'", "https:"]
+    }
+  },
+  crossOriginResourcePolicy: { policy: "cross-origin" }, // Allow cross-origin images etc.
+  crossOriginEmbedderPolicy: false
 }));
 
-// 2. CORS — must come BEFORE routes
-const allowedOrigins = [
-    process.env.CLIENT_URL || 'http://localhost:3000',
-    'http://localhost:5000',
-    // NOTE: no trailing slash — browsers send origin without one
-    'https://bindaas-kbb5lsuro-blockadebuster16s-projects.vercel.app',
-    'https://bindaas.vercel.app',
-    'https://www.bindaas.social',
-    'https://bindaas.social'
-].filter(Boolean);
+// 2. CORS
+const allowedOrigins = process.env.NODE_ENV === 'production' 
+  ? [
+      process.env.CLIENT_URL,
+      'https://www.bindaas.social',
+      'https://bindaas.social'
+    ].filter(Boolean)
+  : [
+      process.env.CLIENT_URL,
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:5173',
+      'http://localhost:5000',
+      'http://localhost:5001'
+    ].filter(Boolean);
 
 app.use(cors({
     origin: (origin, callback) => {
-        // Allow same-origin / server-to-server calls (no Origin header)
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) return callback(null, true);
+        if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
         callback(new Error(`CORS policy: origin ${origin} not allowed`));
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
@@ -45,52 +66,57 @@ app.use(cors({
 
 app.use(express.json());
 
-// 3. Rate Limiters — protect sensitive endpoints
+// 3. Rate Limiters
 const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
+    windowMs: 15 * 60 * 1000,
     max: process.env.NODE_ENV === 'development' ? 1000 : 15,
     standardHeaders: true,
-    legacyHeaders: false,
-    message: { success: false, message: 'Too many requests, please try again later.' }
+    legacyHeaders: false
 });
 
 const couponLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 20,
     standardHeaders: true,
-    legacyHeaders: false,
-    message: { success: false, message: 'Too many coupon attempts, please try again later.' }
+    legacyHeaders: false
 });
 
 const paymentLimiter = rateLimit({
-    windowMs: 60 * 1000, // 1 minute
+    windowMs: 60 * 1000,
     max: 10,
     standardHeaders: true,
-    legacyHeaders: false,
-    message: { success: false, message: 'Too many payment requests, please slow down.' }
+    legacyHeaders: false
+});
+
+const aiLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 50,
+    standardHeaders: true,
+    legacyHeaders: false
 });
 
 // 4. Database Connection
 connectDB();
 
-// 5. Health Check (Kubernetes Liveness Probes)
+// 4.5. Initialize Background Workers
+require('./config/outboxHandlers').initHandlers();
+
+// 5. Health Check
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'UP', timestamp: new Date() });
 });
 
-app.get('/', (req, res) => {
-    res.send('Luxury E-commerce API is running...');
-});
+// 6. Routes
+const { cacheControl } = require('./middleware/cache'); // PERF-001: proper SWR caching
 
-// 6. Routes — apply rate limiters to sensitive endpoints
-app.use('/api/products', require('./routes/productRoutes'));
+app.use('/api/products', cacheControl, require('./routes/productRoutes'));
 app.use('/api/auth', authLimiter, require('./routes/authRoutes'));
 app.use('/api/payments', paymentLimiter, require('./routes/paymentRoutes'));
 app.use('/api/cart', require('./routes/cartRoutes'));
 app.use('/api/upload', require('./routes/uploadRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/advertisements', require('./routes/advertisementRoutes'));
-app.use('/api/ai', require('./routes/aiRoutes'));
+app.use('/api/ai', aiLimiter, require('./routes/aiRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/wishlist', require('./routes/wishlistRoutes'));
 app.use('/api/coupons', couponLimiter, require('./routes/couponRoutes'));
@@ -101,8 +127,27 @@ app.use('/api/analytics', require('./routes/analyticsRoutes'));
 app.use('/api/membership', require('./routes/membershipRoutes'));
 app.use('/api/forms', require('./routes/formRoutes'));
 app.use('/api/page-layouts', require('./routes/pageLayoutRoutes'));
+app.use('/api/returns', require('./routes/returnRoutes'));
+app.use('/api/outreach', require('./routes/outreachRoutes'));
 
-// 7. Global Error Handler
+// 7. Background workers initialization for Segmentation & Outreach
+const { initSegmentationWorker } = require('./services/segmentationWorker');
+const { initOutreachDispatcher } = require('./services/outreachDispatcher');
+if (process.env.NODE_ENV !== 'test') {
+    initSegmentationWorker();
+    initOutreachDispatcher();
+}
+
+// 8. 404 Handler
+app.use((req, res) => {
+    res.status(404).json({ success: false, message: 'Resource not found' });
+});
+
+// 8. Global Error Handler
+if (process.env.SENTRY_DSN) {
+    app.use(Sentry.Handlers.errorHandler());
+}
+
 app.use((err, req, res, next) => {
     logger.error({ message: err.message, stack: err.stack, path: req.path, method: req.method });
     res.status(err.status || 500).json({

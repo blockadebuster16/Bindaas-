@@ -1,12 +1,13 @@
-const { getOrdersWithItems, updateOrderStatus: updateSupabaseOrderStatus, checkClimateDonation } = require('../services/supabaseService');
-const googleSheetsService = require('../services/googleSheetsService');
+const { getOrdersWithItems, updateOrderStatus: updateSupabaseOrderStatus, checkClimateDonation, updateQikinkTracking } = require('../services/supabaseService');
+const qikinkService = require('../services/qikinkService');
+
 
 // @desc    Get all orders with filtering
 // @route   GET /api/orders
 // @access  Private/Admin
 const getOrders = async (req, res) => {
     try {
-        const { search, status, sort } = req.query;
+        const { search, status, sort, paginated, limit, page } = req.query;
 
         // Build filter object for Supabase
         let filters = {};
@@ -17,14 +18,42 @@ const getOrders = async (req, res) => {
             filters.status = status;
         }
 
-        let orders = await getOrdersWithItems(filters);
+        const isPaginated = paginated === 'true';
+        let totalItems = 0;
+        let totalPages = 1;
+        let currentPage = 1;
+
+        if (isPaginated || limit) {
+            filters.returnCount = true;
+            const limitNum = limit ? parseInt(limit) : 20;
+            currentPage = page ? parseInt(page) : 1;
+            const skip = (currentPage - 1) * limitNum;
+            filters.limit = limitNum;
+            filters.skip = skip;
+        }
+
+        let result = await getOrdersWithItems(filters);
+        let orders = filters.returnCount ? result.data : result;
+        if (filters.returnCount) {
+            totalItems = result.count;
+            totalPages = Math.ceil(totalItems / filters.limit);
+        }
 
         // Client-side sort for now if we need 'oldest', since supabase service defaults to descending
         if (sort === 'oldest') {
              orders = orders.reverse();
         }
 
-        res.json(orders);
+        if (isPaginated) {
+            res.json({
+                orders,
+                totalItems,
+                totalPages,
+                currentPage
+            });
+        } else {
+            res.json(orders);
+        }
     } catch (error) {
         console.error("Fetch Orders Error:", error);
         res.status(500).json({ message: "Failed to fetch orders." });
@@ -46,12 +75,6 @@ const updateOrderStatus = async (req, res) => {
 
         const updatedOrder = await updateSupabaseOrderStatus(orderId, status);
 
-        // Trigger Google Sheets Sync
-        try {
-            await googleSheetsService.updateOrderStatus(orderId, status);
-        } catch(sheetErr) {
-            console.error("Sheets sync failed but DB updated", sheetErr);
-        }
 
         res.json({ message: "Order status updated successfully.", order: updatedOrder });
     } catch (error) {
@@ -85,7 +108,7 @@ const getMyOrders = async (req, res) => {
     }
 };
 
-// @desc    Check if an order has a climate donation (for n8n automation)
+// @desc    Check if an order has a climate donation (for refund & admin automation)
 // @route   GET /api/orders/climate-donation/:razorpayOrderId
 // @access  Private (Service/Admin)
 const getClimateDonationStatus = async (req, res) => {
@@ -99,4 +122,36 @@ const getClimateDonationStatus = async (req, res) => {
     }
 };
 
-module.exports = { getOrders, updateOrderStatus, getMyOrders, getClimateDonationStatus };
+// @desc    Sync Qikink fulfillment tracking status for an order
+// @route   POST /api/orders/:id/sync-qikink
+// @access  Private/Admin
+const syncQikinkStatus = async (req, res) => {
+    try {
+        const orderId = req.params.id;
+        const orders = await getOrdersWithItems({});
+        const targetOrder = orders.find(o => String(o._id) === String(orderId));
+
+        if (!targetOrder) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+
+        const qikinkOrderId = targetOrder.qikinkOrderId;
+        if (!qikinkOrderId) {
+            return res.status(400).json({ message: "Order does not have a Qikink order ID associated yet" });
+        }
+
+        const trackingData = await qikinkService.fetchQikinkTracking(qikinkOrderId);
+        const updated = await updateQikinkTracking(orderId, trackingData);
+
+        res.json({
+            message: "Qikink tracking status updated successfully",
+            tracking: trackingData,
+            order: updated
+        });
+    } catch (error) {
+        console.error("Sync Qikink Status Error:", error);
+        res.status(500).json({ message: error.message || "Failed to sync Qikink tracking status" });
+    }
+};
+
+module.exports = { getOrders, updateOrderStatus, getMyOrders, getClimateDonationStatus, syncQikinkStatus };

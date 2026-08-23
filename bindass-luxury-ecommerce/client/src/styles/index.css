@@ -2,41 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide scrollbar utility (retains scroll functionality) */
+.scrollbar-none::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-none,
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* ═══════════════════════════════════════════════════════════
    Bindaas Brand Design System
    Source: Mobile_app/assets/palette.scss + src/theme/index.ts
    ═══════════════════════════════════════════════════════════ */
 :root {
   /* ── Primary / Amber ──────────────────────────────── */
-  --color-primary:        #FFD017; /* Bright Amber — main CTA */
-  --color-primary-dark:   #D4AF37; /* Metallic Gold — hover / secondary */
-  --color-primary-light:  #FAE7A8; /* Vanilla Custard — soft amber bg */
-  --color-on-primary:     #111111; /* Text on amber backgrounds */
+  --color-primary: #FFD017;
+  /* Bright Amber — main CTA */
+  --color-primary-dark: #D4AF37;
+  /* Metallic Gold — hover / secondary */
+  --color-primary-light: #FAE7A8;
+  /* Vanilla Custard — soft amber bg */
+  --color-on-primary: #111111;
+  /* Text on amber backgrounds */
 
   /* ── Neutrals ─────────────────────────────────────── */
-  --color-onyx:           #111111; /* Near-black — navbars, headings */
-  --color-graphite:       #2A2A2A; /* Charcoal — secondary text */
-  --color-parchment:      #F5F2EB; /* Warm White — page background */
-  --color-cream:          #FAE7A8; /* Vanilla Custard — card accents */
+  --color-onyx: #111111;
+  /* Near-black — navbars, headings */
+  --color-graphite: #2A2A2A;
+  /* Charcoal — secondary text */
+  --color-parchment: #F5F2EB;
+  /* Warm White — page background */
+  --color-cream: #FAE7A8;
+  /* Vanilla Custard — card accents */
 
   /* ── Surfaces ─────────────────────────────────────── */
-  --color-surface-1:      #F5F2EB; /* Page background */
-  --color-surface-2:      #ffffff; /* Cards */
-  --color-surface-3:      #FAE7A8; /* Alternate cards */
-  --color-border:         #E8E3D8; /* Warm border */
-  --color-text:           #111111; /* Main text */
-  --color-text-muted:     #2A2A2A; /* Muted text */
-  --color-text-dim:       #6B6457; /* Dimmed text (warm grey) */
-  --color-accent:         #FFD017; /* Primary action */
-  --color-accent-hover:   #D4AF37; /* Hover state */
+  --color-surface-1: #F5F2EB;
+  /* Page background */
+  --color-surface-2: #ffffff;
+  /* Cards */
+  --color-surface-3: #FAE7A8;
+  /* Alternate cards */
+  --color-border: #E8E3D8;
+  /* Warm border */
+  --color-text: #111111;
+  /* Main text */
+  --color-text-muted: #2A2A2A;
+  /* Muted text */
+  --color-text-dim: #6B6457;
+  /* Dimmed text (warm grey) */
+  --color-accent: #FFD017;
+  /* Primary action */
+  --color-accent-hover: #D4AF37;
+  /* Hover state */
 
   /* ── Semantic ─────────────────────────────────────── */
-  --color-error:          #ba1a1a;
-  --color-success:        #2e7d32;
+  --color-error: #ba1a1a;
+  --color-success: #2e7d32;
 
   /* ── Glassmorphism ────────────────────────────────── */
-  --glass-bg:     rgba(245, 242, 235, 0.85); /* Warm parchment glass */
-  --glass-border: rgba(212, 175, 55, 0.15);  /* Gold-tinted border */
+  --glass-bg: rgba(245, 242, 235, 0.85);
+  /* Warm parchment glass */
+  --glass-border: rgba(212, 175, 55, 0.15);
+  /* Gold-tinted border */
   --glass-shadow: 0 8px 32px 0 rgba(17, 17, 17, 0.08);
 
   /* ── Shadows ──────────────────────────────────────── */
@@ -51,12 +82,13 @@ body {
   font-family: 'Outfit', 'Manrope', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #efefef !important;
+  background-color: #F5F2EB;
   color: var(--color-text);
 }
 
 /* ── Lenis Smooth Momentum Scroll (Bluorng-style) ─────────── */
-html.lenis, html.lenis body {
+html.lenis,
+html.lenis body {
   height: auto;
 }
 
@@ -84,7 +116,8 @@ h1.display,
 }
 
 /* ── Glass Effects ─────────────────────────────────────────── */
-.glass-panel, .glass {
+.glass-panel,
+.glass {
   background: var(--glass-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -205,8 +238,15 @@ h1.display,
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ── Tables ────────────────────────────────────────────────── */
@@ -237,9 +277,9 @@ td {
     opacity: 0;
     transform: translateX(60px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
   }
 }
-

@@ -1,19 +1,27 @@
-﻿const User = require('../models/User');
+const User = require('../models/User');
 const { upsertCustomerProfile } = require('../services/supabaseService');
+
+const getUserQuery = (reqUser) => {
+    const conditions = [];
+    if (reqUser?.uid) conditions.push({ googleUID: reqUser.uid });
+    if (reqUser?.email) conditions.push({ email: reqUser.email.toLowerCase() });
+    return conditions.length > 0 ? { $or: conditions } : { _id: null };
+};
 
 // @desc    Get or Initialize user profile
 // @route   GET /api/users/profile
 // @access  Private
 exports.getProfile = async (req, res) => {
     try {
-        let user = await User.findOne({ googleUID: req.user.uid });
+        let user = await User.findOne(getUserQuery(req.user));
 
         if (!user) {
             // Initialize new profile from Google OAuth / email data
             user = await User.create({
-                googleUID: req.user.uid,
-                email: req.user.email,
-                displayName: req.user.name || 'Value Member'
+                googleUID: req.user.provider === 'google' ? req.user.uid : undefined,
+                email: (req.user.email || '').toLowerCase(),
+                displayName: req.user.name || 'Value Member',
+                authProvider: req.user.provider || 'email'
             });
         }
 
@@ -37,7 +45,7 @@ exports.updateProfile = async (req, res) => {
         delete updates.membershipTier;
 
         const user = await User.findOneAndUpdate(
-            { googleUID: req.user.uid },
+            getUserQuery(req.user),
             { $set: updates },
             { new: true, runValidators: true }
         );
@@ -61,7 +69,7 @@ exports.addToRecentlyViewed = async (req, res) => {
         const { productId } = req.body;
         if (!productId) return res.status(400).json({ message: "Product ID required" });
 
-        const user = await User.findOne({ googleUID: req.user.uid });
+        const user = await User.findOne(getUserQuery(req.user));
         if (!user) return res.status(404).json({ message: "User not found" });
 
         // deduplicate and keep only the last 12
@@ -89,7 +97,7 @@ exports.addToRecentlyViewed = async (req, res) => {
 // @access  Private
 exports.getRecentlyViewed = async (req, res) => {
     try {
-        const user = await User.findOne({ googleUID: req.user.uid })
+        const user = await User.findOne(getUserQuery(req.user))
             .populate('recentlyViewed', 'name price images category stock_quantity');
 
         if (!user) return res.status(404).json({ message: "User not found" });
@@ -100,6 +108,7 @@ exports.getRecentlyViewed = async (req, res) => {
         res.status(500).json({ message: "Server error fetching history" });
     }
 };
+
 // @desc    Sync guest history to server on login
 // @route   POST /api/users/recently-viewed/sync
 // @access  Private
@@ -108,7 +117,7 @@ exports.syncRecentlyViewed = async (req, res) => {
         const { productIds } = req.body;
         if (!Array.isArray(productIds)) return res.status(400).json({ message: "Array of product IDs required" });
 
-        const user = await User.findOne({ googleUID: req.user.uid });
+        const user = await User.findOne(getUserQuery(req.user));
         if (!user) return res.status(404).json({ message: "User not found" });
 
         // deduplicate and keep only the last 12
