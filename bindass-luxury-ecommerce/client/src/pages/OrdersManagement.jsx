@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../components/AdminSidebar';
@@ -19,6 +19,12 @@ const OrdersManagement = () => {
     const [sortBy, setSortBy] = useState('newest');
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [syncingId, setSyncingId] = useState(null);
+    
+    // Pagination State
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
 
     const API_URL = `${process.env.REACT_APP_API_URL || 'http://localhost:5001'}/api/orders`;
 
@@ -35,10 +41,19 @@ const OrdersManagement = () => {
                 params: {
                     search: searchTerm,
                     status: statusFilter,
-                    sort: sortBy
+                    sort: sortBy,
+                    paginated: 'true',
+                    page: currentPage,
+                    limit: 20
                 }
             });
-            setOrders(data);
+            if (data.orders) {
+                setOrders(data.orders);
+                setTotalPages(data.totalPages);
+                setTotalItems(data.totalItems);
+            } else {
+                setOrders(data);
+            }
             setError(null);
         } catch (err) {
             setError("Failed to fetch orders.");
@@ -51,14 +66,14 @@ const OrdersManagement = () => {
         }
     };
 
-    // Refetch when filters change (server-side filtering)
+    // Refetch when filters or page change (server-side filtering)
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             fetchOrders();
         }, 300); // debounce search
         return () => clearTimeout(delayDebounceFn);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchTerm, statusFilter, sortBy]);
+    }, [searchTerm, statusFilter, sortBy, currentPage]);
 
     const showToast = (message, type = 'success') => {
         setToast({ show: true, message, type });
@@ -81,6 +96,30 @@ const OrdersManagement = () => {
         }
     };
 
+    // Trigger live Qikink tracking sync for an order
+    const handleSyncQikink = async (orderId) => {
+        setSyncingId(orderId);
+        try {
+            const { data } = await axios.post(
+                `${API_URL}/${orderId}/sync-qikink`,
+                {},
+                getAuthHeaders()
+            );
+            // Merge updated tracking fields back into local state
+            const updated = data.order || {};
+            setOrders(prev => prev.map(o => o._id === orderId ? { ...o, ...updated } : o));
+            // Also update the open modal if it's the same order
+            if (selectedOrder && selectedOrder._id === orderId) {
+                setSelectedOrder(prev => ({ ...prev, ...updated }));
+            }
+            showToast('Qikink tracking synced successfully');
+        } catch (err) {
+            showToast(err.response?.data?.message || 'Failed to sync Qikink status', 'error');
+        } finally {
+            setSyncingId(null);
+        }
+    };
+
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
     };
@@ -92,6 +131,17 @@ const OrdersManagement = () => {
             case 'Shipped': return 'bg-purple-100 text-purple-800 border-purple-200';
             case 'Delivered': return 'bg-green-100 text-green-800 border-green-200';
             default: return 'bg-gray-100 text-gray-800 border-gray-200';
+        }
+    };
+
+    const getFulfillmentStyle = (status) => {
+        switch (status) {
+            case 'SUBMITTED': return 'bg-blue-50 text-blue-700 border-blue-200';
+            case 'IN_PRODUCTION': return 'bg-amber-50 text-amber-700 border-amber-200';
+            case 'SHIPPED': return 'bg-purple-50 text-purple-700 border-purple-200';
+            case 'DELIVERED': return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+            case 'FAILED': return 'bg-red-50 text-red-700 border-red-200';
+            default: return 'bg-gray-50 text-gray-600 border-gray-200';
         }
     };
 
@@ -194,15 +244,21 @@ const OrdersManagement = () => {
                                             <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Amount</th>
                                             <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
                                             <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                                            <th scope="col" className="relative px-6 py-4 text-right"><span className="sr-only">Details</span></th>
+                                            <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Fulfillment</th>
+                                            <th scope="col" className="relative px-6 py-4 text-right"><span className="sr-only">Actions</span></th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-100">
                                         {orders.map((order) => (
                                             <tr key={order._id} className="hover:bg-gray-50/50 transition-colors">
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="text-sm font-medium text-gray-900">#{order._id.substring(order._id.length - 6)}</div>
-                                                    <div className="text-xs text-gray-500 mt-1">{order.products.length} items</div>
+                                                    <div className="text-sm font-medium text-gray-900">#{String(order._id).substring(String(order._id).length - 6)}</div>
+                                                    <div className="text-xs text-gray-500 mt-1">{(order.products || []).length} items</div>
+                                                    {order.ticketId && (
+                                                        <div className="text-[9px] font-mono text-slate-400 mt-1 truncate max-w-[100px]" title={order.ticketId}>
+                                                            🎫 {order.ticketId.substring(0, 8)}…
+                                                        </div>
+                                                    )}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="text-sm text-gray-900">{order.userEmail}</div>
@@ -229,18 +285,75 @@ const OrdersManagement = () => {
                                                         </select>
                                                     </div>
                                                 </td>
+                                                {/* Fulfillment Status Column */}
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    {order.fulfillmentStatus ? (
+                                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${getFulfillmentStyle(order.fulfillmentStatus)}`}>
+                                                            {order.fulfillmentStatus}
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-[10px] text-gray-400 font-medium">Not submitted</span>
+                                                    )}
+                                                </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-right">
-                                                    <button 
-                                                        onClick={() => { setSelectedOrder(order); setIsModalOpen(true); }}
-                                                        className="text-[10px] font-black uppercase tracking-widest text-indigo-600 hover:text-indigo-900 bg-indigo-50 px-3 py-1.5 rounded-md transition-colors"
-                                                    >
-                                                        View Details
-                                                    </button>
+                                                    <div className="flex items-center justify-end gap-2">
+                                                        {/* Qikink Sync Button */}
+                                                        {order.qikinkOrderId && (
+                                                            <button
+                                                                onClick={() => handleSyncQikink(order._id)}
+                                                                disabled={syncingId === order._id}
+                                                                className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-violet-600 hover:text-violet-900 bg-violet-50 px-2.5 py-1.5 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                title="Sync live tracking from Qikink"
+                                                            >
+                                                                {syncingId === order._id ? (
+                                                                    <svg className="animate-spin h-3 w-3" fill="none" viewBox="0 0 24 24">
+                                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                                                                    </svg>
+                                                                ) : (
+                                                                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                                    </svg>
+                                                                )}
+                                                                Sync
+                                                            </button>
+                                                        )}
+                                                        <button 
+                                                            onClick={() => { setSelectedOrder(order); setIsModalOpen(true); }}
+                                                            className="text-[10px] font-black uppercase tracking-widest text-indigo-600 hover:text-indigo-900 bg-indigo-50 px-3 py-1.5 rounded-md transition-colors"
+                                                        >
+                                                            View Details
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
+                                
+                                {totalPages > 1 && (
+                                    <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex items-center justify-between">
+                                        <div className="text-sm text-gray-500">
+                                            Page <span className="font-medium text-gray-900">{currentPage}</span> of <span className="font-medium text-gray-900">{totalPages}</span>
+                                        </div>
+                                        <div className="flex space-x-2">
+                                            <button
+                                                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                                disabled={currentPage === 1}
+                                                className="px-3 py-1 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            >
+                                                Previous
+                                            </button>
+                                            <button
+                                                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                                                disabled={currentPage === totalPages}
+                                                className="px-3 py-1 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            >
+                                                Next
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
@@ -259,8 +372,11 @@ const OrdersManagement = () => {
                             <div className="bg-white px-8 pt-8 pb-10">
                                 <div className="flex justify-between items-start mb-8 border-b border-gray-100 pb-6">
                                     <div>
-                                        <h3 className="text-xl font-bold text-gray-900 uppercase tracking-tight">Order #{selectedOrder._id.substring(selectedOrder._id.length - 8)}</h3>
+                                        <h3 className="text-xl font-bold text-gray-900 uppercase tracking-tight">Order #{String(selectedOrder._id).substring(String(selectedOrder._id).length - 8)}</h3>
                                         <p className="text-xs text-gray-500 font-medium mt-1">Placed on {new Date(selectedOrder.orderDate).toLocaleString()}</p>
+                                        {selectedOrder.ticketId && (
+                                            <p className="text-[9px] font-mono text-slate-400 mt-1">🎫 Ticket: {selectedOrder.ticketId}</p>
+                                        )}
                                     </div>
                                     <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600">
                                         <span className="material-icons">close</span>
@@ -303,6 +419,91 @@ const OrdersManagement = () => {
                                     </div>
                                 </div>
 
+                                {/* ── Qikink Fulfillment Tracking Panel ── */}
+                                <div className="mb-10 p-5 rounded-xl border border-violet-100 bg-violet-50/40">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-7 h-7 rounded-lg bg-violet-100 flex items-center justify-center">
+                                                <svg className="w-4 h-4 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+                                                </svg>
+                                            </div>
+                                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-700">Qikink POD Fulfillment</h4>
+                                        </div>
+                                        {selectedOrder.qikinkOrderId && (
+                                            <button
+                                                onClick={() => handleSyncQikink(selectedOrder._id)}
+                                                disabled={syncingId === selectedOrder._id}
+                                                className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-violet-700 bg-violet-100 hover:bg-violet-200 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+                                            >
+                                                {syncingId === selectedOrder._id ? (
+                                                    <svg className="animate-spin h-3 w-3" fill="none" viewBox="0 0 24 24">
+                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                                                    </svg>
+                                                ) : (
+                                                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                    </svg>
+                                                )}
+                                                Sync Live Status
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    {selectedOrder.qikinkOrderId ? (
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                            <div className="bg-white rounded-lg p-3 border border-violet-100">
+                                                <p className="text-[8px] font-black uppercase tracking-widest text-slate-400 mb-1">Qikink Order ID</p>
+                                                <p className="text-xs font-bold text-gray-800 break-all">{selectedOrder.qikinkOrderId}</p>
+                                            </div>
+                                            <div className="bg-white rounded-lg p-3 border border-violet-100">
+                                                <p className="text-[8px] font-black uppercase tracking-widest text-slate-400 mb-1">Fulfillment Status</p>
+                                                {selectedOrder.fulfillmentStatus ? (
+                                                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border ${getFulfillmentStyle(selectedOrder.fulfillmentStatus)}`}>
+                                                        {selectedOrder.fulfillmentStatus}
+                                                    </span>
+                                                ) : <p className="text-xs text-gray-500">—</p>}
+                                            </div>
+                                            <div className="bg-white rounded-lg p-3 border border-violet-100">
+                                                <p className="text-[8px] font-black uppercase tracking-widest text-slate-400 mb-1">Courier</p>
+                                                <p className="text-xs font-bold text-gray-800">{selectedOrder.courierName || '—'}</p>
+                                            </div>
+                                            <div className="bg-white rounded-lg p-3 border border-violet-100">
+                                                <p className="text-[8px] font-black uppercase tracking-widest text-slate-400 mb-1">AWB / Tracking No.</p>
+                                                <p className="text-xs font-bold text-gray-800 break-all">{selectedOrder.trackingNumber || '—'}</p>
+                                            </div>
+                                            <div className="bg-white rounded-lg p-3 border border-violet-100 sm:col-span-2">
+                                                <p className="text-[8px] font-black uppercase tracking-widest text-slate-400 mb-1">Tracking URL</p>
+                                                {selectedOrder.trackingUrl ? (
+                                                    <a
+                                                        href={selectedOrder.trackingUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-xs font-bold text-violet-600 hover:text-violet-800 underline break-all"
+                                                    >
+                                                        {selectedOrder.trackingUrl}
+                                                    </a>
+                                                ) : <p className="text-xs text-gray-500">Available after dispatch</p>}
+                                            </div>
+                                            {selectedOrder.qikinkSyncedAt && (
+                                                <div className="sm:col-span-3 text-right">
+                                                    <p className="text-[8px] text-slate-400 font-medium">
+                                                        Last synced: {new Date(selectedOrder.qikinkSyncedAt).toLocaleString()}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-4">
+                                            <p className="text-[10px] text-slate-500 font-medium">
+                                                Qikink order not yet submitted. It will be dispatched automatically after payment verification.
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+
                                 {/* Product Breakdown */}
                                 <div>
                                     <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Itemized Acquisition</h4>
@@ -317,7 +518,7 @@ const OrdersManagement = () => {
                                                 </tr>
                                             </thead>
                                             <tbody className="divide-y divide-gray-100">
-                                                {selectedOrder.products.map((item, idx) => (
+                                                {(selectedOrder.products || []).map((item, idx) => (
                                                     <tr key={idx}>
                                                         <td className="px-6 py-4 flex items-center gap-3">
                                                             <div className="w-10 h-12 bg-slate-100 rounded overflow-hidden">
@@ -352,5 +553,3 @@ const OrdersManagement = () => {
 };
 
 export default OrdersManagement;
-
-

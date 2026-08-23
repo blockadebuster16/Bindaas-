@@ -9,7 +9,9 @@ const {
     toggleProductStatus,
     searchProducts
 } = require('../controllers/productController');
-const { adminProtect } = require('../middleware/adminAuth');
+const { protectAdmin } = require('../middleware/authMiddleware');
+const validate = require('../middleware/validate');
+const { productSchema } = require('../validators/schemas');
 
 // @route   GET /api/products/search
 router.get('/search', searchProducts);
@@ -17,16 +19,16 @@ router.get('/search', searchProducts);
 // @route   GET /api/products
 router.route('/')
     .get(getProducts)
-    .post(adminProtect, createProduct);
+    .post(protectAdmin, validate(productSchema), createProduct);
 
 // @route   GET /api/products/:id
 // @route   PUT /api/products/:id
 // @route   DELETE /api/products/:id
 router.route('/:id')
     .get(getProductById)
-    .put(adminProtect, updateProduct)
-    .delete(adminProtect, deleteProduct);
+    .put(protectAdmin, validate(productSchema), updateProduct)
+    .delete(protectAdmin, deleteProduct);
 
-router.patch('/:id/toggle', adminProtect, toggleProductStatus);
+router.patch('/:id/toggle', protectAdmin, toggleProductStatus);
 
 module.exports = router;

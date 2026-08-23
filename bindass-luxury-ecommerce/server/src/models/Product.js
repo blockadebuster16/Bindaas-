@@ -10,6 +10,7 @@ const productSchema = new mongoose.Schema({
     materials_care: { type: String },
     materials_integrity: { type: String },
     shipping_returns: { type: String },
+    promotions: { type: String },
     pages: [{ type: String }],   // e.g. ['new_arrivals', 'womens_collection']
     images: [{ type: String }],
     sizes: [{ type: String }],

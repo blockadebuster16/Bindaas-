@@ -49,8 +49,10 @@ const AdminLogin = () => {
     setSuccessMsg('');
 
     try {
+      const token = localStorage.getItem('adminToken');
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
       const payload = { predefinedEmail, newEmail, newPassword };
-      const response = await axios.post(`${AUTH_API_URL}/admin-reset`, payload);
+      const response = await axios.post(`${AUTH_API_URL}/admin-reset`, payload, { headers });
 
       if (response.data.success) {
         setSuccessMsg('Credentials successfully updated. Please sign in with your new credentials.');

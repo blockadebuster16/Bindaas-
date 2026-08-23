@@ -38,7 +38,7 @@ const Navbar = () => {
     useEffect(() => {
         const checkHeroAtTop = () => {
             const heroEl = document.querySelector('.hero-banner-top');
-            setHasHeroAtTop(!!heroEl);
+            setHasHeroAtTop(!!heroEl && location.pathname === '/');
         };
 
         checkHeroAtTop();
@@ -187,10 +187,10 @@ const Navbar = () => {
     if (isTransparentOverlay) {
         headerClasses += "bg-transparent text-white border-transparent shadow-none py-2";
     } else {
-        headerClasses += "bg-white text-bindas-onyx shadow-md border-b border-slate-200 py-1";
+        headerClasses += "bg-white text-bindas-onyx shadow-sm border-b border-gray-100 py-1";
     }
 
-    const navLinkClass = `transition-colors py-1 hover:text-bindas-gold ${isTransparentOverlay ? 'text-white' : 'text-bindas-onyx'}`;
+    const navLinkClass = `transition-colors py-1 hover:text-bindas-gold ${isTransparentOverlay ? 'text-white hover:text-white/80' : 'text-bindas-onyx'}`;
 
     return (
         <>

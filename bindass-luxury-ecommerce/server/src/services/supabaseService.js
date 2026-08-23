@@ -81,7 +81,22 @@ const updateSettings = async (updates, adminEmail) => {
 // ORDERS MODULE
 // ==========================================
 const createOrder = async (orderData, itemsData) => {
-    // 1. Insert Order
+    // 1. Try atomic RPC procedure if available on Supabase
+    try {
+        const { data: rpcOrder, error: rpcError } = await supabase.rpc('insert_order_with_items', {
+            p_order: orderData,
+            p_items: itemsData
+        });
+
+        if (!rpcError && rpcOrder) {
+            console.log(`✅ Atomic Order Created via RPC: #${rpcOrder.id}`);
+            return rpcOrder;
+        }
+    } catch (e) {
+        console.warn("⚠️ RPC insert_order_with_items fallback to REST:", e.message);
+    }
+
+    // 2. Fallback to standard Supabase REST insert if RPC function not executed yet
     const { data: order, error: orderError } = await supabase
         .from('orders')
         .insert([orderData])
@@ -90,23 +105,31 @@ const createOrder = async (orderData, itemsData) => {
         
     if (orderError) throw orderError;
 
-    // 2. Insert Items with foreign key
     const itemsWithOrderId = itemsData.map(item => ({ ...item, order_id: order.id }));
     const { error: itemsError } = await supabase.from('order_items').insert(itemsWithOrderId);
     
     if (itemsError) {
-        // Rollback is manual in standard Supabase REST (or RPC if needed), but we'll soft-handle here
-        console.error("Order items insertion failed:", itemsError);
+        console.error("❌ Order items insertion failed:", itemsError);
     }
 
     return order;
 };
 
 const getOrdersWithItems = async (filters = {}) => {
+    // Core columns that always exist + pipeline columns added by migration
+    // (migration columns degrade gracefully via the fallback)
     let query = supabase.from('orders').select(`
-        *,
-        order_items (*)
-    `).order('order_date', { ascending: false });
+        id, user_email, full_name, phone, total_amount, climate_contribution,
+        status, shipping_info, order_date, transaction_id, razorpay_payment_id,
+        shipping_address,
+        payment_status, fulfillment_status, ticket_id, idempotency_key,
+        qikink_order_id, qikink_shipment_id, tracking_number, courier_name,
+        tracking_url, qikink_synced_at, qikink_sync_failed,
+        email_sent_at, email_send_failed,
+        order_items (
+            id, product_id, name, image, quantity, price, size, color
+        )
+    `, { count: 'exact' }).order('order_date', { ascending: false });
 
     if (filters.userEmail) {
         query = query.eq('user_email', filters.userEmail);
@@ -115,27 +138,92 @@ const getOrdersWithItems = async (filters = {}) => {
         query = query.eq('status', filters.status);
     }
 
-    const { data, error } = await query;
-    if (error) throw error;
-    
-    // Map to camelCase for frontend (matches old MongoDB structure)
-    return data.map(order => ({
+    if (filters.limit) {
+        const skip = filters.skip || 0;
+        query = query.range(skip, skip + filters.limit - 1);
+    }
+
+    const { data, error, count } = await query;
+
+    // If the full query failed (migration columns may not exist yet), fall back to base columns only
+    if (error) {
+        console.warn('⚠️ Full order query failed (migration pending?), falling back to base columns:', error.message);
+        let fallbackQuery = supabase.from('orders').select(`
+            id, user_email, total_amount, climate_contribution,
+            status, shipping_info, order_date, transaction_id,
+            order_items ( id, product_id, name, image, quantity, price, size )
+        `, { count: 'exact' }).order('order_date', { ascending: false });
+
+        if (filters.userEmail) fallbackQuery = fallbackQuery.eq('user_email', filters.userEmail);
+        if (filters.status && filters.status !== 'All') fallbackQuery = fallbackQuery.eq('status', filters.status);
+        if (filters.limit) {
+            const skip = filters.skip || 0;
+            fallbackQuery = fallbackQuery.range(skip, skip + filters.limit - 1);
+        }
+
+        const { data: fbData, error: fbError, count: fbCount } = await fallbackQuery;
+        if (fbError) {
+            console.error('❌ Fallback order query failed:', fbError);
+            throw fbError;
+        }
+        
+        if (filters.returnCount) return { data: mapOrders(fbData), count: fbCount };
+        return mapOrders(fbData);
+    }
+
+    if (filters.returnCount) return { data: mapOrders(data), count };
+    return mapOrders(data);
+};
+
+// Shared mapping helper — converts Supabase snake_case rows to camelCase for the frontend.
+// full_name, phone, and shipping_address are stored inside the shipping_info JSONB field if not migrated.
+const mapOrders = (data) => data.map(order => {
+    const si = order.shipping_info || {};
+    return {
         _id: order.id,
         userEmail: order.user_email,
+        fullName: order.full_name || (si.firstName ? `${si.firstName} ${si.lastName || ''}`.trim() : (si.fullName || 'Anonymous')),
+        phone: order.phone || si.phone || si.mobile || '',
+        razorpayPaymentId: order.razorpay_payment_id || order.transaction_id || null,
+        shippingAddress: order.shipping_address || {
+            addressLine1: si.addressLine1 || '',
+            addressLine2: si.addressLine2 || '',
+            city: si.city || '',
+            state: si.state || '',
+            postalCode: si.pincode || si.postalCode || '',
+            country: si.country || 'India'
+        },
         totalAmount: order.total_amount,
         climateContribution: order.climate_contribution,
         status: order.status,
-        transactionId: order.transaction_id,
-        shippingInfo: order.shipping_info,
+        shippingInfo: si,
         orderDate: order.order_date,
-        products: order.order_items.map(item => ({
-            productId: { _id: item.product_id, name: item.name, images: [item.image] }, // Simulate mongo populate
+        transactionId: order.transaction_id,
+        // Pipeline columns (null before migration runs — graceful)
+        paymentStatus: order.payment_status || 'PAYMENT_VERIFIED',
+        fulfillmentStatus: order.fulfillment_status || null,
+        ticketId: order.ticket_id || null,
+        qikinkOrderId: order.qikink_order_id || null,
+        qikinkShipmentId: order.qikink_shipment_id || null,
+        trackingNumber: order.tracking_number || null,
+        courierName: order.courier_name || null,
+        trackingUrl: order.tracking_url || null,
+        qikinkSyncedAt: order.qikink_synced_at || null,
+        qikinkSyncFailed: order.qikink_sync_failed || false,
+        emailSentAt: order.email_sent_at || null,
+        emailSendFailed: order.email_send_failed || false,
+        // Products: flat structure so OrdersManagement can use item.name / item.image directly
+        products: (order.order_items || []).map(item => ({
+            productId: item.product_id,
+            name: item.name,
+            image: item.image,
             quantity: item.quantity,
             price: item.price,
-            size: item.size
+            size: item.size,
+            color: item.color || null
         }))
-    }));
-};
+    };
+});
 
 const updateOrderStatus = async (orderId, status) => {
     const { data, error } = await supabase.from('orders')
@@ -145,6 +233,61 @@ const updateOrderStatus = async (orderId, status) => {
         .single();
     if (error) throw error;
     return { ...data, _id: data.id };
+};
+
+const updateQikinkOrderDetails = async (orderId, qikinkData) => {
+    const { data, error } = await supabase.from('orders')
+        .update({
+            qikink_order_id: qikinkData.qikinkOrderId,
+            qikink_shipment_id: qikinkData.shipmentId,
+            fulfillment_status: qikinkData.status || 'SUBMITTED',
+            qikink_synced_at: new Date().toISOString(),
+            qikink_sync_failed: false
+        })
+        .eq('id', orderId)
+        .select()
+        .single();
+
+    if (error) {
+        console.error("❌ Error updating Qikink order details:", error);
+        throw error;
+    }
+    return data;
+};
+
+const markQikinkFailed = async (orderId) => {
+    await supabase.from('orders')
+        .update({ qikink_sync_failed: true })
+        .eq('id', orderId);
+};
+
+const updateQikinkTracking = async (orderId, trackingData) => {
+    const { data, error } = await supabase.from('orders')
+        .update({
+            fulfillment_status: trackingData.fulfillmentStatus || 'SUBMITTED',
+            courier_name: trackingData.courierName,
+            tracking_number: trackingData.trackingNumber,
+            tracking_url: trackingData.trackingUrl,
+            updated_at: new Date().toISOString()
+        })
+        .eq('id', orderId)
+        .select()
+        .single();
+
+    if (error) throw error;
+    return data;
+};
+
+const markEmailSent = async (orderId) => {
+    await supabase.from('orders')
+        .update({ email_sent_at: new Date().toISOString(), email_send_failed: false })
+        .eq('id', orderId);
+};
+
+const markEmailFailed = async (orderId) => {
+    await supabase.from('orders')
+        .update({ email_send_failed: true })
+        .eq('id', orderId);
 };
 
 
@@ -182,7 +325,7 @@ const recordClimateDonation = async ({ orderId, razorpayOrderId, razorpayPayment
 
 /**
  * Look up whether a specific Razorpay order had a climate donation.
- * Used by the n8n refund automation endpoint.
+ * Used by refund processing & reconciliation services.
  * Returns { hasDonation: bool, record: {...} | null }
  */
 const checkClimateDonation = async (razorpayOrderId) => {
@@ -330,6 +473,7 @@ const upsertCustomerProfile = async (profileData) => {
 module.exports = {
     getSettings, updateSettings,
     createOrder, getOrdersWithItems, updateOrderStatus,
+    updateQikinkOrderDetails, markQikinkFailed, updateQikinkTracking, markEmailSent, markEmailFailed,
     recordClimateDonation, checkClimateDonation,
     getCoupons, createCoupon, toggleCoupon, deleteCoupon, validateCoupon, recordCouponUsage,
     upsertCustomerProfile

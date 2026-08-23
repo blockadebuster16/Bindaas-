@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment files
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Build outputs
+dist/
+**/dist/
+dev-dist/
+**/dev-dist/
+
+# Scratch & temporary artifacts
+scratch/
+**/scratch/
+.tempmediaStorage/
+**/.tempmediaStorage/
+
+# Antigravity & tooling
+.agents/
+tools/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*

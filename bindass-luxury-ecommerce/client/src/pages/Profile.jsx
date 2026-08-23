@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
@@ -211,6 +211,29 @@ const Profile = () => {
                                     <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Automate your acquisition experience</p>
                                 </header>
 
+                                {loading ? (
+                                    <div className="bg-white border border-slate-100 rounded-lg p-8 space-y-8 max-w-2xl shadow-sm animate-pulse">
+                                        <div className="space-y-6">
+                                            <div className="w-1/3 h-4 bg-slate-200 rounded" />
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <div className="h-10 bg-slate-100 rounded" />
+                                                <div className="h-10 bg-slate-100 rounded" />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-6 mt-8">
+                                            <div className="w-1/3 h-4 bg-slate-200 rounded" />
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <div className="h-10 bg-slate-100 rounded" />
+                                                <div className="h-10 bg-slate-100 rounded" />
+                                            </div>
+                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                                                <div className="h-10 bg-slate-100 rounded" />
+                                                <div className="h-10 bg-slate-100 rounded" />
+                                                <div className="h-10 bg-slate-100 rounded" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
                                 <form onSubmit={handleUpdateProfile} className="bg-white border border-slate-100 rounded-lg p-8 space-y-8 max-w-2xl shadow-sm">
                                     {/* Personal Info */}
                                     <div className="space-y-6">
@@ -310,6 +333,7 @@ const Profile = () => {
                                         {saveLoading ? 'Archiving Profile...' : 'Save Shipping Profile'}
                                     </button>
                                 </form>
+                                )}
                             </div>
                         )}
                     </section>

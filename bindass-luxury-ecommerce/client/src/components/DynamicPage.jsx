@@ -113,9 +113,46 @@ const DynamicPage = ({ pageKey, title, description }) => {
                         const filterKey = sec.categoryFilter || pageKey;
                         const isGlobal = filterKey === 'new_arrivals' || !filterKey;
                         
-                        const gridProducts = isGlobal
+                        // Map legacy/page layout keys to product publication keys
+                        const mappedKeys = [filterKey];
+                        if (filterKey === 'men') mappedKeys.push('mens_collection');
+                        if (filterKey === 'women') mappedKeys.push('womens_collection');
+                        if (filterKey === 'sports') mappedKeys.push('sportscollection');
+                        
+                        let gridProducts = isGlobal
                             ? products
-                            : products.filter(p => p.pages && p.pages.includes(filterKey));
+                            : products.filter(p => p.pages && p.pages.some(page => mappedKeys.includes(page)));
+
+                        // UX Fallback: If no products are published under this page key/mapped key,
+                        // fall back to matching the primary category (case-insensitive) or productType,
+                        // or show any active products in catalog to avoid a completely empty screen.
+                        if (gridProducts.length === 0 && !isGlobal) {
+                            gridProducts = products.filter(p => {
+                                const catLower = (p.category || '').toLowerCase();
+                                const typeLower = (p.productType || '').toLowerCase();
+                                const nameLower = (p.name || '').toLowerCase();
+                                
+                                // Matches for men
+                                if (filterKey === 'men' || filterKey === 'mens_collection') {
+                                    return catLower === 'men' || catLower.includes('men') || typeLower.includes('men') || nameLower.includes('men');
+                                }
+                                // Matches for women
+                                if (filterKey === 'women' || filterKey === 'womens_collection') {
+                                    return catLower === 'women' || catLower.includes('women') || typeLower.includes('women') || nameLower.includes('women');
+                                }
+                                // Matches for sports
+                                if (filterKey === 'sports' || filterKey === 'sportscollection') {
+                                    return catLower === 'sports' || catLower.includes('sport') || typeLower.includes('sport') || nameLower.includes('sport');
+                                }
+                                // General category/type matches
+                                return catLower === filterKey.toLowerCase() || typeLower === filterKey.toLowerCase();
+                            });
+
+                            // Absolute fallback: if still empty, show the first 8 general products
+                            if (gridProducts.length === 0) {
+                                gridProducts = products.slice(0, 8);
+                            }
+                        }
 
                         return (
                             <section key={sectionId} className="bg-white py-8 md:py-14 px-2.5 sm:px-4 lg:px-6 border-t border-[#E8E3D8]/50">

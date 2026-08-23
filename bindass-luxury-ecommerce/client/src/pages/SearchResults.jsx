@@ -16,7 +16,8 @@ const SearchResults = () => {
             setLoading(true);
             try {
                 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
-                const { data } = await axios.get(`${API_URL}/api/products/search?q=${query}`);
+                // UX-005 / API-002 FIX: Use params object — axios URL-encodes automatically
+                const { data } = await axios.get(`${API_URL}/api/products/search`, { params: { q: query } });
                 setProducts(data);
             } catch (err) {
                 console.error("Search failed", err);
